@@ -1,0 +1,262 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator nestgraphql {
+  provider               = "node ../../../node_modules/prisma-nestjs-graphql"
+  output                 = "../../@generated/prisma-nestjs-graphql"
+  fields_Validator_from  = "class-validator"
+  fields_Validator_input = true
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Log {
+  id              String        @id @default(uuid())
+  section         SystemSection @relation(fields: [systemSectionId], references: [id])
+  requestBody     String
+  requestType     String
+  deviceType      String
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  systemSectionId String
+}
+
+model SystemSection {
+  id        String   @id @default(uuid())
+  name      String
+  logs      Log[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model User {
+  id             String    @id @default(uuid())
+  /// @FieldType({ name: 'Scalars.GraphQLEmailAddress', from: 'graphql-scalars', input: true })
+  email          String    @unique
+  /// @HideField({ output: false, input: true })
+  fullName       String
+  firstName      String
+  lastName       String
+  password       String
+  /// @HideField({ output: false, input: true })
+  lastLogin      DateTime?
+  /// @HideField({ output: false, input: true })
+  profilePicture String?
+  /// @HideField({ output: false, input: true })
+  createdAt      DateTime  @default(now())
+  /// @HideField({ output: false, input: true })
+  updatedAt      DateTime  @updatedAt
+}
+
+model Employee {
+  /// @HideField({ match: 'EmployeeCreate*Input' })
+  id        String         @id @default(uuid())
+  type      EmployeesTypes
+  phones    Phone[]
+  /// @FieldType({ name: 'Scalars.GraphQLEmailAddress', from: 'graphql-scalars', input: true })
+  email     String         @unique
+  fullName  String
+  firstName String
+  lastName  String
+  documents Document[]
+  /// @HideField({ output: false, input: true })
+  createdAt DateTime       @default(now())
+  /// @HideField({ output: false, input: true })
+  updatedAt DateTime       @updatedAt
+  Contract  Contract[]
+}
+
+model Document {
+  id   String       @id @default(uuid())
+  type DocumentType
+
+  Borrower   Borrower? @relation(fields: [borrowerId], references: [id])
+  borrowerId String?
+  Employee   Employee? @relation(fields: [employeeId], references: [id])
+  aval       Aval?     @relation(fields: [avalId], references: [id])
+  avalId     String?
+  Contract   Contract? @relation(fields: [contractId], references: [id])
+  contractId String?
+  employeeId String?
+}
+
+model Customer {
+  id        String   @id @default(uuid())
+  name      String
+  logo      String
+  url       String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// El contrato se firma una vez al Año por un maximo de 60k. Y se hacen disposiciones de dinero Cada X tiempo. Cuando loquidas el prestamo actual
+// El contrato es para darte una linea de credito. Y cada que quieras un prestamo, debes solicitar una disposicion de dinero. Esta disposicion de dinero es  por X semanas
+// Un contrato puede tener N disposiciones de dinero. (Pero no al mismo tiempo)
+// cada prestamo, tiene N pagares (estos se llenan manualmente. Solo se requiere la base del archivo)
+
+model Loantype {
+  id           String   @id @default(uuid())
+  name         String
+  weekDuration Int
+  MaxAmount    Float
+  rate         Float
+  overdueRate  Float
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Aval {
+  id        String     @id @default(uuid())
+  phones    Phone[]
+  email     String     @unique
+  fullName  String
+  firstName String
+  lastName  String
+  documents Document[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+//Prestatario
+model Borrower {
+  /// @HideField({ match: 'BorrowerCreate*Input' })
+  id        String     @id @default(uuid())
+  name      String
+  address   String
+  email     String?
+  phones    Phone[]
+  documents Document[]
+  /// @HideField({ output: false, input: true })
+  createdAt DateTime   @default(now())
+  /// @HideField({ output: false, input: true })
+  updatedAt DateTime   @updatedAt
+  Contract  Contract[]
+}
+
+model Phone {
+  id         String    @id @default(uuid())
+  number     String
+  Borrower   Borrower? @relation(fields: [borrowerId], references: [id])
+  borrowerId String?
+  Employee   Employee? @relation(fields: [employeeId], references: [id])
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  aval       Aval?     @relation(fields: [avalId], references: [id])
+  avalId     String?
+  employeeId String?
+}
+
+model ContractType {
+  /// @HideField({ output: false, input: true })
+  id           String   @id @default(uuid())
+  /// @Validator.MinLength(3)
+  name         String
+  weekDuration Int
+  amount       Float
+  rate         Float
+  /// @HideField({ output: false, input: true })
+  createdAt    DateTime @default(now())
+  /// @HideField({ output: false, input: true })
+  updatedAt    DateTime @updatedAt
+}
+
+model Contract {
+  /// @HideField({ match: 'ContractCreate*Input' })
+  id         String     @id @default(uuid())
+  /// @PropertyType({ name: 'Prisma.Decimal', from: '@prisma/client', namedImport: true })
+  amount     Decimal    @db.Money
+  Borrower   Borrower?  @relation(fields: [borrowerId], references: [id])
+  borrowerId String?
+  Employee   Employee?  @relation(fields: [employeeId], references: [id])
+  Documents  Document[]
+  Loans      Loan[]
+  /// @HideField({ output: false, input: true })
+  createdAt  DateTime   @default(now())
+  /// @HideField({ output: false, input: true })
+  updatedAt  DateTime   @updatedAt
+  employeeId String?
+}
+
+model Loan {
+  /// @HideField({ match: 'LoanCreateInput' })
+  id         String        @id @default(uuid())
+  /// @HideField({ output: false, input: true })
+  status     LoanState
+  payments   LoanPayment[]
+  amount     Decimal       @db.Money
+  /// @HideField({ output: false, input: true })
+  createdAt  DateTime      @default(now())
+  /// @HideField({ output: false, input: true })
+  updatedAt  DateTime      @updatedAt
+  Contract   Contract?     @relation(fields: [contractId], references: [id])
+  contractId String?
+}
+
+model LoanPayment {
+  /// @HideField({ match: 'LoanPaymentCreate*Input' })
+  id         String       @id @default(uuid())
+  numeration Int
+  amount     Decimal      @db.Money
+  /// @HideField({ output: false, input: true })
+  status     PaymentState
+  paidDate   DateTime
+  dueDate    DateTime
+  /// @HideField({ output: false, input: true })
+  createdAt  DateTime     @default(now())
+  /// @HideField({ output: false, input: true })
+  updatedAt  DateTime     @updatedAt
+  Loan       Loan?        @relation(fields: [loanId], references: [id])
+  loanId     String?
+}
+
+enum LoanState {
+  REQUESTED
+  IN_REVIEW
+  APPROVED
+  REJECTED
+  PAID_OUT
+}
+
+enum PaymentState {
+  PENDING
+  DELAYED
+  PAID_OUT
+}
+
+enum EmployeesTypes {
+  COMMERCIAL_HOLDER
+  COMMERCIAL_SUPPORT
+  ADMINISTRATION_HEAD
+  COMMERCIAL_ASSISTENT
+  ADMINISTRATION_SUPPORT
+}
+
+enum DocumentType {
+  DNI
+  NSS
+  RFC
+  SHOP_PHOTO
+  BANC_ACCOUNT
+  ADDRESS_PROFF
+  CREDIT_BUREAU
+  DRIVER_LICENCE
+  JOB_APPLICATION
+  CONTRACT_EVIDENCE
+  LETTER_NO_CRIMINAL_RECORD
+}
+
+enum PrintableFormat {
+  CONTRACT
+  MONEY_REQUEST
+  COLLECTION_LIST
+  RESPONSIVE_LETTER
+  PROMISSORY_NOTES
+  DISPOSAL_ORDER
+}
