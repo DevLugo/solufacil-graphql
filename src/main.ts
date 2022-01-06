@@ -4,24 +4,27 @@ import * as fs from 'fs';
 import { parse } from 'dotenv';
 
 async function bootstrap() {
-  const envFilePath = __dirname + './../../.env';
-  const envFilePath2 = __dirname + './../.env';
-  const existsPath = fs.existsSync(envFilePath);
+  const envFilePath = `${__dirname.replace("\\dist",'')}./../.env`;
+  const keyFilePath = `${__dirname.replace("\\dist",'')}/key.pem`;
+  const secretFilePath = `${__dirname.replace("\\dist",'')}/cert.pem`;
+  
   try {
-    const env = existsPath? parse(fs.readFileSync(envFilePath)):parse(fs.readFileSync(envFilePath2));
+    const env = parse(fs.readFileSync(envFilePath))
     let app;
     if(JSON.parse(env['HTTPS'])){
-      const httpsOptions = {key: fs.readFileSync(__dirname +'\\key.pem', 'utf8'), 
-      cert: fs.readFileSync(__dirname + '\\cert.pem', 'utf8')};
+      const httpsOptions = {
+        key: fs.readFileSync(keyFilePath, 'utf8'), 
+        cert: fs.readFileSync(secretFilePath, 'utf8')
+      };
       app = await NestFactory.create(AppModule,{httpsOptions});
     }else{
       app = await NestFactory.create(AppModule);
     }
     await app.listen(process.env.PORT || 3000);
   } catch (error) {
-    throw new Error("Invalid .env path on boostrap");
+    console.log(error);
+    const app = await NestFactory.create(AppModule);
+    await app.listen(process.env.PORT || 3000);
   }
-  
-  
 }
 bootstrap();

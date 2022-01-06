@@ -13,7 +13,7 @@ export class BorrowerResolver {
     }
 
     @Mutation(() => Borrower)
-    async createContractType(
+    async createBorrower(
         @Args({ name: 'input', type: () => BorrowerCreateInput})
         data: BorrowerCreateInput
     ){

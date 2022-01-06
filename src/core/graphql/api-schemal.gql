@@ -213,13 +213,39 @@ type Query {
 }
 
 type Mutation {
-  createContractType(input: BorrowerCreateInput!): Borrower!
+  createContractType(input: ContractTypeCreateInput!): ContractType!
   signUp(input: UserCreateInput!): User!
   signIn(input: SignInInput!): SignInOutput!
+  createBorrower(input: BorrowerCreateInput!): Borrower!
   createEmployee(input: EmployeeCreateInput!): Employee!
   createContract(input: ContractCreateInput!): Contract!
   createLoan(input: LoanCreateInput!): Loan!
   createLoanPayment(input: LoanPaymentCreateInput!): LoanPayment!
+}
+
+input ContractTypeCreateInput {
+  name: String!
+  weekDuration: Int!
+  amount: Float!
+  rate: Float!
+}
+
+input UserCreateInput {
+  id: String
+  email: EmailAddress!
+  firstName: String!
+  lastName: String!
+  password: String!
+}
+
+"""
+A field whose value conforms to the standard internet email address format as specified in RFC822: https://www.w3.org/Protocols/rfc822/.
+"""
+scalar EmailAddress @specifiedBy(url: "https://www.w3.org/Protocols/rfc822/")
+
+input SignInInput {
+  email: String!
+  password: String!
 }
 
 input BorrowerCreateInput {
@@ -262,11 +288,6 @@ input EmployeeCreateWithoutPhonesInput {
   documents: DocumentCreateNestedManyWithoutEmployeeInput
   Contract: ContractCreateNestedManyWithoutEmployeeInput
 }
-
-"""
-A field whose value conforms to the standard internet email address format as specified in RFC822: https://www.w3.org/Protocols/rfc822/.
-"""
-scalar EmailAddress @specifiedBy(url: "https://www.w3.org/Protocols/rfc822/")
 
 input DocumentCreateNestedManyWithoutEmployeeInput {
   create: [DocumentCreateWithoutEmployeeInput!]
@@ -804,19 +825,6 @@ input PhoneCreateManyBorrowerInput {
   updatedAt: DateTime
   avalId: String
   employeeId: String
-}
-
-input UserCreateInput {
-  id: String
-  email: EmailAddress!
-  firstName: String!
-  lastName: String!
-  password: String!
-}
-
-input SignInInput {
-  email: String!
-  password: String!
 }
 
 input EmployeeCreateInput {
