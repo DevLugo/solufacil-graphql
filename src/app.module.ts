@@ -8,9 +8,21 @@ import { EmployeeModule } from './modules/employee/employee.module';
 import { ContractModule } from './modules/contract/contract.module';
 import { LoanModule } from './modules/loan/loan.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { PhoneModule } from './modules/phone/phone.module';
 
 @Module({
-  imports: [SocialAuthModule, CoreModule, ContractTypeModule, BorrowerModule, EmployeeModule, ContractModule, LoanModule, SocialAuthModule, AuthModule],
+  imports: [
+     SocialAuthModule,
+     CoreModule,
+     ContractTypeModule,
+     BorrowerModule,
+     EmployeeModule,
+     ContractModule,
+     LoanModule,
+     SocialAuthModule,
+     AuthModule,
+     PhoneModule
+    ],
   providers: [PrismaService],
 })
 export class AppModule {}

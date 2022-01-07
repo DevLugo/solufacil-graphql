@@ -221,6 +221,7 @@ type Mutation {
   createContract(input: ContractCreateInput!): Contract!
   createLoan(input: LoanCreateInput!): Loan!
   createLoanPayment(input: LoanPaymentCreateInput!): LoanPayment!
+  createPhone(input: PhoneCreateInput!): Phone!
 }
 
 input ContractTypeCreateInput {
@@ -893,4 +894,14 @@ input LoanCreateWithoutPaymentsInput {
 input LoanCreateOrConnectWithoutPaymentsInput {
   where: LoanWhereUniqueInput!
   create: LoanCreateWithoutPaymentsInput!
+}
+
+input PhoneCreateInput {
+  id: String
+  number: String!
+  createdAt: DateTime
+  updatedAt: DateTime
+  Borrower: BorrowerCreateNestedOneWithoutPhonesInput
+  Employee: EmployeeCreateNestedOneWithoutPhonesInput
+  aval: AvalCreateNestedOneWithoutPhonesInput
 }

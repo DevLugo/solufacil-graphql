@@ -10,7 +10,6 @@ import { EmployeeService } from './employee.service';
 export class EmployeeResolver {
     constructor(private readonly EmployeeService: EmployeeService){}
     
-    //@UseGuards(GqlAuthGuardFb)
     @Query(() => [Employee])
     async employees() {
         return await this.EmployeeService.getMany();
