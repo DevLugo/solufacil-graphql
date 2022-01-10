@@ -62,6 +62,7 @@ model Employee {
   phones    Phone[]
   /// @FieldType({ name: 'Scalars.GraphQLEmailAddress', from: 'graphql-scalars', input: true })
   email     String         @unique
+  /// @HideField({ output: false, input: true })
   fullName  String
   firstName String
   lastName  String
@@ -113,14 +114,19 @@ model Loantype {
 }
 
 model Aval {
+  /// @HideField({ match: 'BorrowerCreate*Input' })
   id        String     @id @default(uuid())
   phones    Phone[]
+  /// @FieldType({ name: 'Scalars.GraphQLEmailAddress', from: 'graphql-scalars', input: true })
   email     String     @unique
+  /// @HideField({ output: false, input: true })
   fullName  String
   firstName String
   lastName  String
   documents Document[]
+  /// @HideField({ output: false, input: true })
   createdAt DateTime   @default(now())
+  /// @HideField({ output: false, input: true })
   updatedAt DateTime   @updatedAt
 }
 
@@ -130,6 +136,7 @@ model Borrower {
   id        String     @id @default(uuid())
   name      String
   address   String
+  /// @FieldType({ name: 'Scalars.GraphQLEmailAddress', from: 'graphql-scalars', input: true })
   email     String?
   phones    Phone[]
   documents Document[]
@@ -141,14 +148,20 @@ model Borrower {
 }
 
 model Phone {
+  /// @HideField({ match: 'PhoneCreate*Input' })
   id         String    @id @default(uuid())
   number     String
   Borrower   Borrower? @relation(fields: [borrowerId], references: [id])
+  /// @HideField({ output: false, input: true })
   borrowerId String?
+  /// @HideField({ output: false, input: true })
   Employee   Employee? @relation(fields: [employeeId], references: [id])
+  /// @HideField({ output: false, input: true })
   createdAt  DateTime  @default(now())
+  /// @HideField({ output: false, input: true })
   updatedAt  DateTime  @updatedAt
   aval       Aval?     @relation(fields: [avalId], references: [id])
+  /// @showField()
   avalId     String?
   employeeId String?
 }

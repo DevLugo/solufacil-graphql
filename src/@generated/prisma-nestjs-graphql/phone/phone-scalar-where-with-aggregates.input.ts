@@ -2,6 +2,7 @@ import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
 import { StringWithAggregatesFilter } from '../prisma/string-with-aggregates-filter.input';
 import { StringNullableWithAggregatesFilter } from '../prisma/string-nullable-with-aggregates-filter.input';
+import { HideField } from '@nestjs/graphql';
 import { DateTimeWithAggregatesFilter } from '../prisma/date-time-with-aggregates-filter.input';
 
 @InputType()
@@ -22,13 +23,13 @@ export class PhoneScalarWhereWithAggregatesInput {
     @Field(() => StringWithAggregatesFilter, {nullable:true})
     number?: StringWithAggregatesFilter;
 
-    @Field(() => StringNullableWithAggregatesFilter, {nullable:true})
+    @HideField()
     borrowerId?: StringNullableWithAggregatesFilter;
 
-    @Field(() => DateTimeWithAggregatesFilter, {nullable:true})
+    @HideField()
     createdAt?: DateTimeWithAggregatesFilter;
 
-    @Field(() => DateTimeWithAggregatesFilter, {nullable:true})
+    @HideField()
     updatedAt?: DateTimeWithAggregatesFilter;
 
     @Field(() => StringNullableWithAggregatesFilter, {nullable:true})

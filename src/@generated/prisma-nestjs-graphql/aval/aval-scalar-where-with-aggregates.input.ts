@@ -1,6 +1,7 @@
 import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
 import { StringWithAggregatesFilter } from '../prisma/string-with-aggregates-filter.input';
+import { HideField } from '@nestjs/graphql';
 import { DateTimeWithAggregatesFilter } from '../prisma/date-time-with-aggregates-filter.input';
 
 @InputType()
@@ -21,7 +22,7 @@ export class AvalScalarWhereWithAggregatesInput {
     @Field(() => StringWithAggregatesFilter, {nullable:true})
     email?: StringWithAggregatesFilter;
 
-    @Field(() => StringWithAggregatesFilter, {nullable:true})
+    @HideField()
     fullName?: StringWithAggregatesFilter;
 
     @Field(() => StringWithAggregatesFilter, {nullable:true})
@@ -30,9 +31,9 @@ export class AvalScalarWhereWithAggregatesInput {
     @Field(() => StringWithAggregatesFilter, {nullable:true})
     lastName?: StringWithAggregatesFilter;
 
-    @Field(() => DateTimeWithAggregatesFilter, {nullable:true})
+    @HideField()
     createdAt?: DateTimeWithAggregatesFilter;
 
-    @Field(() => DateTimeWithAggregatesFilter, {nullable:true})
+    @HideField()
     updatedAt?: DateTimeWithAggregatesFilter;
 }

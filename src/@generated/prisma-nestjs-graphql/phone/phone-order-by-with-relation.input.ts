@@ -2,6 +2,7 @@ import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
 import { SortOrder } from '../prisma/sort-order.enum';
 import { BorrowerOrderByWithRelationInput } from '../borrower/borrower-order-by-with-relation.input';
+import { HideField } from '@nestjs/graphql';
 import { EmployeeOrderByWithRelationInput } from '../employee/employee-order-by-with-relation.input';
 import { AvalOrderByWithRelationInput } from '../aval/aval-order-by-with-relation.input';
 
@@ -17,16 +18,16 @@ export class PhoneOrderByWithRelationInput {
     @Field(() => BorrowerOrderByWithRelationInput, {nullable:true})
     Borrower?: BorrowerOrderByWithRelationInput;
 
-    @Field(() => SortOrder, {nullable:true})
+    @HideField()
     borrowerId?: keyof typeof SortOrder;
 
-    @Field(() => EmployeeOrderByWithRelationInput, {nullable:true})
+    @HideField()
     Employee?: EmployeeOrderByWithRelationInput;
 
-    @Field(() => SortOrder, {nullable:true})
+    @HideField()
     createdAt?: keyof typeof SortOrder;
 
-    @Field(() => SortOrder, {nullable:true})
+    @HideField()
     updatedAt?: keyof typeof SortOrder;
 
     @Field(() => AvalOrderByWithRelationInput, {nullable:true})

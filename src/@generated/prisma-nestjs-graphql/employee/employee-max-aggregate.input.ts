@@ -14,7 +14,7 @@ export class EmployeeMaxAggregateInput {
     @Field(() => Boolean, {nullable:true})
     email?: true;
 
-    @Field(() => Boolean, {nullable:true})
+    @HideField()
     fullName?: true;
 
     @Field(() => Boolean, {nullable:true})

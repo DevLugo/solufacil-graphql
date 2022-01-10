@@ -2,8 +2,8 @@ import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
 import { SortOrder } from '../prisma/sort-order.enum';
 import { PhoneOrderByRelationAggregateInput } from '../phone/phone-order-by-relation-aggregate.input';
-import { DocumentOrderByRelationAggregateInput } from '../document/document-order-by-relation-aggregate.input';
 import { HideField } from '@nestjs/graphql';
+import { DocumentOrderByRelationAggregateInput } from '../document/document-order-by-relation-aggregate.input';
 import { ContractOrderByRelationAggregateInput } from '../contract/contract-order-by-relation-aggregate.input';
 
 @InputType()
@@ -21,7 +21,7 @@ export class EmployeeOrderByWithRelationInput {
     @Field(() => SortOrder, {nullable:true})
     email?: keyof typeof SortOrder;
 
-    @Field(() => SortOrder, {nullable:true})
+    @HideField()
     fullName?: keyof typeof SortOrder;
 
     @Field(() => SortOrder, {nullable:true})

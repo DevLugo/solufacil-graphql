@@ -1,6 +1,7 @@
 import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
 import { SortOrder } from '../prisma/sort-order.enum';
+import { HideField } from '@nestjs/graphql';
 import { AvalCountOrderByAggregateInput } from './aval-count-order-by-aggregate.input';
 import { AvalMaxOrderByAggregateInput } from './aval-max-order-by-aggregate.input';
 import { AvalMinOrderByAggregateInput } from './aval-min-order-by-aggregate.input';
@@ -14,7 +15,7 @@ export class AvalOrderByWithAggregationInput {
     @Field(() => SortOrder, {nullable:true})
     email?: keyof typeof SortOrder;
 
-    @Field(() => SortOrder, {nullable:true})
+    @HideField()
     fullName?: keyof typeof SortOrder;
 
     @Field(() => SortOrder, {nullable:true})
@@ -23,10 +24,10 @@ export class AvalOrderByWithAggregationInput {
     @Field(() => SortOrder, {nullable:true})
     lastName?: keyof typeof SortOrder;
 
-    @Field(() => SortOrder, {nullable:true})
+    @HideField()
     createdAt?: keyof typeof SortOrder;
 
-    @Field(() => SortOrder, {nullable:true})
+    @HideField()
     updatedAt?: keyof typeof SortOrder;
 
     @Field(() => AvalCountOrderByAggregateInput, {nullable:true})

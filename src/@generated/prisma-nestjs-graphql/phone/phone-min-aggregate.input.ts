@@ -1,5 +1,6 @@
 import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
+import { HideField } from '@nestjs/graphql';
 
 @InputType()
 export class PhoneMinAggregateInput {
@@ -10,13 +11,13 @@ export class PhoneMinAggregateInput {
     @Field(() => Boolean, {nullable:true})
     number?: true;
 
-    @Field(() => Boolean, {nullable:true})
+    @HideField()
     borrowerId?: true;
 
-    @Field(() => Boolean, {nullable:true})
+    @HideField()
     createdAt?: true;
 
-    @Field(() => Boolean, {nullable:true})
+    @HideField()
     updatedAt?: true;
 
     @Field(() => Boolean, {nullable:true})

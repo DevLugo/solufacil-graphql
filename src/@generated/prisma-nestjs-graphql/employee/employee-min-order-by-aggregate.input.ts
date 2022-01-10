@@ -15,7 +15,7 @@ export class EmployeeMinOrderByAggregateInput {
     @Field(() => SortOrder, {nullable:true})
     email?: keyof typeof SortOrder;
 
-    @Field(() => SortOrder, {nullable:true})
+    @HideField()
     fullName?: keyof typeof SortOrder;
 
     @Field(() => SortOrder, {nullable:true})

@@ -1,5 +1,6 @@
 import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
+import { HideField } from '@nestjs/graphql';
 import { BorrowerCreateNestedOneWithoutPhonesInput } from '../borrower/borrower-create-nested-one-without-phones.input';
 import { EmployeeCreateNestedOneWithoutPhonesInput } from '../employee/employee-create-nested-one-without-phones.input';
 import { AvalCreateNestedOneWithoutPhonesInput } from '../aval/aval-create-nested-one-without-phones.input';
@@ -7,22 +8,22 @@ import { AvalCreateNestedOneWithoutPhonesInput } from '../aval/aval-create-neste
 @InputType()
 export class PhoneCreateInput {
 
-    @Field(() => String, {nullable:true})
+    @HideField()
     id?: string;
 
     @Field(() => String, {nullable:false})
     number!: string;
 
-    @Field(() => Date, {nullable:true})
+    @HideField()
     createdAt?: Date | string;
 
-    @Field(() => Date, {nullable:true})
+    @HideField()
     updatedAt?: Date | string;
 
     @Field(() => BorrowerCreateNestedOneWithoutPhonesInput, {nullable:true})
     Borrower?: BorrowerCreateNestedOneWithoutPhonesInput;
 
-    @Field(() => EmployeeCreateNestedOneWithoutPhonesInput, {nullable:true})
+    @HideField()
     Employee?: EmployeeCreateNestedOneWithoutPhonesInput;
 
     @Field(() => AvalCreateNestedOneWithoutPhonesInput, {nullable:true})

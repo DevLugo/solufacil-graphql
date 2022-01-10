@@ -1,5 +1,6 @@
 import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
+import { HideField } from '@nestjs/graphql';
 
 @InputType()
 export class PhoneUncheckedCreateWithoutEmployeeInput {
@@ -10,13 +11,13 @@ export class PhoneUncheckedCreateWithoutEmployeeInput {
     @Field(() => String, {nullable:false})
     number!: string;
 
-    @Field(() => String, {nullable:true})
+    @HideField()
     borrowerId?: string;
 
-    @Field(() => Date, {nullable:true})
+    @HideField()
     createdAt?: Date | string;
 
-    @Field(() => Date, {nullable:true})
+    @HideField()
     updatedAt?: Date | string;
 
     @Field(() => String, {nullable:true})

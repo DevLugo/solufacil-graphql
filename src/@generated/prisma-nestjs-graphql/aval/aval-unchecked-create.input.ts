@@ -1,5 +1,7 @@
 import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
+import * as Scalars from 'graphql-scalars';
+import { HideField } from '@nestjs/graphql';
 import { PhoneUncheckedCreateNestedManyWithoutAvalInput } from '../phone/phone-unchecked-create-nested-many-without-aval.input';
 import { DocumentUncheckedCreateNestedManyWithoutAvalInput } from '../document/document-unchecked-create-nested-many-without-aval.input';
 
@@ -9,10 +11,10 @@ export class AvalUncheckedCreateInput {
     @Field(() => String, {nullable:true})
     id?: string;
 
-    @Field(() => String, {nullable:false})
+    @Field(() => Scalars.GraphQLEmailAddress, {nullable:false})
     email!: string;
 
-    @Field(() => String, {nullable:false})
+    @HideField()
     fullName!: string;
 
     @Field(() => String, {nullable:false})
@@ -21,10 +23,10 @@ export class AvalUncheckedCreateInput {
     @Field(() => String, {nullable:false})
     lastName!: string;
 
-    @Field(() => Date, {nullable:true})
+    @HideField()
     createdAt?: Date | string;
 
-    @Field(() => Date, {nullable:true})
+    @HideField()
     updatedAt?: Date | string;
 
     @Field(() => PhoneUncheckedCreateNestedManyWithoutAvalInput, {nullable:true})

@@ -1,5 +1,6 @@
 import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
+import * as Scalars from 'graphql-scalars';
 import { HideField } from '@nestjs/graphql';
 import { PhoneUncheckedCreateNestedManyWithoutBorrowerInput } from '../phone/phone-unchecked-create-nested-many-without-borrower.input';
 import { DocumentUncheckedCreateNestedManyWithoutBorrowerInput } from '../document/document-unchecked-create-nested-many-without-borrower.input';
@@ -17,7 +18,7 @@ export class BorrowerUncheckedCreateInput {
     @Field(() => String, {nullable:false})
     address!: string;
 
-    @Field(() => String, {nullable:true})
+    @Field(() => Scalars.GraphQLEmailAddress, {nullable:true})
     email?: string;
 
     @HideField()

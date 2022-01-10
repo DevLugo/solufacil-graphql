@@ -18,7 +18,7 @@ export class EmployeeCreateWithoutDocumentsInput {
     @Field(() => Scalars.GraphQLEmailAddress, {nullable:false})
     email!: string;
 
-    @Field(() => String, {nullable:false})
+    @HideField()
     fullName!: string;
 
     @Field(() => String, {nullable:false})

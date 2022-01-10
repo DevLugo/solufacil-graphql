@@ -1,6 +1,7 @@
 import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
 import { HideField } from '@nestjs/graphql';
+import * as Scalars from 'graphql-scalars';
 
 @InputType()
 export class BorrowerCreateManyInput {
@@ -14,7 +15,7 @@ export class BorrowerCreateManyInput {
     @Field(() => String, {nullable:false})
     address!: string;
 
-    @Field(() => String, {nullable:true})
+    @Field(() => Scalars.GraphQLEmailAddress, {nullable:true})
     email?: string;
 
     @HideField()

@@ -1,5 +1,6 @@
 import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
+import * as Scalars from 'graphql-scalars';
 
 @InputType()
 export class AvalWhereUniqueInput {
@@ -7,6 +8,6 @@ export class AvalWhereUniqueInput {
     @Field(() => String, {nullable:true})
     id?: string;
 
-    @Field(() => String, {nullable:true})
+    @Field(() => Scalars.GraphQLEmailAddress, {nullable:true})
     email?: string;
 }

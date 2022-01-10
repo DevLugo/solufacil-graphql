@@ -3,9 +3,9 @@ import { InputType } from '@nestjs/graphql';
 import { StringFilter } from '../prisma/string-filter.input';
 import { EnumEmployeesTypesFilter } from '../prisma/enum-employees-types-filter.input';
 import { PhoneListRelationFilter } from '../phone/phone-list-relation-filter.input';
+import { HideField } from '@nestjs/graphql';
 import { DocumentListRelationFilter } from '../document/document-list-relation-filter.input';
 import { DateTimeFilter } from '../prisma/date-time-filter.input';
-import { HideField } from '@nestjs/graphql';
 import { ContractListRelationFilter } from '../contract/contract-list-relation-filter.input';
 
 @InputType()
@@ -32,7 +32,7 @@ export class EmployeeWhereInput {
     @Field(() => StringFilter, {nullable:true})
     email?: StringFilter;
 
-    @Field(() => StringFilter, {nullable:true})
+    @HideField()
     fullName?: StringFilter;
 
     @Field(() => StringFilter, {nullable:true})

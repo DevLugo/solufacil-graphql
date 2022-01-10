@@ -205,11 +205,378 @@ type Borrower {
   _count: BorrowerCount!
 }
 
+type Loantype {
+  id: ID!
+  name: String!
+  weekDuration: Int!
+  MaxAmount: Float!
+  rate: Float!
+  overdueRate: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 type Query {
   contractTypes: [ContractType!]!
   Borrowers: [Borrower!]!
   employees: [Employee!]!
   contracts: [Contract!]!
+  loans(where: LoanWhereInput!): [Loan!]!
+  loanTypes(where: LoantypeWhereInput!): [Loantype!]!
+  loanPayments(where: LoanPaymentWhereInput!): [LoanPayment!]!
+}
+
+input LoanWhereInput {
+  AND: [LoanWhereInput!]
+  OR: [LoanWhereInput!]
+  NOT: [LoanWhereInput!]
+  id: StringFilter
+  payments: LoanPaymentListRelationFilter
+  amount: DecimalFilter
+  Contract: ContractRelationFilter
+  contractId: StringNullableFilter
+}
+
+input StringFilter {
+  equals: String
+  in: [String!]
+  notIn: [String!]
+  lt: String
+  lte: String
+  gt: String
+  gte: String
+  contains: String
+  startsWith: String
+  endsWith: String
+  mode: QueryMode
+  not: NestedStringFilter
+}
+
+enum QueryMode {
+  default
+  insensitive
+}
+
+input NestedStringFilter {
+  equals: String
+  in: [String!]
+  notIn: [String!]
+  lt: String
+  lte: String
+  gt: String
+  gte: String
+  contains: String
+  startsWith: String
+  endsWith: String
+  not: NestedStringFilter
+}
+
+input LoanPaymentListRelationFilter {
+  every: LoanPaymentWhereInput
+  some: LoanPaymentWhereInput
+  none: LoanPaymentWhereInput
+}
+
+input LoanPaymentWhereInput {
+  AND: [LoanPaymentWhereInput!]
+  OR: [LoanPaymentWhereInput!]
+  NOT: [LoanPaymentWhereInput!]
+  id: StringFilter
+  numeration: IntFilter
+  amount: DecimalFilter
+  paidDate: DateTimeFilter
+  dueDate: DateTimeFilter
+  Loan: LoanRelationFilter
+  loanId: StringNullableFilter
+}
+
+input IntFilter {
+  equals: Int
+  in: [Int!]
+  notIn: [Int!]
+  lt: Int
+  lte: Int
+  gt: Int
+  gte: Int
+  not: NestedIntFilter
+}
+
+input NestedIntFilter {
+  equals: Int
+  in: [Int!]
+  notIn: [Int!]
+  lt: Int
+  lte: Int
+  gt: Int
+  gte: Int
+  not: NestedIntFilter
+}
+
+input DecimalFilter {
+  equals: Decimal
+  in: [Decimal!]
+  notIn: [Decimal!]
+  lt: Decimal
+  lte: Decimal
+  gt: Decimal
+  gte: Decimal
+  not: NestedDecimalFilter
+}
+
+input NestedDecimalFilter {
+  equals: Decimal
+  in: [Decimal!]
+  notIn: [Decimal!]
+  lt: Decimal
+  lte: Decimal
+  gt: Decimal
+  gte: Decimal
+  not: NestedDecimalFilter
+}
+
+input DateTimeFilter {
+  equals: DateTime
+  in: [DateTime!]
+  notIn: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  gt: DateTime
+  gte: DateTime
+  not: NestedDateTimeFilter
+}
+
+input NestedDateTimeFilter {
+  equals: DateTime
+  in: [DateTime!]
+  notIn: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  gt: DateTime
+  gte: DateTime
+  not: NestedDateTimeFilter
+}
+
+input LoanRelationFilter {
+  is: LoanWhereInput
+  isNot: LoanWhereInput
+}
+
+input StringNullableFilter {
+  equals: String
+  in: [String!]
+  notIn: [String!]
+  lt: String
+  lte: String
+  gt: String
+  gte: String
+  contains: String
+  startsWith: String
+  endsWith: String
+  mode: QueryMode
+  not: NestedStringNullableFilter
+}
+
+input NestedStringNullableFilter {
+  equals: String
+  in: [String!]
+  notIn: [String!]
+  lt: String
+  lte: String
+  gt: String
+  gte: String
+  contains: String
+  startsWith: String
+  endsWith: String
+  not: NestedStringNullableFilter
+}
+
+input ContractRelationFilter {
+  is: ContractWhereInput
+  isNot: ContractWhereInput
+}
+
+input ContractWhereInput {
+  AND: [ContractWhereInput!]
+  OR: [ContractWhereInput!]
+  NOT: [ContractWhereInput!]
+  id: StringFilter
+  amount: DecimalFilter
+  Borrower: BorrowerRelationFilter
+  borrowerId: StringNullableFilter
+  Employee: EmployeeRelationFilter
+  Documents: DocumentListRelationFilter
+  Loans: LoanListRelationFilter
+  employeeId: StringNullableFilter
+}
+
+input BorrowerRelationFilter {
+  is: BorrowerWhereInput
+  isNot: BorrowerWhereInput
+}
+
+input BorrowerWhereInput {
+  AND: [BorrowerWhereInput!]
+  OR: [BorrowerWhereInput!]
+  NOT: [BorrowerWhereInput!]
+  id: StringFilter
+  name: StringFilter
+  address: StringFilter
+  email: StringNullableFilter
+  phones: PhoneListRelationFilter
+  documents: DocumentListRelationFilter
+  Contract: ContractListRelationFilter
+}
+
+input PhoneListRelationFilter {
+  every: PhoneWhereInput
+  some: PhoneWhereInput
+  none: PhoneWhereInput
+}
+
+input PhoneWhereInput {
+  AND: [PhoneWhereInput!]
+  OR: [PhoneWhereInput!]
+  NOT: [PhoneWhereInput!]
+  id: StringFilter
+  number: StringFilter
+  Borrower: BorrowerRelationFilter
+  aval: AvalRelationFilter
+  avalId: StringNullableFilter
+  employeeId: StringNullableFilter
+}
+
+input AvalRelationFilter {
+  is: AvalWhereInput
+  isNot: AvalWhereInput
+}
+
+input AvalWhereInput {
+  AND: [AvalWhereInput!]
+  OR: [AvalWhereInput!]
+  NOT: [AvalWhereInput!]
+  id: StringFilter
+  phones: PhoneListRelationFilter
+  email: StringFilter
+  firstName: StringFilter
+  lastName: StringFilter
+  documents: DocumentListRelationFilter
+}
+
+input DocumentListRelationFilter {
+  every: DocumentWhereInput
+  some: DocumentWhereInput
+  none: DocumentWhereInput
+}
+
+input DocumentWhereInput {
+  AND: [DocumentWhereInput!]
+  OR: [DocumentWhereInput!]
+  NOT: [DocumentWhereInput!]
+  id: StringFilter
+  type: EnumDocumentTypeFilter
+  Borrower: BorrowerRelationFilter
+  borrowerId: StringNullableFilter
+  Employee: EmployeeRelationFilter
+  aval: AvalRelationFilter
+  avalId: StringNullableFilter
+  Contract: ContractRelationFilter
+  contractId: StringNullableFilter
+  employeeId: StringNullableFilter
+}
+
+input EnumDocumentTypeFilter {
+  equals: DocumentType
+  in: [DocumentType!]
+  notIn: [DocumentType!]
+  not: NestedEnumDocumentTypeFilter
+}
+
+input NestedEnumDocumentTypeFilter {
+  equals: DocumentType
+  in: [DocumentType!]
+  notIn: [DocumentType!]
+  not: NestedEnumDocumentTypeFilter
+}
+
+input EmployeeRelationFilter {
+  is: EmployeeWhereInput
+  isNot: EmployeeWhereInput
+}
+
+input EmployeeWhereInput {
+  AND: [EmployeeWhereInput!]
+  OR: [EmployeeWhereInput!]
+  NOT: [EmployeeWhereInput!]
+  id: StringFilter
+  type: EnumEmployeesTypesFilter
+  phones: PhoneListRelationFilter
+  email: StringFilter
+  firstName: StringFilter
+  lastName: StringFilter
+  documents: DocumentListRelationFilter
+  Contract: ContractListRelationFilter
+}
+
+input EnumEmployeesTypesFilter {
+  equals: EmployeesTypes
+  in: [EmployeesTypes!]
+  notIn: [EmployeesTypes!]
+  not: NestedEnumEmployeesTypesFilter
+}
+
+input NestedEnumEmployeesTypesFilter {
+  equals: EmployeesTypes
+  in: [EmployeesTypes!]
+  notIn: [EmployeesTypes!]
+  not: NestedEnumEmployeesTypesFilter
+}
+
+input ContractListRelationFilter {
+  every: ContractWhereInput
+  some: ContractWhereInput
+  none: ContractWhereInput
+}
+
+input LoanListRelationFilter {
+  every: LoanWhereInput
+  some: LoanWhereInput
+  none: LoanWhereInput
+}
+
+input LoantypeWhereInput {
+  AND: [LoantypeWhereInput!]
+  OR: [LoantypeWhereInput!]
+  NOT: [LoantypeWhereInput!]
+  id: StringFilter
+  name: StringFilter
+  weekDuration: IntFilter
+  MaxAmount: FloatFilter
+  rate: FloatFilter
+  overdueRate: FloatFilter
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
+}
+
+input FloatFilter {
+  equals: Float
+  in: [Float!]
+  notIn: [Float!]
+  lt: Float
+  lte: Float
+  gt: Float
+  gte: Float
+  not: NestedFloatFilter
+}
+
+input NestedFloatFilter {
+  equals: Float
+  in: [Float!]
+  notIn: [Float!]
+  lt: Float
+  lte: Float
+  gt: Float
+  gte: Float
+  not: NestedFloatFilter
 }
 
 type Mutation {
@@ -221,6 +588,7 @@ type Mutation {
   createContract(input: ContractCreateInput!): Contract!
   createLoan(input: LoanCreateInput!): Loan!
   createLoanPayment(input: LoanPaymentCreateInput!): LoanPayment!
+  createLoanType(input: LoantypeCreateInput!): Loantype!
   createPhone(input: PhoneCreateInput!): Phone!
 }
 
@@ -252,7 +620,7 @@ input SignInInput {
 input BorrowerCreateInput {
   name: String!
   address: String!
-  email: String
+  email: EmailAddress
   phones: PhoneCreateNestedManyWithoutBorrowerInput
   documents: DocumentCreateNestedManyWithoutBorrowerInput
   Contract: ContractCreateNestedManyWithoutBorrowerInput
@@ -266,42 +634,36 @@ input PhoneCreateNestedManyWithoutBorrowerInput {
 }
 
 input PhoneCreateWithoutBorrowerInput {
-  id: String
   number: String!
-  createdAt: DateTime
-  updatedAt: DateTime
-  Employee: EmployeeCreateNestedOneWithoutPhonesInput
   aval: AvalCreateNestedOneWithoutPhonesInput
 }
 
-input EmployeeCreateNestedOneWithoutPhonesInput {
-  create: EmployeeCreateWithoutPhonesInput
-  connectOrCreate: EmployeeCreateOrConnectWithoutPhonesInput
-  connect: EmployeeWhereUniqueInput
+input AvalCreateNestedOneWithoutPhonesInput {
+  create: AvalCreateWithoutPhonesInput
+  connectOrCreate: AvalCreateOrConnectWithoutPhonesInput
+  connect: AvalWhereUniqueInput
 }
 
-input EmployeeCreateWithoutPhonesInput {
-  type: EmployeesTypes!
+input AvalCreateWithoutPhonesInput {
+  id: String
   email: EmailAddress!
-  fullName: String!
   firstName: String!
   lastName: String!
-  documents: DocumentCreateNestedManyWithoutEmployeeInput
-  Contract: ContractCreateNestedManyWithoutEmployeeInput
+  documents: DocumentCreateNestedManyWithoutAvalInput
 }
 
-input DocumentCreateNestedManyWithoutEmployeeInput {
-  create: [DocumentCreateWithoutEmployeeInput!]
-  connectOrCreate: [DocumentCreateOrConnectWithoutEmployeeInput!]
-  createMany: DocumentCreateManyEmployeeInputEnvelope
+input DocumentCreateNestedManyWithoutAvalInput {
+  create: [DocumentCreateWithoutAvalInput!]
+  connectOrCreate: [DocumentCreateOrConnectWithoutAvalInput!]
+  createMany: DocumentCreateManyAvalInputEnvelope
   connect: [DocumentWhereUniqueInput!]
 }
 
-input DocumentCreateWithoutEmployeeInput {
+input DocumentCreateWithoutAvalInput {
   id: String
   type: DocumentType!
   Borrower: BorrowerCreateNestedOneWithoutDocumentsInput
-  aval: AvalCreateNestedOneWithoutDocumentsInput
+  Employee: EmployeeCreateNestedOneWithoutDocumentsInput
   Contract: ContractCreateNestedOneWithoutDocumentsInput
 }
 
@@ -314,7 +676,7 @@ input BorrowerCreateNestedOneWithoutDocumentsInput {
 input BorrowerCreateWithoutDocumentsInput {
   name: String!
   address: String!
-  email: String
+  email: EmailAddress
   phones: PhoneCreateNestedManyWithoutBorrowerInput
   Contract: ContractCreateNestedManyWithoutBorrowerInput
 }
@@ -342,7 +704,6 @@ input EmployeeCreateNestedOneWithoutContractInput {
 input EmployeeCreateWithoutContractInput {
   type: EmployeesTypes!
   email: EmailAddress!
-  fullName: String!
   firstName: String!
   lastName: String!
   phones: PhoneCreateNestedManyWithoutEmployeeInput
@@ -357,10 +718,7 @@ input PhoneCreateNestedManyWithoutEmployeeInput {
 }
 
 input PhoneCreateWithoutEmployeeInput {
-  id: String
   number: String!
-  createdAt: DateTime
-  updatedAt: DateTime
   Borrower: BorrowerCreateNestedOneWithoutPhonesInput
   aval: AvalCreateNestedOneWithoutPhonesInput
 }
@@ -374,7 +732,7 @@ input BorrowerCreateNestedOneWithoutPhonesInput {
 input BorrowerCreateWithoutPhonesInput {
   name: String!
   address: String!
-  email: String
+  email: EmailAddress
   documents: DocumentCreateNestedManyWithoutBorrowerInput
   Contract: ContractCreateNestedManyWithoutBorrowerInput
 }
@@ -403,7 +761,6 @@ input EmployeeCreateNestedOneWithoutDocumentsInput {
 input EmployeeCreateWithoutDocumentsInput {
   type: EmployeesTypes!
   email: EmailAddress!
-  fullName: String!
   firstName: String!
   lastName: String!
   phones: PhoneCreateNestedManyWithoutEmployeeInput
@@ -433,7 +790,7 @@ input BorrowerCreateNestedOneWithoutContractInput {
 input BorrowerCreateWithoutContractInput {
   name: String!
   address: String!
-  email: String
+  email: EmailAddress
   phones: PhoneCreateNestedManyWithoutBorrowerInput
   documents: DocumentCreateNestedManyWithoutBorrowerInput
 }
@@ -470,12 +827,9 @@ input AvalCreateNestedOneWithoutDocumentsInput {
 
 input AvalCreateWithoutDocumentsInput {
   id: String
-  email: String!
-  fullName: String!
+  email: EmailAddress!
   firstName: String!
   lastName: String!
-  createdAt: DateTime
-  updatedAt: DateTime
   phones: PhoneCreateNestedManyWithoutAvalInput
 }
 
@@ -487,12 +841,8 @@ input PhoneCreateNestedManyWithoutAvalInput {
 }
 
 input PhoneCreateWithoutAvalInput {
-  id: String
   number: String!
-  createdAt: DateTime
-  updatedAt: DateTime
   Borrower: BorrowerCreateNestedOneWithoutPhonesInput
-  Employee: EmployeeCreateNestedOneWithoutPhonesInput
 }
 
 input PhoneCreateOrConnectWithoutAvalInput {
@@ -510,11 +860,7 @@ input PhoneCreateManyAvalInputEnvelope {
 }
 
 input PhoneCreateManyAvalInput {
-  id: String
   number: String!
-  borrowerId: String
-  createdAt: DateTime
-  updatedAt: DateTime
   employeeId: String
 }
 
@@ -525,7 +871,7 @@ input AvalCreateOrConnectWithoutDocumentsInput {
 
 input AvalWhereUniqueInput {
   id: String
-  email: String
+  email: EmailAddress
 }
 
 input DocumentCreateOrConnectWithoutContractInput {
@@ -687,61 +1033,6 @@ input BorrowerCreateOrConnectWithoutPhonesInput {
   create: BorrowerCreateWithoutPhonesInput!
 }
 
-input AvalCreateNestedOneWithoutPhonesInput {
-  create: AvalCreateWithoutPhonesInput
-  connectOrCreate: AvalCreateOrConnectWithoutPhonesInput
-  connect: AvalWhereUniqueInput
-}
-
-input AvalCreateWithoutPhonesInput {
-  id: String
-  email: String!
-  fullName: String!
-  firstName: String!
-  lastName: String!
-  createdAt: DateTime
-  updatedAt: DateTime
-  documents: DocumentCreateNestedManyWithoutAvalInput
-}
-
-input DocumentCreateNestedManyWithoutAvalInput {
-  create: [DocumentCreateWithoutAvalInput!]
-  connectOrCreate: [DocumentCreateOrConnectWithoutAvalInput!]
-  createMany: DocumentCreateManyAvalInputEnvelope
-  connect: [DocumentWhereUniqueInput!]
-}
-
-input DocumentCreateWithoutAvalInput {
-  id: String
-  type: DocumentType!
-  Borrower: BorrowerCreateNestedOneWithoutDocumentsInput
-  Employee: EmployeeCreateNestedOneWithoutDocumentsInput
-  Contract: ContractCreateNestedOneWithoutDocumentsInput
-}
-
-input DocumentCreateOrConnectWithoutAvalInput {
-  where: DocumentWhereUniqueInput!
-  create: DocumentCreateWithoutAvalInput!
-}
-
-input DocumentCreateManyAvalInputEnvelope {
-  data: [DocumentCreateManyAvalInput!]!
-  skipDuplicates: Boolean
-}
-
-input DocumentCreateManyAvalInput {
-  id: String
-  type: DocumentType!
-  borrowerId: String
-  contractId: String
-  employeeId: String
-}
-
-input AvalCreateOrConnectWithoutPhonesInput {
-  where: AvalWhereUniqueInput!
-  create: AvalCreateWithoutPhonesInput!
-}
-
 input PhoneCreateOrConnectWithoutEmployeeInput {
   where: PhoneWhereUniqueInput!
   create: PhoneCreateWithoutEmployeeInput!
@@ -753,12 +1044,41 @@ input PhoneCreateManyEmployeeInputEnvelope {
 }
 
 input PhoneCreateManyEmployeeInput {
-  id: String
   number: String!
-  borrowerId: String
-  createdAt: DateTime
-  updatedAt: DateTime
   avalId: String
+}
+
+input DocumentCreateNestedManyWithoutEmployeeInput {
+  create: [DocumentCreateWithoutEmployeeInput!]
+  connectOrCreate: [DocumentCreateOrConnectWithoutEmployeeInput!]
+  createMany: DocumentCreateManyEmployeeInputEnvelope
+  connect: [DocumentWhereUniqueInput!]
+}
+
+input DocumentCreateWithoutEmployeeInput {
+  id: String
+  type: DocumentType!
+  Borrower: BorrowerCreateNestedOneWithoutDocumentsInput
+  aval: AvalCreateNestedOneWithoutDocumentsInput
+  Contract: ContractCreateNestedOneWithoutDocumentsInput
+}
+
+input DocumentCreateOrConnectWithoutEmployeeInput {
+  where: DocumentWhereUniqueInput!
+  create: DocumentCreateWithoutEmployeeInput!
+}
+
+input DocumentCreateManyEmployeeInputEnvelope {
+  data: [DocumentCreateManyEmployeeInput!]!
+  skipDuplicates: Boolean
+}
+
+input DocumentCreateManyEmployeeInput {
+  id: String
+  type: DocumentType!
+  borrowerId: String
+  avalId: String
+  contractId: String
 }
 
 input EmployeeCreateOrConnectWithoutContractInput {
@@ -786,27 +1106,27 @@ input BorrowerCreateOrConnectWithoutDocumentsInput {
   create: BorrowerCreateWithoutDocumentsInput!
 }
 
-input DocumentCreateOrConnectWithoutEmployeeInput {
+input DocumentCreateOrConnectWithoutAvalInput {
   where: DocumentWhereUniqueInput!
-  create: DocumentCreateWithoutEmployeeInput!
+  create: DocumentCreateWithoutAvalInput!
 }
 
-input DocumentCreateManyEmployeeInputEnvelope {
-  data: [DocumentCreateManyEmployeeInput!]!
+input DocumentCreateManyAvalInputEnvelope {
+  data: [DocumentCreateManyAvalInput!]!
   skipDuplicates: Boolean
 }
 
-input DocumentCreateManyEmployeeInput {
+input DocumentCreateManyAvalInput {
   id: String
   type: DocumentType!
   borrowerId: String
-  avalId: String
   contractId: String
+  employeeId: String
 }
 
-input EmployeeCreateOrConnectWithoutPhonesInput {
-  where: EmployeeWhereUniqueInput!
-  create: EmployeeCreateWithoutPhonesInput!
+input AvalCreateOrConnectWithoutPhonesInput {
+  where: AvalWhereUniqueInput!
+  create: AvalCreateWithoutPhonesInput!
 }
 
 input PhoneCreateOrConnectWithoutBorrowerInput {
@@ -820,10 +1140,7 @@ input PhoneCreateManyBorrowerInputEnvelope {
 }
 
 input PhoneCreateManyBorrowerInput {
-  id: String
   number: String!
-  createdAt: DateTime
-  updatedAt: DateTime
   avalId: String
   employeeId: String
 }
@@ -831,7 +1148,6 @@ input PhoneCreateManyBorrowerInput {
 input EmployeeCreateInput {
   type: EmployeesTypes!
   email: EmailAddress!
-  fullName: String!
   firstName: String!
   lastName: String!
   phones: PhoneCreateNestedManyWithoutEmployeeInput
@@ -896,12 +1212,19 @@ input LoanCreateOrConnectWithoutPaymentsInput {
   create: LoanCreateWithoutPaymentsInput!
 }
 
-input PhoneCreateInput {
+input LoantypeCreateInput {
   id: String
-  number: String!
+  name: String!
+  weekDuration: Int!
+  MaxAmount: Float!
+  rate: Float!
+  overdueRate: Float!
   createdAt: DateTime
   updatedAt: DateTime
+}
+
+input PhoneCreateInput {
+  number: String!
   Borrower: BorrowerCreateNestedOneWithoutPhonesInput
-  Employee: EmployeeCreateNestedOneWithoutPhonesInput
   aval: AvalCreateNestedOneWithoutPhonesInput
 }

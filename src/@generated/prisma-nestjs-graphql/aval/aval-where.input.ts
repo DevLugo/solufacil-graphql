@@ -2,6 +2,7 @@ import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
 import { StringFilter } from '../prisma/string-filter.input';
 import { PhoneListRelationFilter } from '../phone/phone-list-relation-filter.input';
+import { HideField } from '@nestjs/graphql';
 import { DocumentListRelationFilter } from '../document/document-list-relation-filter.input';
 import { DateTimeFilter } from '../prisma/date-time-filter.input';
 
@@ -26,7 +27,7 @@ export class AvalWhereInput {
     @Field(() => StringFilter, {nullable:true})
     email?: StringFilter;
 
-    @Field(() => StringFilter, {nullable:true})
+    @HideField()
     fullName?: StringFilter;
 
     @Field(() => StringFilter, {nullable:true})
@@ -38,9 +39,9 @@ export class AvalWhereInput {
     @Field(() => DocumentListRelationFilter, {nullable:true})
     documents?: DocumentListRelationFilter;
 
-    @Field(() => DateTimeFilter, {nullable:true})
+    @HideField()
     createdAt?: DateTimeFilter;
 
-    @Field(() => DateTimeFilter, {nullable:true})
+    @HideField()
     updatedAt?: DateTimeFilter;
 }

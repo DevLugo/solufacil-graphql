@@ -1,5 +1,6 @@
 import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
+import { HideField } from '@nestjs/graphql';
 
 @InputType()
 export class AvalMaxAggregateInput {
@@ -10,7 +11,7 @@ export class AvalMaxAggregateInput {
     @Field(() => Boolean, {nullable:true})
     email?: true;
 
-    @Field(() => Boolean, {nullable:true})
+    @HideField()
     fullName?: true;
 
     @Field(() => Boolean, {nullable:true})
@@ -19,9 +20,9 @@ export class AvalMaxAggregateInput {
     @Field(() => Boolean, {nullable:true})
     lastName?: true;
 
-    @Field(() => Boolean, {nullable:true})
+    @HideField()
     createdAt?: true;
 
-    @Field(() => Boolean, {nullable:true})
+    @HideField()
     updatedAt?: true;
 }

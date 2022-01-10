@@ -3,6 +3,7 @@ import { InputType } from '@nestjs/graphql';
 import { StringFilter } from '../prisma/string-filter.input';
 import { BorrowerRelationFilter } from '../borrower/borrower-relation-filter.input';
 import { StringNullableFilter } from '../prisma/string-nullable-filter.input';
+import { HideField } from '@nestjs/graphql';
 import { EmployeeRelationFilter } from '../employee/employee-relation-filter.input';
 import { DateTimeFilter } from '../prisma/date-time-filter.input';
 import { AvalRelationFilter } from '../aval/aval-relation-filter.input';
@@ -28,16 +29,16 @@ export class PhoneWhereInput {
     @Field(() => BorrowerRelationFilter, {nullable:true})
     Borrower?: BorrowerRelationFilter;
 
-    @Field(() => StringNullableFilter, {nullable:true})
+    @HideField()
     borrowerId?: StringNullableFilter;
 
-    @Field(() => EmployeeRelationFilter, {nullable:true})
+    @HideField()
     Employee?: EmployeeRelationFilter;
 
-    @Field(() => DateTimeFilter, {nullable:true})
+    @HideField()
     createdAt?: DateTimeFilter;
 
-    @Field(() => DateTimeFilter, {nullable:true})
+    @HideField()
     updatedAt?: DateTimeFilter;
 
     @Field(() => AvalRelationFilter, {nullable:true})

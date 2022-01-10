@@ -2,6 +2,7 @@ import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
 import { StringFilter } from '../prisma/string-filter.input';
 import { StringNullableFilter } from '../prisma/string-nullable-filter.input';
+import { HideField } from '@nestjs/graphql';
 import { DateTimeFilter } from '../prisma/date-time-filter.input';
 
 @InputType()
@@ -22,13 +23,13 @@ export class PhoneScalarWhereInput {
     @Field(() => StringFilter, {nullable:true})
     number?: StringFilter;
 
-    @Field(() => StringNullableFilter, {nullable:true})
+    @HideField()
     borrowerId?: StringNullableFilter;
 
-    @Field(() => DateTimeFilter, {nullable:true})
+    @HideField()
     createdAt?: DateTimeFilter;
 
-    @Field(() => DateTimeFilter, {nullable:true})
+    @HideField()
     updatedAt?: DateTimeFilter;
 
     @Field(() => StringNullableFilter, {nullable:true})
