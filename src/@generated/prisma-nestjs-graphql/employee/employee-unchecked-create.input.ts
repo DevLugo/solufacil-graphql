@@ -1,11 +1,12 @@
 import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
 import { EmployeesTypes } from '../prisma/employees-types.enum';
-import * as Scalars from 'graphql-scalars';
 import { HideField } from '@nestjs/graphql';
 import { PhoneUncheckedCreateNestedManyWithoutEmployeeInput } from '../phone/phone-unchecked-create-nested-many-without-employee.input';
 import { DocumentUncheckedCreateNestedManyWithoutEmployeeInput } from '../document/document-unchecked-create-nested-many-without-employee.input';
 import { ContractUncheckedCreateNestedManyWithoutEmployeeInput } from '../contract/contract-unchecked-create-nested-many-without-employee.input';
+import { LoanUncheckedCreateNestedManyWithoutEmployeeInput } from '../loan/loan-unchecked-create-nested-many-without-employee.input';
+import { LoanPaymentUncheckedCreateNestedManyWithoutEmployeeInput } from '../loan-payment/loan-payment-unchecked-create-nested-many-without-employee.input';
 
 @InputType()
 export class EmployeeUncheckedCreateInput {
@@ -16,23 +17,14 @@ export class EmployeeUncheckedCreateInput {
     @Field(() => EmployeesTypes, {nullable:false})
     type!: keyof typeof EmployeesTypes;
 
-    @Field(() => Scalars.GraphQLEmailAddress, {nullable:false})
-    email!: string;
-
-    @HideField()
-    fullName!: string;
-
-    @Field(() => String, {nullable:false})
-    firstName!: string;
-
-    @Field(() => String, {nullable:false})
-    lastName!: string;
-
     @HideField()
     createdAt?: Date | string;
 
     @HideField()
     updatedAt?: Date | string;
+
+    @Field(() => String, {nullable:false})
+    userId!: string;
 
     @Field(() => PhoneUncheckedCreateNestedManyWithoutEmployeeInput, {nullable:true})
     phones?: PhoneUncheckedCreateNestedManyWithoutEmployeeInput;
@@ -41,5 +33,11 @@ export class EmployeeUncheckedCreateInput {
     documents?: DocumentUncheckedCreateNestedManyWithoutEmployeeInput;
 
     @Field(() => ContractUncheckedCreateNestedManyWithoutEmployeeInput, {nullable:true})
-    Contract?: ContractUncheckedCreateNestedManyWithoutEmployeeInput;
+    contracts?: ContractUncheckedCreateNestedManyWithoutEmployeeInput;
+
+    @Field(() => LoanUncheckedCreateNestedManyWithoutEmployeeInput, {nullable:true})
+    loan?: LoanUncheckedCreateNestedManyWithoutEmployeeInput;
+
+    @Field(() => LoanPaymentUncheckedCreateNestedManyWithoutEmployeeInput, {nullable:true})
+    loanPayment?: LoanPaymentUncheckedCreateNestedManyWithoutEmployeeInput;
 }

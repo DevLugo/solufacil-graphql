@@ -4,6 +4,7 @@ import { StringFieldUpdateOperationsInput } from '../prisma/string-field-update-
 import { IntFieldUpdateOperationsInput } from '../prisma/int-field-update-operations.input';
 import { FloatFieldUpdateOperationsInput } from '../prisma/float-field-update-operations.input';
 import { DateTimeFieldUpdateOperationsInput } from '../prisma/date-time-field-update-operations.input';
+import { LoanUpdateManyWithoutLoanTypeInput } from '../loan/loan-update-many-without-loan-type.input';
 
 @InputType()
 export class LoantypeUpdateInput {
@@ -18,9 +19,6 @@ export class LoantypeUpdateInput {
     weekDuration?: IntFieldUpdateOperationsInput;
 
     @Field(() => FloatFieldUpdateOperationsInput, {nullable:true})
-    MaxAmount?: FloatFieldUpdateOperationsInput;
-
-    @Field(() => FloatFieldUpdateOperationsInput, {nullable:true})
     rate?: FloatFieldUpdateOperationsInput;
 
     @Field(() => FloatFieldUpdateOperationsInput, {nullable:true})
@@ -31,4 +29,7 @@ export class LoantypeUpdateInput {
 
     @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
     updatedAt?: DateTimeFieldUpdateOperationsInput;
+
+    @Field(() => LoanUpdateManyWithoutLoanTypeInput, {nullable:true})
+    Loan?: LoanUpdateManyWithoutLoanTypeInput;
 }

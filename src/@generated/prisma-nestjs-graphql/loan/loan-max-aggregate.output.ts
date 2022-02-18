@@ -13,7 +13,10 @@ export class LoanMaxAggregate {
     status?: keyof typeof LoanState;
 
     @Field(() => GraphQLDecimal, {nullable:true})
-    amount?: any;
+    weeklyPaymentAmount?: any;
+
+    @Field(() => GraphQLDecimal, {nullable:true})
+    amountToPay?: any;
 
     @Field(() => Date, {nullable:true})
     createdAt?: Date | string;
@@ -23,4 +26,10 @@ export class LoanMaxAggregate {
 
     @Field(() => String, {nullable:true})
     contractId?: string;
+
+    @Field(() => String, {nullable:true})
+    loantypeId?: string;
+
+    @Field(() => String, {nullable:true})
+    employeeId?: string;
 }

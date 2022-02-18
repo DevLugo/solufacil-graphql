@@ -2,10 +2,13 @@ import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
 import { StringFieldUpdateOperationsInput } from '../prisma/string-field-update-operations.input';
 import { EnumEmployeesTypesFieldUpdateOperationsInput } from '../prisma/enum-employees-types-field-update-operations.input';
-import { HideField } from '@nestjs/graphql';
 import { DateTimeFieldUpdateOperationsInput } from '../prisma/date-time-field-update-operations.input';
+import { HideField } from '@nestjs/graphql';
 import { PhoneUpdateManyWithoutEmployeeInput } from '../phone/phone-update-many-without-employee.input';
 import { DocumentUpdateManyWithoutEmployeeInput } from '../document/document-update-many-without-employee.input';
+import { UserUpdateOneRequiredWithoutEmployeeInput } from '../user/user-update-one-required-without-employee.input';
+import { LoanUpdateManyWithoutEmployeeInput } from '../loan/loan-update-many-without-employee.input';
+import { LoanPaymentUpdateManyWithoutEmployeeInput } from '../loan-payment/loan-payment-update-many-without-employee.input';
 
 @InputType()
 export class EmployeeUpdateWithoutContractInput {
@@ -15,18 +18,6 @@ export class EmployeeUpdateWithoutContractInput {
 
     @Field(() => EnumEmployeesTypesFieldUpdateOperationsInput, {nullable:true})
     type?: EnumEmployeesTypesFieldUpdateOperationsInput;
-
-    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
-    email?: StringFieldUpdateOperationsInput;
-
-    @HideField()
-    fullName?: StringFieldUpdateOperationsInput;
-
-    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
-    firstName?: StringFieldUpdateOperationsInput;
-
-    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
-    lastName?: StringFieldUpdateOperationsInput;
 
     @HideField()
     createdAt?: DateTimeFieldUpdateOperationsInput;
@@ -39,4 +30,13 @@ export class EmployeeUpdateWithoutContractInput {
 
     @Field(() => DocumentUpdateManyWithoutEmployeeInput, {nullable:true})
     documents?: DocumentUpdateManyWithoutEmployeeInput;
+
+    @Field(() => UserUpdateOneRequiredWithoutEmployeeInput, {nullable:true})
+    user?: UserUpdateOneRequiredWithoutEmployeeInput;
+
+    @Field(() => LoanUpdateManyWithoutEmployeeInput, {nullable:true})
+    Loan?: LoanUpdateManyWithoutEmployeeInput;
+
+    @Field(() => LoanPaymentUpdateManyWithoutEmployeeInput, {nullable:true})
+    LoanPayment?: LoanPaymentUpdateManyWithoutEmployeeInput;
 }

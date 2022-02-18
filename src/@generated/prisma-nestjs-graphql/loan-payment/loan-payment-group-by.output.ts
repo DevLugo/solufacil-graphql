@@ -1,8 +1,6 @@
 import { Field } from '@nestjs/graphql';
 import { ObjectType } from '@nestjs/graphql';
-import { Int } from '@nestjs/graphql';
 import { GraphQLDecimal } from 'prisma-graphql-type-decimal';
-import { PaymentState } from '../prisma/payment-state.enum';
 import { LoanPaymentCountAggregate } from './loan-payment-count-aggregate.output';
 import { LoanPaymentAvgAggregate } from './loan-payment-avg-aggregate.output';
 import { LoanPaymentSumAggregate } from './loan-payment-sum-aggregate.output';
@@ -15,20 +13,14 @@ export class LoanPaymentGroupBy {
     @Field(() => String, {nullable:false})
     id!: string;
 
-    @Field(() => Int, {nullable:false})
-    numeration!: number;
-
     @Field(() => GraphQLDecimal, {nullable:false})
     amount!: any;
 
-    @Field(() => PaymentState, {nullable:false})
-    status!: keyof typeof PaymentState;
-
     @Field(() => Date, {nullable:false})
-    paidDate!: Date | string;
+    date!: Date | string;
 
-    @Field(() => Date, {nullable:false})
-    dueDate!: Date | string;
+    @Field(() => String, {nullable:true})
+    comments?: string;
 
     @Field(() => Date, {nullable:false})
     createdAt!: Date | string;
@@ -36,8 +28,11 @@ export class LoanPaymentGroupBy {
     @Field(() => Date, {nullable:false})
     updatedAt!: Date | string;
 
-    @Field(() => String, {nullable:true})
-    loanId?: string;
+    @Field(() => String, {nullable:false})
+    loanId!: string;
+
+    @Field(() => String, {nullable:false})
+    employeeId!: string;
 
     @Field(() => LoanPaymentCountAggregate, {nullable:true})
     _count?: LoanPaymentCountAggregate;

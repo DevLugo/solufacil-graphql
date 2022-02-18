@@ -6,7 +6,10 @@ import { HideField } from '@nestjs/graphql';
 import { DecimalFieldUpdateOperationsInput } from '../prisma/decimal-field-update-operations.input';
 import { DateTimeFieldUpdateOperationsInput } from '../prisma/date-time-field-update-operations.input';
 import { LoanPaymentUpdateManyWithoutLoanInput } from '../loan-payment/loan-payment-update-many-without-loan.input';
-import { ContractUpdateOneWithoutLoansInput } from '../contract/contract-update-one-without-loans.input';
+import { LoantypeUpdateOneRequiredWithoutLoanInput } from '../loantype/loantype-update-one-required-without-loan.input';
+import { EmployeeUpdateOneRequiredWithoutLoanInput } from '../employee/employee-update-one-required-without-loan.input';
+import { ContractUpdateOneRequiredWithoutLoansInput } from '../contract/contract-update-one-required-without-loans.input';
+import { PaymentScheduleUpdateManyWithoutLoanInput } from '../payment-schedule/payment-schedule-update-many-without-loan.input';
 
 @InputType()
 export class LoanUpdateInput {
@@ -18,7 +21,10 @@ export class LoanUpdateInput {
     status?: EnumLoanStateFieldUpdateOperationsInput;
 
     @Field(() => DecimalFieldUpdateOperationsInput, {nullable:true})
-    amount?: DecimalFieldUpdateOperationsInput;
+    weeklyPaymentAmount?: DecimalFieldUpdateOperationsInput;
+
+    @Field(() => DecimalFieldUpdateOperationsInput, {nullable:true})
+    amountToPay?: DecimalFieldUpdateOperationsInput;
 
     @HideField()
     createdAt?: DateTimeFieldUpdateOperationsInput;
@@ -26,9 +32,18 @@ export class LoanUpdateInput {
     @HideField()
     updatedAt?: DateTimeFieldUpdateOperationsInput;
 
-    @Field(() => LoanPaymentUpdateManyWithoutLoanInput, {nullable:true})
+    @HideField()
     payments?: LoanPaymentUpdateManyWithoutLoanInput;
 
-    @Field(() => ContractUpdateOneWithoutLoansInput, {nullable:true})
-    Contract?: ContractUpdateOneWithoutLoansInput;
+    @Field(() => LoantypeUpdateOneRequiredWithoutLoanInput, {nullable:true})
+    loanType?: LoantypeUpdateOneRequiredWithoutLoanInput;
+
+    @Field(() => EmployeeUpdateOneRequiredWithoutLoanInput, {nullable:true})
+    employee?: EmployeeUpdateOneRequiredWithoutLoanInput;
+
+    @Field(() => ContractUpdateOneRequiredWithoutLoansInput, {nullable:true})
+    contract?: ContractUpdateOneRequiredWithoutLoansInput;
+
+    @Field(() => PaymentScheduleUpdateManyWithoutLoanInput, {nullable:true})
+    paymentSchedule?: PaymentScheduleUpdateManyWithoutLoanInput;
 }

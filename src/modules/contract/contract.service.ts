@@ -4,13 +4,20 @@ import { PrismaService } from '../../core/prisma/prisma.service';
 
 @Injectable()
 export class ContractService {
-    constructor(private readonly db: PrismaService){}
+    constructor(private readonly _db: PrismaService){}
 
     async create(data: ContractCreateInput) {
-        return await this.db.contract.create({data});
+        return await this._db.contract.create(
+            {data: {
+                amount: data.amount,
+                dueDate: new Date(data.dueDate),
+                signDate: new Date(data.dueDate),
+                employee: data.employee,
+                borrower: data.borrower
+        }});
     }
 
     async getMany() {
-        return await this.db.contract.findMany();
+        return await this._db.contract.findMany();
     }
 }

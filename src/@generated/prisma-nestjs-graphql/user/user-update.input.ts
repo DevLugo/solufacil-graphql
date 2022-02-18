@@ -5,6 +5,7 @@ import { HideField } from '@nestjs/graphql';
 import { NullableDateTimeFieldUpdateOperationsInput } from '../prisma/nullable-date-time-field-update-operations.input';
 import { NullableStringFieldUpdateOperationsInput } from '../prisma/nullable-string-field-update-operations.input';
 import { DateTimeFieldUpdateOperationsInput } from '../prisma/date-time-field-update-operations.input';
+import { EmployeeUpdateManyWithoutUserInput } from '../employee/employee-update-many-without-user.input';
 
 @InputType()
 export class UserUpdateInput {
@@ -38,4 +39,7 @@ export class UserUpdateInput {
 
     @HideField()
     updatedAt?: DateTimeFieldUpdateOperationsInput;
+
+    @Field(() => EmployeeUpdateManyWithoutUserInput, {nullable:true})
+    Employee?: EmployeeUpdateManyWithoutUserInput;
 }

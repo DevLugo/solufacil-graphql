@@ -5,9 +5,11 @@ import { EnumLoanStateFilter } from '../prisma/enum-loan-state-filter.input';
 import { HideField } from '@nestjs/graphql';
 import { LoanPaymentListRelationFilter } from '../loan-payment/loan-payment-list-relation-filter.input';
 import { DecimalFilter } from '../prisma/decimal-filter.input';
+import { LoantypeRelationFilter } from '../loantype/loantype-relation-filter.input';
 import { DateTimeFilter } from '../prisma/date-time-filter.input';
+import { EmployeeRelationFilter } from '../employee/employee-relation-filter.input';
 import { ContractRelationFilter } from '../contract/contract-relation-filter.input';
-import { StringNullableFilter } from '../prisma/string-nullable-filter.input';
+import { PaymentScheduleListRelationFilter } from '../payment-schedule/payment-schedule-list-relation-filter.input';
 
 @InputType()
 export class LoanWhereInput {
@@ -27,21 +29,39 @@ export class LoanWhereInput {
     @HideField()
     status?: EnumLoanStateFilter;
 
-    @Field(() => LoanPaymentListRelationFilter, {nullable:true})
+    @HideField()
     payments?: LoanPaymentListRelationFilter;
 
     @Field(() => DecimalFilter, {nullable:true})
-    amount?: DecimalFilter;
+    weeklyPaymentAmount?: DecimalFilter;
+
+    @Field(() => DecimalFilter, {nullable:true})
+    amountToPay?: DecimalFilter;
+
+    @Field(() => LoantypeRelationFilter, {nullable:true})
+    loanType?: LoantypeRelationFilter;
 
     @HideField()
     createdAt?: DateTimeFilter;
+
+    @Field(() => EmployeeRelationFilter, {nullable:true})
+    employee?: EmployeeRelationFilter;
 
     @HideField()
     updatedAt?: DateTimeFilter;
 
     @Field(() => ContractRelationFilter, {nullable:true})
-    Contract?: ContractRelationFilter;
+    contract?: ContractRelationFilter;
 
-    @Field(() => StringNullableFilter, {nullable:true})
-    contractId?: StringNullableFilter;
+    @Field(() => StringFilter, {nullable:true})
+    contractId?: StringFilter;
+
+    @Field(() => StringFilter, {nullable:true})
+    loantypeId?: StringFilter;
+
+    @Field(() => StringFilter, {nullable:true})
+    employeeId?: StringFilter;
+
+    @Field(() => PaymentScheduleListRelationFilter, {nullable:true})
+    paymentSchedule?: PaymentScheduleListRelationFilter;
 }

@@ -2,8 +2,8 @@ import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
 import { StringWithAggregatesFilter } from '../prisma/string-with-aggregates-filter.input';
 import { EnumEmployeesTypesWithAggregatesFilter } from '../prisma/enum-employees-types-with-aggregates-filter.input';
-import { HideField } from '@nestjs/graphql';
 import { DateTimeWithAggregatesFilter } from '../prisma/date-time-with-aggregates-filter.input';
+import { HideField } from '@nestjs/graphql';
 
 @InputType()
 export class EmployeeScalarWhereWithAggregatesInput {
@@ -23,21 +23,12 @@ export class EmployeeScalarWhereWithAggregatesInput {
     @Field(() => EnumEmployeesTypesWithAggregatesFilter, {nullable:true})
     type?: EnumEmployeesTypesWithAggregatesFilter;
 
-    @Field(() => StringWithAggregatesFilter, {nullable:true})
-    email?: StringWithAggregatesFilter;
-
-    @HideField()
-    fullName?: StringWithAggregatesFilter;
-
-    @Field(() => StringWithAggregatesFilter, {nullable:true})
-    firstName?: StringWithAggregatesFilter;
-
-    @Field(() => StringWithAggregatesFilter, {nullable:true})
-    lastName?: StringWithAggregatesFilter;
-
     @HideField()
     createdAt?: DateTimeWithAggregatesFilter;
 
     @HideField()
     updatedAt?: DateTimeWithAggregatesFilter;
+
+    @Field(() => StringWithAggregatesFilter, {nullable:true})
+    userId?: StringWithAggregatesFilter;
 }

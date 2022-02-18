@@ -13,13 +13,10 @@ export class ContractTypeMaxOrderByAggregateInput {
     name?: keyof typeof SortOrder;
 
     @Field(() => SortOrder, {nullable:true})
-    weekDuration?: keyof typeof SortOrder;
+    monthDuration?: keyof typeof SortOrder;
 
     @Field(() => SortOrder, {nullable:true})
     amount?: keyof typeof SortOrder;
-
-    @Field(() => SortOrder, {nullable:true})
-    rate?: keyof typeof SortOrder;
 
     @HideField()
     createdAt?: keyof typeof SortOrder;

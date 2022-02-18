@@ -4,6 +4,7 @@ import { StringFilter } from '../prisma/string-filter.input';
 import { IntFilter } from '../prisma/int-filter.input';
 import { FloatFilter } from '../prisma/float-filter.input';
 import { DateTimeFilter } from '../prisma/date-time-filter.input';
+import { LoanListRelationFilter } from '../loan/loan-list-relation-filter.input';
 
 @InputType()
 export class LoantypeWhereInput {
@@ -27,9 +28,6 @@ export class LoantypeWhereInput {
     weekDuration?: IntFilter;
 
     @Field(() => FloatFilter, {nullable:true})
-    MaxAmount?: FloatFilter;
-
-    @Field(() => FloatFilter, {nullable:true})
     rate?: FloatFilter;
 
     @Field(() => FloatFilter, {nullable:true})
@@ -40,4 +38,7 @@ export class LoantypeWhereInput {
 
     @Field(() => DateTimeFilter, {nullable:true})
     updatedAt?: DateTimeFilter;
+
+    @Field(() => LoanListRelationFilter, {nullable:true})
+    Loan?: LoanListRelationFilter;
 }

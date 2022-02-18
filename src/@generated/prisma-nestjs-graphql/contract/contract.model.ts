@@ -2,7 +2,6 @@ import { Field } from '@nestjs/graphql';
 import { ObjectType } from '@nestjs/graphql';
 import { ID } from '@nestjs/graphql';
 import { GraphQLDecimal } from 'prisma-graphql-type-decimal';
-import { Prisma } from '@prisma/client';
 import { Borrower } from '../borrower/borrower.model';
 import { Employee } from '../employee/employee.model';
 import { Document } from '../document/document.model';
@@ -16,31 +15,37 @@ export class Contract {
     id!: string;
 
     @Field(() => GraphQLDecimal, {nullable:false})
-    amount!: Prisma.Decimal;
+    amount!: any;
 
-    @Field(() => Borrower, {nullable:true})
-    Borrower?: Borrower | null;
+    @Field(() => Borrower, {nullable:false})
+    borrower?: Borrower;
 
-    @Field(() => String, {nullable:true})
-    borrowerId!: string | null;
+    @Field(() => String, {nullable:false})
+    borrowerId!: string;
 
     @Field(() => Employee, {nullable:true})
-    Employee?: Employee | null;
+    employee?: Employee | null;
 
     @Field(() => [Document], {nullable:true})
-    Documents?: Array<Document>;
+    documents?: Array<Document>;
 
     @Field(() => [Loan], {nullable:true})
-    Loans?: Array<Loan>;
+    loans?: Array<Loan>;
 
     @Field(() => Date, {nullable:false})
     createdAt!: Date;
 
     @Field(() => Date, {nullable:false})
+    dueDate!: Date;
+
+    @Field(() => Date, {nullable:false})
+    signDate!: Date;
+
+    @Field(() => Date, {nullable:false})
     updatedAt!: Date;
 
-    @Field(() => String, {nullable:true})
-    employeeId!: string | null;
+    @Field(() => String, {nullable:false})
+    employeeId!: string;
 
     @Field(() => ContractCount, {nullable:false})
     _count?: ContractCount;

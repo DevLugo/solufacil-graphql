@@ -12,13 +12,10 @@ export class ContractTypeCountAggregate {
     name!: number;
 
     @Field(() => Int, {nullable:false})
-    weekDuration!: number;
+    monthDuration!: number;
 
     @Field(() => Int, {nullable:false})
     amount!: number;
-
-    @Field(() => Int, {nullable:false})
-    rate!: number;
 
     @Field(() => Int, {nullable:false})
     createdAt!: number;

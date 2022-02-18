@@ -5,5 +5,8 @@ import { InputType } from '@nestjs/graphql';
 export class LoanAvgAggregateInput {
 
     @Field(() => Boolean, {nullable:true})
-    amount?: true;
+    weeklyPaymentAmount?: true;
+
+    @Field(() => Boolean, {nullable:true})
+    amountToPay?: true;
 }

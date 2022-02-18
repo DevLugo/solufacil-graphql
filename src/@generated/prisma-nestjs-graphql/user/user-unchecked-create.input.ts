@@ -2,6 +2,7 @@ import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
 import * as Scalars from 'graphql-scalars';
 import { HideField } from '@nestjs/graphql';
+import { EmployeeUncheckedCreateNestedManyWithoutUserInput } from '../employee/employee-unchecked-create-nested-many-without-user.input';
 
 @InputType()
 export class UserUncheckedCreateInput {
@@ -35,4 +36,7 @@ export class UserUncheckedCreateInput {
 
     @HideField()
     updatedAt?: Date | string;
+
+    @Field(() => EmployeeUncheckedCreateNestedManyWithoutUserInput, {nullable:true})
+    Employee?: EmployeeUncheckedCreateNestedManyWithoutUserInput;
 }

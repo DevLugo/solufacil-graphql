@@ -3,6 +3,8 @@ import { ObjectType } from '@nestjs/graphql';
 import { ID } from '@nestjs/graphql';
 import { Int } from '@nestjs/graphql';
 import { Float } from '@nestjs/graphql';
+import { Loan } from '../loan/loan.model';
+import { LoantypeCount } from './loantype-count.output';
 
 @ObjectType()
 export class Loantype {
@@ -17,9 +19,6 @@ export class Loantype {
     weekDuration!: number;
 
     @Field(() => Float, {nullable:false})
-    MaxAmount!: number;
-
-    @Field(() => Float, {nullable:false})
     rate!: number;
 
     @Field(() => Float, {nullable:false})
@@ -30,4 +29,10 @@ export class Loantype {
 
     @Field(() => Date, {nullable:false})
     updatedAt!: Date;
+
+    @Field(() => [Loan], {nullable:true})
+    Loan?: Array<Loan>;
+
+    @Field(() => LoantypeCount, {nullable:false})
+    _count?: LoantypeCount;
 }

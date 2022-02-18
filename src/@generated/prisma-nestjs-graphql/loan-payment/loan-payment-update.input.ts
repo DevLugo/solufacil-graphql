@@ -1,12 +1,13 @@
 import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
 import { StringFieldUpdateOperationsInput } from '../prisma/string-field-update-operations.input';
-import { IntFieldUpdateOperationsInput } from '../prisma/int-field-update-operations.input';
 import { DecimalFieldUpdateOperationsInput } from '../prisma/decimal-field-update-operations.input';
-import { EnumPaymentStateFieldUpdateOperationsInput } from '../prisma/enum-payment-state-field-update-operations.input';
-import { HideField } from '@nestjs/graphql';
 import { DateTimeFieldUpdateOperationsInput } from '../prisma/date-time-field-update-operations.input';
-import { LoanUpdateOneWithoutPaymentsInput } from '../loan/loan-update-one-without-payments.input';
+import { NullableStringFieldUpdateOperationsInput } from '../prisma/nullable-string-field-update-operations.input';
+import { HideField } from '@nestjs/graphql';
+import { PaymentScheduleUpdateManyWithoutLoanPaymentsInput } from '../payment-schedule/payment-schedule-update-many-without-loan-payments.input';
+import { LoanUpdateOneRequiredWithoutPaymentsInput } from '../loan/loan-update-one-required-without-payments.input';
+import { EmployeeUpdateOneRequiredWithoutLoanPaymentInput } from '../employee/employee-update-one-required-without-loan-payment.input';
 
 @InputType()
 export class LoanPaymentUpdateInput {
@@ -14,20 +15,14 @@ export class LoanPaymentUpdateInput {
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     id?: StringFieldUpdateOperationsInput;
 
-    @Field(() => IntFieldUpdateOperationsInput, {nullable:true})
-    numeration?: IntFieldUpdateOperationsInput;
-
     @Field(() => DecimalFieldUpdateOperationsInput, {nullable:true})
     amount?: DecimalFieldUpdateOperationsInput;
 
-    @HideField()
-    status?: EnumPaymentStateFieldUpdateOperationsInput;
-
     @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
-    paidDate?: DateTimeFieldUpdateOperationsInput;
+    date?: DateTimeFieldUpdateOperationsInput;
 
-    @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
-    dueDate?: DateTimeFieldUpdateOperationsInput;
+    @Field(() => NullableStringFieldUpdateOperationsInput, {nullable:true})
+    comments?: NullableStringFieldUpdateOperationsInput;
 
     @HideField()
     createdAt?: DateTimeFieldUpdateOperationsInput;
@@ -35,6 +30,12 @@ export class LoanPaymentUpdateInput {
     @HideField()
     updatedAt?: DateTimeFieldUpdateOperationsInput;
 
-    @Field(() => LoanUpdateOneWithoutPaymentsInput, {nullable:true})
-    Loan?: LoanUpdateOneWithoutPaymentsInput;
+    @Field(() => PaymentScheduleUpdateManyWithoutLoanPaymentsInput, {nullable:true})
+    paymentSchedules?: PaymentScheduleUpdateManyWithoutLoanPaymentsInput;
+
+    @Field(() => LoanUpdateOneRequiredWithoutPaymentsInput, {nullable:true})
+    loan?: LoanUpdateOneRequiredWithoutPaymentsInput;
+
+    @Field(() => EmployeeUpdateOneRequiredWithoutLoanPaymentInput, {nullable:true})
+    employee?: EmployeeUpdateOneRequiredWithoutLoanPaymentInput;
 }

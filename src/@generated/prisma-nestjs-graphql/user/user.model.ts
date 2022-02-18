@@ -1,6 +1,8 @@
 import { Field } from '@nestjs/graphql';
 import { ObjectType } from '@nestjs/graphql';
 import { ID } from '@nestjs/graphql';
+import { Employee } from '../employee/employee.model';
+import { UserCount } from './user-count.output';
 
 @ObjectType()
 export class User {
@@ -34,4 +36,10 @@ export class User {
 
     @Field(() => Date, {nullable:false})
     updatedAt!: Date;
+
+    @Field(() => [Employee], {nullable:true})
+    Employee?: Array<Employee>;
+
+    @Field(() => UserCount, {nullable:false})
+    _count?: UserCount;
 }

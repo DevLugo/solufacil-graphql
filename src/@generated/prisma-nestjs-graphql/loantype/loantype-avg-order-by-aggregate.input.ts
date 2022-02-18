@@ -9,9 +9,6 @@ export class LoantypeAvgOrderByAggregateInput {
     weekDuration?: keyof typeof SortOrder;
 
     @Field(() => SortOrder, {nullable:true})
-    MaxAmount?: keyof typeof SortOrder;
-
-    @Field(() => SortOrder, {nullable:true})
     rate?: keyof typeof SortOrder;
 
     @Field(() => SortOrder, {nullable:true})

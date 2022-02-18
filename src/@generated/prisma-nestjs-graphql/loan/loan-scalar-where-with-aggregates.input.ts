@@ -5,7 +5,6 @@ import { EnumLoanStateWithAggregatesFilter } from '../prisma/enum-loan-state-wit
 import { HideField } from '@nestjs/graphql';
 import { DecimalWithAggregatesFilter } from '../prisma/decimal-with-aggregates-filter.input';
 import { DateTimeWithAggregatesFilter } from '../prisma/date-time-with-aggregates-filter.input';
-import { StringNullableWithAggregatesFilter } from '../prisma/string-nullable-with-aggregates-filter.input';
 
 @InputType()
 export class LoanScalarWhereWithAggregatesInput {
@@ -26,7 +25,10 @@ export class LoanScalarWhereWithAggregatesInput {
     status?: EnumLoanStateWithAggregatesFilter;
 
     @Field(() => DecimalWithAggregatesFilter, {nullable:true})
-    amount?: DecimalWithAggregatesFilter;
+    weeklyPaymentAmount?: DecimalWithAggregatesFilter;
+
+    @Field(() => DecimalWithAggregatesFilter, {nullable:true})
+    amountToPay?: DecimalWithAggregatesFilter;
 
     @HideField()
     createdAt?: DateTimeWithAggregatesFilter;
@@ -34,6 +36,12 @@ export class LoanScalarWhereWithAggregatesInput {
     @HideField()
     updatedAt?: DateTimeWithAggregatesFilter;
 
-    @Field(() => StringNullableWithAggregatesFilter, {nullable:true})
-    contractId?: StringNullableWithAggregatesFilter;
+    @Field(() => StringWithAggregatesFilter, {nullable:true})
+    contractId?: StringWithAggregatesFilter;
+
+    @Field(() => StringWithAggregatesFilter, {nullable:true})
+    loantypeId?: StringWithAggregatesFilter;
+
+    @Field(() => StringWithAggregatesFilter, {nullable:true})
+    employeeId?: StringWithAggregatesFilter;
 }

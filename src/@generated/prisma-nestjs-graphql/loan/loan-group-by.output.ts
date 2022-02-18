@@ -18,7 +18,10 @@ export class LoanGroupBy {
     status!: keyof typeof LoanState;
 
     @Field(() => GraphQLDecimal, {nullable:false})
-    amount!: any;
+    weeklyPaymentAmount!: any;
+
+    @Field(() => GraphQLDecimal, {nullable:false})
+    amountToPay!: any;
 
     @Field(() => Date, {nullable:false})
     createdAt!: Date | string;
@@ -26,8 +29,14 @@ export class LoanGroupBy {
     @Field(() => Date, {nullable:false})
     updatedAt!: Date | string;
 
-    @Field(() => String, {nullable:true})
-    contractId?: string;
+    @Field(() => String, {nullable:false})
+    contractId!: string;
+
+    @Field(() => String, {nullable:false})
+    loantypeId!: string;
+
+    @Field(() => String, {nullable:false})
+    employeeId!: string;
 
     @Field(() => LoanCountAggregate, {nullable:true})
     _count?: LoanCountAggregate;

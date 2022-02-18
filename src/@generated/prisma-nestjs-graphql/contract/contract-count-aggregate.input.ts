@@ -1,6 +1,5 @@
 import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
-import { Prisma } from '@prisma/client';
 import { HideField } from '@nestjs/graphql';
 
 @InputType()
@@ -10,13 +9,19 @@ export class ContractCountAggregateInput {
     id?: true;
 
     @Field(() => Boolean, {nullable:true})
-    amount?: Prisma.Decimal;
+    amount?: true;
 
     @Field(() => Boolean, {nullable:true})
     borrowerId?: true;
 
     @HideField()
     createdAt?: true;
+
+    @Field(() => Boolean, {nullable:true})
+    dueDate?: true;
+
+    @Field(() => Boolean, {nullable:true})
+    signDate?: true;
 
     @HideField()
     updatedAt?: true;

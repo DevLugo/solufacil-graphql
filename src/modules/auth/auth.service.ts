@@ -41,7 +41,7 @@ export class AuthService {
         return newUser;
       }
 
-      async signin(signinDto: SignInInput): Promise<{ token: string }> {
+      async signin(signinDto: SignInInput): Promise<{ token: string, user: User }> {
         const { email, password } = signinDto;
     
         const user: User = await this._db.user.findUnique({
@@ -65,7 +65,10 @@ export class AuthService {
         };
     
         const token = await this._jwtService.sign(payload);
-    
-        return { token };
+        
+        return { 
+          token, 
+          user
+        };
     }
 }

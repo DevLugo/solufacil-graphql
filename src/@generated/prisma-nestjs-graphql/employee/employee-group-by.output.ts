@@ -14,23 +14,14 @@ export class EmployeeGroupBy {
     @Field(() => EmployeesTypes, {nullable:false})
     type!: keyof typeof EmployeesTypes;
 
-    @Field(() => String, {nullable:false})
-    email!: string;
-
-    @Field(() => String, {nullable:false})
-    fullName!: string;
-
-    @Field(() => String, {nullable:false})
-    firstName!: string;
-
-    @Field(() => String, {nullable:false})
-    lastName!: string;
-
     @Field(() => Date, {nullable:false})
     createdAt!: Date | string;
 
     @Field(() => Date, {nullable:false})
     updatedAt!: Date | string;
+
+    @Field(() => String, {nullable:false})
+    userId!: string;
 
     @Field(() => EmployeeCountAggregate, {nullable:true})
     _count?: EmployeeCountAggregate;

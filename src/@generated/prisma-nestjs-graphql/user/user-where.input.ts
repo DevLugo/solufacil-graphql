@@ -5,6 +5,7 @@ import { HideField } from '@nestjs/graphql';
 import { DateTimeNullableFilter } from '../prisma/date-time-nullable-filter.input';
 import { StringNullableFilter } from '../prisma/string-nullable-filter.input';
 import { DateTimeFilter } from '../prisma/date-time-filter.input';
+import { EmployeeListRelationFilter } from '../employee/employee-list-relation-filter.input';
 
 @InputType()
 export class UserWhereInput {
@@ -47,4 +48,7 @@ export class UserWhereInput {
 
     @HideField()
     updatedAt?: DateTimeFilter;
+
+    @Field(() => EmployeeListRelationFilter, {nullable:true})
+    Employee?: EmployeeListRelationFilter;
 }

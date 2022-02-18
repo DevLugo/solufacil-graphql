@@ -1,6 +1,7 @@
 import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
 import { SortOrder } from '../prisma/sort-order.enum';
+import { LoanOrderByRelationAggregateInput } from '../loan/loan-order-by-relation-aggregate.input';
 
 @InputType()
 export class LoantypeOrderByWithRelationInput {
@@ -15,9 +16,6 @@ export class LoantypeOrderByWithRelationInput {
     weekDuration?: keyof typeof SortOrder;
 
     @Field(() => SortOrder, {nullable:true})
-    MaxAmount?: keyof typeof SortOrder;
-
-    @Field(() => SortOrder, {nullable:true})
     rate?: keyof typeof SortOrder;
 
     @Field(() => SortOrder, {nullable:true})
@@ -28,4 +26,7 @@ export class LoantypeOrderByWithRelationInput {
 
     @Field(() => SortOrder, {nullable:true})
     updatedAt?: keyof typeof SortOrder;
+
+    @Field(() => LoanOrderByRelationAggregateInput, {nullable:true})
+    Loan?: LoanOrderByRelationAggregateInput;
 }

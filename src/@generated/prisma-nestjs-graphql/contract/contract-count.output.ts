@@ -6,8 +6,8 @@ import { Int } from '@nestjs/graphql';
 export class ContractCount {
 
     @Field(() => Int, {nullable:false})
-    Documents!: number;
+    documents!: number;
 
     @Field(() => Int, {nullable:false})
-    Loans!: number;
+    loans!: number;
 }

@@ -1,7 +1,7 @@
 import { Field } from '@nestjs/graphql';
 import { ObjectType } from '@nestjs/graphql';
 import { Int } from '@nestjs/graphql';
-import { Float } from '@nestjs/graphql';
+import { GraphQLDecimal } from 'prisma-graphql-type-decimal';
 import { ContractTypeCountAggregate } from './contract-type-count-aggregate.output';
 import { ContractTypeAvgAggregate } from './contract-type-avg-aggregate.output';
 import { ContractTypeSumAggregate } from './contract-type-sum-aggregate.output';
@@ -18,19 +18,16 @@ export class ContractTypeGroupBy {
     name!: string;
 
     @Field(() => Int, {nullable:false})
-    weekDuration!: number;
+    monthDuration!: number;
 
-    @Field(() => Float, {nullable:false})
-    amount!: number;
-
-    @Field(() => Float, {nullable:false})
-    rate!: number;
+    @Field(() => GraphQLDecimal, {nullable:false})
+    amount!: any;
 
     @Field(() => Date, {nullable:false})
     createdAt!: Date | string;
 
-    @Field(() => Date, {nullable:false})
-    updatedAt!: Date | string;
+    @Field(() => Date, {nullable:true})
+    updatedAt?: Date | string;
 
     @Field(() => ContractTypeCountAggregate, {nullable:true})
     _count?: ContractTypeCountAggregate;

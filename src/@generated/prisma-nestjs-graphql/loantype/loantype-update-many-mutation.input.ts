@@ -18,9 +18,6 @@ export class LoantypeUpdateManyMutationInput {
     weekDuration?: IntFieldUpdateOperationsInput;
 
     @Field(() => FloatFieldUpdateOperationsInput, {nullable:true})
-    MaxAmount?: FloatFieldUpdateOperationsInput;
-
-    @Field(() => FloatFieldUpdateOperationsInput, {nullable:true})
     rate?: FloatFieldUpdateOperationsInput;
 
     @Field(() => FloatFieldUpdateOperationsInput, {nullable:true})

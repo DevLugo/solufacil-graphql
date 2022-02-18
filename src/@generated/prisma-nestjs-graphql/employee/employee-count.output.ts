@@ -12,5 +12,11 @@ export class EmployeeCount {
     documents!: number;
 
     @Field(() => Int, {nullable:false})
-    Contract!: number;
+    contracts!: number;
+
+    @Field(() => Int, {nullable:false})
+    loan!: number;
+
+    @Field(() => Int, {nullable:false})
+    loanPayment!: number;
 }

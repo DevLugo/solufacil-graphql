@@ -10,19 +10,13 @@ export class LoanPaymentMinOrderByAggregateInput {
     id?: keyof typeof SortOrder;
 
     @Field(() => SortOrder, {nullable:true})
-    numeration?: keyof typeof SortOrder;
-
-    @Field(() => SortOrder, {nullable:true})
     amount?: keyof typeof SortOrder;
 
-    @HideField()
-    status?: keyof typeof SortOrder;
+    @Field(() => SortOrder, {nullable:true})
+    date?: keyof typeof SortOrder;
 
     @Field(() => SortOrder, {nullable:true})
-    paidDate?: keyof typeof SortOrder;
-
-    @Field(() => SortOrder, {nullable:true})
-    dueDate?: keyof typeof SortOrder;
+    comments?: keyof typeof SortOrder;
 
     @HideField()
     createdAt?: keyof typeof SortOrder;
@@ -32,4 +26,7 @@ export class LoanPaymentMinOrderByAggregateInput {
 
     @Field(() => SortOrder, {nullable:true})
     loanId?: keyof typeof SortOrder;
+
+    @Field(() => SortOrder, {nullable:true})
+    employeeId?: keyof typeof SortOrder;
 }

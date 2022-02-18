@@ -1,6 +1,5 @@
 import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
-import { Prisma } from '@prisma/client';
 import { GraphQLDecimal } from 'prisma-graphql-type-decimal';
 import { HideField } from '@nestjs/graphql';
 import { DocumentUncheckedCreateNestedManyWithoutContractInput } from '../document/document-unchecked-create-nested-many-without-contract.input';
@@ -13,20 +12,26 @@ export class ContractUncheckedCreateWithoutBorrowerInput {
     id?: string;
 
     @Field(() => GraphQLDecimal, {nullable:false})
-    amount!: Prisma.Decimal;
+    amount!: any;
 
     @HideField()
     createdAt?: Date | string;
 
+    @Field(() => Date, {nullable:false})
+    dueDate!: Date | string;
+
+    @Field(() => Date, {nullable:false})
+    signDate!: Date | string;
+
     @HideField()
     updatedAt?: Date | string;
 
-    @Field(() => String, {nullable:true})
-    employeeId?: string;
+    @Field(() => String, {nullable:false})
+    employeeId!: string;
 
     @Field(() => DocumentUncheckedCreateNestedManyWithoutContractInput, {nullable:true})
-    Documents?: DocumentUncheckedCreateNestedManyWithoutContractInput;
+    documents?: DocumentUncheckedCreateNestedManyWithoutContractInput;
 
-    @Field(() => LoanUncheckedCreateNestedManyWithoutContractInput, {nullable:true})
-    Loans?: LoanUncheckedCreateNestedManyWithoutContractInput;
+    @HideField()
+    loans?: LoanUncheckedCreateNestedManyWithoutContractInput;
 }

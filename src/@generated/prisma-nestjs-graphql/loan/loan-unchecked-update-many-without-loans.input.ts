@@ -16,11 +16,20 @@ export class LoanUncheckedUpdateManyWithoutLoansInput {
     status?: EnumLoanStateFieldUpdateOperationsInput;
 
     @Field(() => DecimalFieldUpdateOperationsInput, {nullable:true})
-    amount?: DecimalFieldUpdateOperationsInput;
+    weeklyPaymentAmount?: DecimalFieldUpdateOperationsInput;
+
+    @Field(() => DecimalFieldUpdateOperationsInput, {nullable:true})
+    amountToPay?: DecimalFieldUpdateOperationsInput;
 
     @HideField()
     createdAt?: DateTimeFieldUpdateOperationsInput;
 
     @HideField()
     updatedAt?: DateTimeFieldUpdateOperationsInput;
+
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    loantypeId?: StringFieldUpdateOperationsInput;
+
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    employeeId?: StringFieldUpdateOperationsInput;
 }

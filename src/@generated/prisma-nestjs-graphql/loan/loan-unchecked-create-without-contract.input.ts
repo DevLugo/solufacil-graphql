@@ -4,6 +4,7 @@ import { LoanState } from '../prisma/loan-state.enum';
 import { HideField } from '@nestjs/graphql';
 import { GraphQLDecimal } from 'prisma-graphql-type-decimal';
 import { LoanPaymentUncheckedCreateNestedManyWithoutLoanInput } from '../loan-payment/loan-payment-unchecked-create-nested-many-without-loan.input';
+import { PaymentScheduleUncheckedCreateNestedManyWithoutLoanInput } from '../payment-schedule/payment-schedule-unchecked-create-nested-many-without-loan.input';
 
 @InputType()
 export class LoanUncheckedCreateWithoutContractInput {
@@ -15,7 +16,10 @@ export class LoanUncheckedCreateWithoutContractInput {
     status!: keyof typeof LoanState;
 
     @Field(() => GraphQLDecimal, {nullable:false})
-    amount!: any;
+    weeklyPaymentAmount!: any;
+
+    @Field(() => GraphQLDecimal, {nullable:true})
+    amountToPay?: any;
 
     @HideField()
     createdAt?: Date | string;
@@ -23,6 +27,15 @@ export class LoanUncheckedCreateWithoutContractInput {
     @HideField()
     updatedAt?: Date | string;
 
-    @Field(() => LoanPaymentUncheckedCreateNestedManyWithoutLoanInput, {nullable:true})
+    @Field(() => String, {nullable:false})
+    loantypeId!: string;
+
+    @Field(() => String, {nullable:false})
+    employeeId!: string;
+
+    @HideField()
     payments?: LoanPaymentUncheckedCreateNestedManyWithoutLoanInput;
+
+    @Field(() => PaymentScheduleUncheckedCreateNestedManyWithoutLoanInput, {nullable:true})
+    paymentSchedule?: PaymentScheduleUncheckedCreateNestedManyWithoutLoanInput;
 }

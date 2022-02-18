@@ -9,19 +9,13 @@ export class LoanPaymentCountAggregate {
     id!: number;
 
     @Field(() => Int, {nullable:false})
-    numeration!: number;
-
-    @Field(() => Int, {nullable:false})
     amount!: number;
 
     @Field(() => Int, {nullable:false})
-    status!: number;
+    date!: number;
 
     @Field(() => Int, {nullable:false})
-    paidDate!: number;
-
-    @Field(() => Int, {nullable:false})
-    dueDate!: number;
+    comments!: number;
 
     @Field(() => Int, {nullable:false})
     createdAt!: number;
@@ -31,6 +25,9 @@ export class LoanPaymentCountAggregate {
 
     @Field(() => Int, {nullable:false})
     loanId!: number;
+
+    @Field(() => Int, {nullable:false})
+    employeeId!: number;
 
     @Field(() => Int, {nullable:false})
     _all!: number;

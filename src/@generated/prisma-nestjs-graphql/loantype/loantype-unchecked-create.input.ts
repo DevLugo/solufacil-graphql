@@ -2,6 +2,7 @@ import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
 import { Int } from '@nestjs/graphql';
 import { Float } from '@nestjs/graphql';
+import { LoanUncheckedCreateNestedManyWithoutLoanTypeInput } from '../loan/loan-unchecked-create-nested-many-without-loan-type.input';
 
 @InputType()
 export class LoantypeUncheckedCreateInput {
@@ -16,9 +17,6 @@ export class LoantypeUncheckedCreateInput {
     weekDuration!: number;
 
     @Field(() => Float, {nullable:false})
-    MaxAmount!: number;
-
-    @Field(() => Float, {nullable:false})
     rate!: number;
 
     @Field(() => Float, {nullable:false})
@@ -29,4 +27,7 @@ export class LoantypeUncheckedCreateInput {
 
     @Field(() => Date, {nullable:true})
     updatedAt?: Date | string;
+
+    @Field(() => LoanUncheckedCreateNestedManyWithoutLoanTypeInput, {nullable:true})
+    Loan?: LoanUncheckedCreateNestedManyWithoutLoanTypeInput;
 }

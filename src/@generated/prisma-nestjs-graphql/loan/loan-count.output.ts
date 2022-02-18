@@ -7,4 +7,7 @@ export class LoanCount {
 
     @Field(() => Int, {nullable:false})
     payments!: number;
+
+    @Field(() => Int, {nullable:false})
+    paymentSchedule!: number;
 }

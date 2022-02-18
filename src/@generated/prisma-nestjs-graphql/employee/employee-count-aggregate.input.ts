@@ -11,23 +11,14 @@ export class EmployeeCountAggregateInput {
     @Field(() => Boolean, {nullable:true})
     type?: true;
 
-    @Field(() => Boolean, {nullable:true})
-    email?: true;
-
-    @HideField()
-    fullName?: true;
-
-    @Field(() => Boolean, {nullable:true})
-    firstName?: true;
-
-    @Field(() => Boolean, {nullable:true})
-    lastName?: true;
-
     @HideField()
     createdAt?: true;
 
     @HideField()
     updatedAt?: true;
+
+    @Field(() => Boolean, {nullable:true})
+    userId?: true;
 
     @Field(() => Boolean, {nullable:true})
     _all?: true;

@@ -12,22 +12,13 @@ export class EmployeeCountAggregate {
     type!: number;
 
     @Field(() => Int, {nullable:false})
-    email!: number;
-
-    @Field(() => Int, {nullable:false})
-    fullName!: number;
-
-    @Field(() => Int, {nullable:false})
-    firstName!: number;
-
-    @Field(() => Int, {nullable:false})
-    lastName!: number;
-
-    @Field(() => Int, {nullable:false})
     createdAt!: number;
 
     @Field(() => Int, {nullable:false})
     updatedAt!: number;
+
+    @Field(() => Int, {nullable:false})
+    userId!: number;
 
     @Field(() => Int, {nullable:false})
     _all!: number;

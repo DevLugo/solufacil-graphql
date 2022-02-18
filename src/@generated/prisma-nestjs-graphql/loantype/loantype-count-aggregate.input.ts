@@ -14,9 +14,6 @@ export class LoantypeCountAggregateInput {
     weekDuration?: true;
 
     @Field(() => Boolean, {nullable:true})
-    MaxAmount?: true;
-
-    @Field(() => Boolean, {nullable:true})
     rate?: true;
 
     @Field(() => Boolean, {nullable:true})

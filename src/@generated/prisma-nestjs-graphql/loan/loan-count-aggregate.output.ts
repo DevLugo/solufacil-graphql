@@ -12,7 +12,10 @@ export class LoanCountAggregate {
     status!: number;
 
     @Field(() => Int, {nullable:false})
-    amount!: number;
+    weeklyPaymentAmount!: number;
+
+    @Field(() => Int, {nullable:false})
+    amountToPay!: number;
 
     @Field(() => Int, {nullable:false})
     createdAt!: number;
@@ -22,6 +25,12 @@ export class LoanCountAggregate {
 
     @Field(() => Int, {nullable:false})
     contractId!: number;
+
+    @Field(() => Int, {nullable:false})
+    loantypeId!: number;
+
+    @Field(() => Int, {nullable:false})
+    employeeId!: number;
 
     @Field(() => Int, {nullable:false})
     _all!: number;

@@ -12,13 +12,10 @@ export class ContractTypeCountAggregateInput {
     name?: true;
 
     @Field(() => Boolean, {nullable:true})
-    weekDuration?: true;
+    monthDuration?: true;
 
     @Field(() => Boolean, {nullable:true})
     amount?: true;
-
-    @Field(() => Boolean, {nullable:true})
-    rate?: true;
 
     @HideField()
     createdAt?: true;

@@ -6,10 +6,15 @@ import { PrismaService } from '../../core/prisma/prisma.service';
 export class EmployeeService {
     constructor(private readonly db: PrismaService){}
     async create(data: EmployeeCreateInput) {
-        return await this.db.employee.create({data});
+        return await this.db.employee.create({data, include:{
+            user:true
+        }});
     }
     
     async getMany() {
         return await this.db.employee.findMany();
       }
 }
+
+
+

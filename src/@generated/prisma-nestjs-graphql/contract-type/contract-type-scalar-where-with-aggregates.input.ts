@@ -3,8 +3,9 @@ import { InputType } from '@nestjs/graphql';
 import { StringWithAggregatesFilter } from '../prisma/string-with-aggregates-filter.input';
 import { HideField } from '@nestjs/graphql';
 import { IntWithAggregatesFilter } from '../prisma/int-with-aggregates-filter.input';
-import { FloatWithAggregatesFilter } from '../prisma/float-with-aggregates-filter.input';
+import { DecimalWithAggregatesFilter } from '../prisma/decimal-with-aggregates-filter.input';
 import { DateTimeWithAggregatesFilter } from '../prisma/date-time-with-aggregates-filter.input';
+import { DateTimeNullableWithAggregatesFilter } from '../prisma/date-time-nullable-with-aggregates-filter.input';
 
 @InputType()
 export class ContractTypeScalarWhereWithAggregatesInput {
@@ -25,17 +26,14 @@ export class ContractTypeScalarWhereWithAggregatesInput {
     name?: StringWithAggregatesFilter;
 
     @Field(() => IntWithAggregatesFilter, {nullable:true})
-    weekDuration?: IntWithAggregatesFilter;
+    monthDuration?: IntWithAggregatesFilter;
 
-    @Field(() => FloatWithAggregatesFilter, {nullable:true})
-    amount?: FloatWithAggregatesFilter;
-
-    @Field(() => FloatWithAggregatesFilter, {nullable:true})
-    rate?: FloatWithAggregatesFilter;
+    @Field(() => DecimalWithAggregatesFilter, {nullable:true})
+    amount?: DecimalWithAggregatesFilter;
 
     @HideField()
     createdAt?: DateTimeWithAggregatesFilter;
 
     @HideField()
-    updatedAt?: DateTimeWithAggregatesFilter;
+    updatedAt?: DateTimeNullableWithAggregatesFilter;
 }

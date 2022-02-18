@@ -5,11 +5,8 @@ import { InputType } from '@nestjs/graphql';
 export class ContractTypeSumAggregateInput {
 
     @Field(() => Boolean, {nullable:true})
-    weekDuration?: true;
+    monthDuration?: true;
 
     @Field(() => Boolean, {nullable:true})
     amount?: true;
-
-    @Field(() => Boolean, {nullable:true})
-    rate?: true;
 }

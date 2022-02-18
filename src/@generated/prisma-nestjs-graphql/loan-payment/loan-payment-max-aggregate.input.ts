@@ -9,19 +9,13 @@ export class LoanPaymentMaxAggregateInput {
     id?: true;
 
     @Field(() => Boolean, {nullable:true})
-    numeration?: true;
-
-    @Field(() => Boolean, {nullable:true})
     amount?: true;
 
-    @HideField()
-    status?: true;
+    @Field(() => Boolean, {nullable:true})
+    date?: true;
 
     @Field(() => Boolean, {nullable:true})
-    paidDate?: true;
-
-    @Field(() => Boolean, {nullable:true})
-    dueDate?: true;
+    comments?: true;
 
     @HideField()
     createdAt?: true;
@@ -31,4 +25,7 @@ export class LoanPaymentMaxAggregateInput {
 
     @Field(() => Boolean, {nullable:true})
     loanId?: true;
+
+    @Field(() => Boolean, {nullable:true})
+    employeeId?: true;
 }

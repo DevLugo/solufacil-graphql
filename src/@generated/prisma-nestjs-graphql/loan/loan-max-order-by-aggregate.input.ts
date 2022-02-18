@@ -13,7 +13,10 @@ export class LoanMaxOrderByAggregateInput {
     status?: keyof typeof SortOrder;
 
     @Field(() => SortOrder, {nullable:true})
-    amount?: keyof typeof SortOrder;
+    weeklyPaymentAmount?: keyof typeof SortOrder;
+
+    @Field(() => SortOrder, {nullable:true})
+    amountToPay?: keyof typeof SortOrder;
 
     @HideField()
     createdAt?: keyof typeof SortOrder;
@@ -23,4 +26,10 @@ export class LoanMaxOrderByAggregateInput {
 
     @Field(() => SortOrder, {nullable:true})
     contractId?: keyof typeof SortOrder;
+
+    @Field(() => SortOrder, {nullable:true})
+    loantypeId?: keyof typeof SortOrder;
+
+    @Field(() => SortOrder, {nullable:true})
+    employeeId?: keyof typeof SortOrder;
 }

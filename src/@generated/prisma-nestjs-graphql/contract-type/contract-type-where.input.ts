@@ -3,8 +3,9 @@ import { InputType } from '@nestjs/graphql';
 import { StringFilter } from '../prisma/string-filter.input';
 import { HideField } from '@nestjs/graphql';
 import { IntFilter } from '../prisma/int-filter.input';
-import { FloatFilter } from '../prisma/float-filter.input';
+import { DecimalFilter } from '../prisma/decimal-filter.input';
 import { DateTimeFilter } from '../prisma/date-time-filter.input';
+import { DateTimeNullableFilter } from '../prisma/date-time-nullable-filter.input';
 
 @InputType()
 export class ContractTypeWhereInput {
@@ -25,17 +26,14 @@ export class ContractTypeWhereInput {
     name?: StringFilter;
 
     @Field(() => IntFilter, {nullable:true})
-    weekDuration?: IntFilter;
+    monthDuration?: IntFilter;
 
-    @Field(() => FloatFilter, {nullable:true})
-    amount?: FloatFilter;
-
-    @Field(() => FloatFilter, {nullable:true})
-    rate?: FloatFilter;
+    @Field(() => DecimalFilter, {nullable:true})
+    amount?: DecimalFilter;
 
     @HideField()
     createdAt?: DateTimeFilter;
 
     @HideField()
-    updatedAt?: DateTimeFilter;
+    updatedAt?: DateTimeNullableFilter;
 }

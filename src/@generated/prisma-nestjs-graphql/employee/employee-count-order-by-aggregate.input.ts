@@ -12,21 +12,12 @@ export class EmployeeCountOrderByAggregateInput {
     @Field(() => SortOrder, {nullable:true})
     type?: keyof typeof SortOrder;
 
-    @Field(() => SortOrder, {nullable:true})
-    email?: keyof typeof SortOrder;
-
-    @HideField()
-    fullName?: keyof typeof SortOrder;
-
-    @Field(() => SortOrder, {nullable:true})
-    firstName?: keyof typeof SortOrder;
-
-    @Field(() => SortOrder, {nullable:true})
-    lastName?: keyof typeof SortOrder;
-
     @HideField()
     createdAt?: keyof typeof SortOrder;
 
     @HideField()
     updatedAt?: keyof typeof SortOrder;
+
+    @Field(() => SortOrder, {nullable:true})
+    userId?: keyof typeof SortOrder;
 }

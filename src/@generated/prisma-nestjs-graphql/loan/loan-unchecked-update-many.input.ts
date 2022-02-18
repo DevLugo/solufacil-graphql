@@ -5,7 +5,6 @@ import { EnumLoanStateFieldUpdateOperationsInput } from '../prisma/enum-loan-sta
 import { HideField } from '@nestjs/graphql';
 import { DecimalFieldUpdateOperationsInput } from '../prisma/decimal-field-update-operations.input';
 import { DateTimeFieldUpdateOperationsInput } from '../prisma/date-time-field-update-operations.input';
-import { NullableStringFieldUpdateOperationsInput } from '../prisma/nullable-string-field-update-operations.input';
 
 @InputType()
 export class LoanUncheckedUpdateManyInput {
@@ -17,7 +16,10 @@ export class LoanUncheckedUpdateManyInput {
     status?: EnumLoanStateFieldUpdateOperationsInput;
 
     @Field(() => DecimalFieldUpdateOperationsInput, {nullable:true})
-    amount?: DecimalFieldUpdateOperationsInput;
+    weeklyPaymentAmount?: DecimalFieldUpdateOperationsInput;
+
+    @Field(() => DecimalFieldUpdateOperationsInput, {nullable:true})
+    amountToPay?: DecimalFieldUpdateOperationsInput;
 
     @HideField()
     createdAt?: DateTimeFieldUpdateOperationsInput;
@@ -25,6 +27,12 @@ export class LoanUncheckedUpdateManyInput {
     @HideField()
     updatedAt?: DateTimeFieldUpdateOperationsInput;
 
-    @Field(() => NullableStringFieldUpdateOperationsInput, {nullable:true})
-    contractId?: NullableStringFieldUpdateOperationsInput;
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    contractId?: StringFieldUpdateOperationsInput;
+
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    loantypeId?: StringFieldUpdateOperationsInput;
+
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    employeeId?: StringFieldUpdateOperationsInput;
 }

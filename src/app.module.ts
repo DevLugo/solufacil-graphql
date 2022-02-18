@@ -21,7 +21,7 @@ import { PhoneModule } from './modules/phone/phone.module';
      LoanModule,
      SocialAuthModule,
      AuthModule,
-     PhoneModule
+     PhoneModule,
     ],
   providers: [PrismaService],
 })

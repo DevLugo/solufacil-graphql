@@ -1,30 +1,22 @@
 import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
-import { HideField } from '@nestjs/graphql';
-import { Int } from '@nestjs/graphql';
 import { GraphQLDecimal } from 'prisma-graphql-type-decimal';
-import { PaymentState } from '../prisma/payment-state.enum';
+import { HideField } from '@nestjs/graphql';
 
 @InputType()
 export class LoanPaymentCreateManyInput {
 
-    @HideField()
+    @Field(() => String, {nullable:true})
     id?: string;
-
-    @Field(() => Int, {nullable:false})
-    numeration!: number;
 
     @Field(() => GraphQLDecimal, {nullable:false})
     amount!: any;
 
-    @HideField()
-    status!: keyof typeof PaymentState;
-
     @Field(() => Date, {nullable:false})
-    paidDate!: Date | string;
+    date!: Date | string;
 
-    @Field(() => Date, {nullable:false})
-    dueDate!: Date | string;
+    @Field(() => String, {nullable:true})
+    comments?: string;
 
     @HideField()
     createdAt?: Date | string;
@@ -32,6 +24,9 @@ export class LoanPaymentCreateManyInput {
     @HideField()
     updatedAt?: Date | string;
 
-    @Field(() => String, {nullable:true})
-    loanId?: string;
+    @Field(() => String, {nullable:false})
+    loanId!: string;
+
+    @Field(() => String, {nullable:false})
+    employeeId!: string;
 }

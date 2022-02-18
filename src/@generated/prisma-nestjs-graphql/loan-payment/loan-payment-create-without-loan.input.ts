@@ -1,34 +1,34 @@
 import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
-import { HideField } from '@nestjs/graphql';
-import { Int } from '@nestjs/graphql';
 import { GraphQLDecimal } from 'prisma-graphql-type-decimal';
-import { PaymentState } from '../prisma/payment-state.enum';
+import { HideField } from '@nestjs/graphql';
+import { PaymentScheduleCreateNestedManyWithoutLoanPaymentsInput } from '../payment-schedule/payment-schedule-create-nested-many-without-loan-payments.input';
+import { EmployeeCreateNestedOneWithoutLoanPaymentInput } from '../employee/employee-create-nested-one-without-loan-payment.input';
 
 @InputType()
 export class LoanPaymentCreateWithoutLoanInput {
 
-    @HideField()
+    @Field(() => String, {nullable:true})
     id?: string;
-
-    @Field(() => Int, {nullable:false})
-    numeration!: number;
 
     @Field(() => GraphQLDecimal, {nullable:false})
     amount!: any;
 
-    @HideField()
-    status!: keyof typeof PaymentState;
-
     @Field(() => Date, {nullable:false})
-    paidDate!: Date | string;
+    date!: Date | string;
 
-    @Field(() => Date, {nullable:false})
-    dueDate!: Date | string;
+    @Field(() => String, {nullable:true})
+    comments?: string;
 
     @HideField()
     createdAt?: Date | string;
 
     @HideField()
     updatedAt?: Date | string;
+
+    @Field(() => PaymentScheduleCreateNestedManyWithoutLoanPaymentsInput, {nullable:true})
+    paymentSchedules?: PaymentScheduleCreateNestedManyWithoutLoanPaymentsInput;
+
+    @Field(() => EmployeeCreateNestedOneWithoutLoanPaymentInput, {nullable:false})
+    employee!: EmployeeCreateNestedOneWithoutLoanPaymentInput;
 }

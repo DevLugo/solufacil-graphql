@@ -6,11 +6,8 @@ import { SortOrder } from '../prisma/sort-order.enum';
 export class ContractTypeSumOrderByAggregateInput {
 
     @Field(() => SortOrder, {nullable:true})
-    weekDuration?: keyof typeof SortOrder;
+    monthDuration?: keyof typeof SortOrder;
 
     @Field(() => SortOrder, {nullable:true})
     amount?: keyof typeof SortOrder;
-
-    @Field(() => SortOrder, {nullable:true})
-    rate?: keyof typeof SortOrder;
 }

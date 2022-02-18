@@ -1,15 +1,13 @@
 import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
 import { StringFilter } from '../prisma/string-filter.input';
-import { Prisma } from '@prisma/client';
 import { DecimalFilter } from '../prisma/decimal-filter.input';
 import { BorrowerRelationFilter } from '../borrower/borrower-relation-filter.input';
-import { StringNullableFilter } from '../prisma/string-nullable-filter.input';
 import { EmployeeRelationFilter } from '../employee/employee-relation-filter.input';
 import { DocumentListRelationFilter } from '../document/document-list-relation-filter.input';
 import { LoanListRelationFilter } from '../loan/loan-list-relation-filter.input';
-import { DateTimeFilter } from '../prisma/date-time-filter.input';
 import { HideField } from '@nestjs/graphql';
+import { DateTimeFilter } from '../prisma/date-time-filter.input';
 
 @InputType()
 export class ContractWhereInput {
@@ -27,29 +25,35 @@ export class ContractWhereInput {
     id?: StringFilter;
 
     @Field(() => DecimalFilter, {nullable:true})
-    amount?: Prisma.Decimal;
+    amount?: DecimalFilter;
 
     @Field(() => BorrowerRelationFilter, {nullable:true})
-    Borrower?: BorrowerRelationFilter;
+    borrower?: BorrowerRelationFilter;
 
-    @Field(() => StringNullableFilter, {nullable:true})
-    borrowerId?: StringNullableFilter;
+    @Field(() => StringFilter, {nullable:true})
+    borrowerId?: StringFilter;
 
     @Field(() => EmployeeRelationFilter, {nullable:true})
-    Employee?: EmployeeRelationFilter;
+    employee?: EmployeeRelationFilter;
 
     @Field(() => DocumentListRelationFilter, {nullable:true})
-    Documents?: DocumentListRelationFilter;
+    documents?: DocumentListRelationFilter;
 
-    @Field(() => LoanListRelationFilter, {nullable:true})
-    Loans?: LoanListRelationFilter;
+    @HideField()
+    loans?: LoanListRelationFilter;
 
     @HideField()
     createdAt?: DateTimeFilter;
 
+    @Field(() => DateTimeFilter, {nullable:true})
+    dueDate?: DateTimeFilter;
+
+    @Field(() => DateTimeFilter, {nullable:true})
+    signDate?: DateTimeFilter;
+
     @HideField()
     updatedAt?: DateTimeFilter;
 
-    @Field(() => StringNullableFilter, {nullable:true})
-    employeeId?: StringNullableFilter;
+    @Field(() => StringFilter, {nullable:true})
+    employeeId?: StringFilter;
 }

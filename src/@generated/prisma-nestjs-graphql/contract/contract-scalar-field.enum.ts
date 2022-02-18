@@ -5,6 +5,8 @@ export enum ContractScalarFieldEnum {
     amount = "amount",
     borrowerId = "borrowerId",
     createdAt = "createdAt",
+    dueDate = "dueDate",
+    signDate = "signDate",
     updatedAt = "updatedAt",
     employeeId = "employeeId"
 }

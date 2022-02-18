@@ -11,21 +11,12 @@ export class EmployeeMaxAggregate {
     @Field(() => EmployeesTypes, {nullable:true})
     type?: keyof typeof EmployeesTypes;
 
-    @Field(() => String, {nullable:true})
-    email?: string;
-
-    @Field(() => String, {nullable:true})
-    fullName?: string;
-
-    @Field(() => String, {nullable:true})
-    firstName?: string;
-
-    @Field(() => String, {nullable:true})
-    lastName?: string;
-
     @Field(() => Date, {nullable:true})
     createdAt?: Date | string;
 
     @Field(() => Date, {nullable:true})
     updatedAt?: Date | string;
+
+    @Field(() => String, {nullable:true})
+    userId?: string;
 }

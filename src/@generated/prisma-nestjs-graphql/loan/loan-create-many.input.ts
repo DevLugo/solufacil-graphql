@@ -14,7 +14,10 @@ export class LoanCreateManyInput {
     status!: keyof typeof LoanState;
 
     @Field(() => GraphQLDecimal, {nullable:false})
-    amount!: any;
+    weeklyPaymentAmount!: any;
+
+    @Field(() => GraphQLDecimal, {nullable:true})
+    amountToPay?: any;
 
     @HideField()
     createdAt?: Date | string;
@@ -22,6 +25,12 @@ export class LoanCreateManyInput {
     @HideField()
     updatedAt?: Date | string;
 
-    @Field(() => String, {nullable:true})
-    contractId?: string;
+    @Field(() => String, {nullable:false})
+    contractId!: string;
+
+    @Field(() => String, {nullable:false})
+    loantypeId!: string;
+
+    @Field(() => String, {nullable:false})
+    employeeId!: string;
 }

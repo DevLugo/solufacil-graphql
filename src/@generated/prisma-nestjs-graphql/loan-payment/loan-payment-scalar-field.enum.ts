@@ -2,14 +2,13 @@ import { registerEnumType } from '@nestjs/graphql';
 
 export enum LoanPaymentScalarFieldEnum {
     id = "id",
-    numeration = "numeration",
     amount = "amount",
-    status = "status",
-    paidDate = "paidDate",
-    dueDate = "dueDate",
+    date = "date",
+    comments = "comments",
     createdAt = "createdAt",
     updatedAt = "updatedAt",
-    loanId = "loanId"
+    loanId = "loanId",
+    employeeId = "employeeId"
 }
 
 

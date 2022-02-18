@@ -6,5 +6,8 @@ import { GraphQLDecimal } from 'prisma-graphql-type-decimal';
 export class LoanAvgAggregate {
 
     @Field(() => GraphQLDecimal, {nullable:true})
-    amount?: any;
+    weeklyPaymentAmount?: any;
+
+    @Field(() => GraphQLDecimal, {nullable:true})
+    amountToPay?: any;
 }

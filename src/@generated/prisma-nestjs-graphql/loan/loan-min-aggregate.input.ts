@@ -12,7 +12,10 @@ export class LoanMinAggregateInput {
     status?: true;
 
     @Field(() => Boolean, {nullable:true})
-    amount?: true;
+    weeklyPaymentAmount?: true;
+
+    @Field(() => Boolean, {nullable:true})
+    amountToPay?: true;
 
     @HideField()
     createdAt?: true;
@@ -22,4 +25,10 @@ export class LoanMinAggregateInput {
 
     @Field(() => Boolean, {nullable:true})
     contractId?: true;
+
+    @Field(() => Boolean, {nullable:true})
+    loantypeId?: true;
+
+    @Field(() => Boolean, {nullable:true})
+    employeeId?: true;
 }

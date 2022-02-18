@@ -21,9 +21,6 @@ export class LoantypeGroupBy {
     weekDuration!: number;
 
     @Field(() => Float, {nullable:false})
-    MaxAmount!: number;
-
-    @Field(() => Float, {nullable:false})
     rate!: number;
 
     @Field(() => Float, {nullable:false})

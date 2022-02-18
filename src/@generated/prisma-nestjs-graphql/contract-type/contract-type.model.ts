@@ -2,7 +2,7 @@ import { Field } from '@nestjs/graphql';
 import { ObjectType } from '@nestjs/graphql';
 import { ID } from '@nestjs/graphql';
 import { Int } from '@nestjs/graphql';
-import { Float } from '@nestjs/graphql';
+import { GraphQLDecimal } from 'prisma-graphql-type-decimal';
 
 @ObjectType()
 export class ContractType {
@@ -14,17 +14,14 @@ export class ContractType {
     name!: string;
 
     @Field(() => Int, {nullable:false})
-    weekDuration!: number;
+    monthDuration!: number;
 
-    @Field(() => Float, {nullable:false})
-    amount!: number;
-
-    @Field(() => Float, {nullable:false})
-    rate!: number;
+    @Field(() => GraphQLDecimal, {nullable:false})
+    amount!: any;
 
     @Field(() => Date, {nullable:false})
     createdAt!: Date;
 
-    @Field(() => Date, {nullable:false})
-    updatedAt!: Date;
+    @Field(() => Date, {nullable:true})
+    updatedAt!: Date | null;
 }

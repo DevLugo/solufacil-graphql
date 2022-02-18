@@ -16,7 +16,10 @@ export class LoanUpdateManyMutationInput {
     status?: EnumLoanStateFieldUpdateOperationsInput;
 
     @Field(() => DecimalFieldUpdateOperationsInput, {nullable:true})
-    amount?: DecimalFieldUpdateOperationsInput;
+    weeklyPaymentAmount?: DecimalFieldUpdateOperationsInput;
+
+    @Field(() => DecimalFieldUpdateOperationsInput, {nullable:true})
+    amountToPay?: DecimalFieldUpdateOperationsInput;
 
     @HideField()
     createdAt?: DateTimeFieldUpdateOperationsInput;

@@ -5,7 +5,6 @@ import { EnumLoanStateFilter } from '../prisma/enum-loan-state-filter.input';
 import { HideField } from '@nestjs/graphql';
 import { DecimalFilter } from '../prisma/decimal-filter.input';
 import { DateTimeFilter } from '../prisma/date-time-filter.input';
-import { StringNullableFilter } from '../prisma/string-nullable-filter.input';
 
 @InputType()
 export class LoanScalarWhereInput {
@@ -26,7 +25,10 @@ export class LoanScalarWhereInput {
     status?: EnumLoanStateFilter;
 
     @Field(() => DecimalFilter, {nullable:true})
-    amount?: DecimalFilter;
+    weeklyPaymentAmount?: DecimalFilter;
+
+    @Field(() => DecimalFilter, {nullable:true})
+    amountToPay?: DecimalFilter;
 
     @HideField()
     createdAt?: DateTimeFilter;
@@ -34,6 +36,12 @@ export class LoanScalarWhereInput {
     @HideField()
     updatedAt?: DateTimeFilter;
 
-    @Field(() => StringNullableFilter, {nullable:true})
-    contractId?: StringNullableFilter;
+    @Field(() => StringFilter, {nullable:true})
+    contractId?: StringFilter;
+
+    @Field(() => StringFilter, {nullable:true})
+    loantypeId?: StringFilter;
+
+    @Field(() => StringFilter, {nullable:true})
+    employeeId?: StringFilter;
 }

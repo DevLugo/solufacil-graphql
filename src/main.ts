@@ -11,7 +11,7 @@ async function bootstrap() {
   try {
     const env = parse(fs.readFileSync(envFilePath))
     let app;
-    if(JSON.parse(env['HTTPS'])){
+    if(env['HTTPS']){
       const httpsOptions = {
         key: fs.readFileSync(keyFilePath, 'utf8'), 
         cert: fs.readFileSync(secretFilePath, 'utf8')
@@ -20,11 +20,11 @@ async function bootstrap() {
     }else{
       app = await NestFactory.create(AppModule);
     }
-    await app.listen(process.env.PORT || 3000);
+    await app.listen(process.env.PORT || 4000);
   } catch (error) {
     console.log(error);
     const app = await NestFactory.create(AppModule);
-    await app.listen(process.env.PORT || 3000);
+    await app.listen(4000);
   }
 }
 bootstrap();

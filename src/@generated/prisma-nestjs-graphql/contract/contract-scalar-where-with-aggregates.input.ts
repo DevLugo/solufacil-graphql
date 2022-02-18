@@ -1,9 +1,7 @@
 import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
 import { StringWithAggregatesFilter } from '../prisma/string-with-aggregates-filter.input';
-import { Prisma } from '@prisma/client';
 import { DecimalWithAggregatesFilter } from '../prisma/decimal-with-aggregates-filter.input';
-import { StringNullableWithAggregatesFilter } from '../prisma/string-nullable-with-aggregates-filter.input';
 import { DateTimeWithAggregatesFilter } from '../prisma/date-time-with-aggregates-filter.input';
 import { HideField } from '@nestjs/graphql';
 
@@ -23,17 +21,23 @@ export class ContractScalarWhereWithAggregatesInput {
     id?: StringWithAggregatesFilter;
 
     @Field(() => DecimalWithAggregatesFilter, {nullable:true})
-    amount?: Prisma.Decimal;
+    amount?: DecimalWithAggregatesFilter;
 
-    @Field(() => StringNullableWithAggregatesFilter, {nullable:true})
-    borrowerId?: StringNullableWithAggregatesFilter;
+    @Field(() => StringWithAggregatesFilter, {nullable:true})
+    borrowerId?: StringWithAggregatesFilter;
 
     @HideField()
     createdAt?: DateTimeWithAggregatesFilter;
 
+    @Field(() => DateTimeWithAggregatesFilter, {nullable:true})
+    dueDate?: DateTimeWithAggregatesFilter;
+
+    @Field(() => DateTimeWithAggregatesFilter, {nullable:true})
+    signDate?: DateTimeWithAggregatesFilter;
+
     @HideField()
     updatedAt?: DateTimeWithAggregatesFilter;
 
-    @Field(() => StringNullableWithAggregatesFilter, {nullable:true})
-    employeeId?: StringNullableWithAggregatesFilter;
+    @Field(() => StringWithAggregatesFilter, {nullable:true})
+    employeeId?: StringWithAggregatesFilter;
 }

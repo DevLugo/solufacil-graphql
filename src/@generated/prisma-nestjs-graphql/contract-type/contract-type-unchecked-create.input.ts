@@ -3,7 +3,7 @@ import { InputType } from '@nestjs/graphql';
 import { HideField } from '@nestjs/graphql';
 import * as Validator from 'class-validator';
 import { Int } from '@nestjs/graphql';
-import { Float } from '@nestjs/graphql';
+import { GraphQLDecimal } from 'prisma-graphql-type-decimal';
 
 @InputType()
 export class ContractTypeUncheckedCreateInput {
@@ -16,13 +16,10 @@ export class ContractTypeUncheckedCreateInput {
     name!: string;
 
     @Field(() => Int, {nullable:false})
-    weekDuration!: number;
+    monthDuration!: number;
 
-    @Field(() => Float, {nullable:false})
-    amount!: number;
-
-    @Field(() => Float, {nullable:false})
-    rate!: number;
+    @Field(() => GraphQLDecimal, {nullable:false})
+    amount!: any;
 
     @HideField()
     createdAt?: Date | string;

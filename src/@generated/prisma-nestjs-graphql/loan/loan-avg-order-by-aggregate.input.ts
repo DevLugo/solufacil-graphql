@@ -6,5 +6,8 @@ import { SortOrder } from '../prisma/sort-order.enum';
 export class LoanAvgOrderByAggregateInput {
 
     @Field(() => SortOrder, {nullable:true})
-    amount?: keyof typeof SortOrder;
+    weeklyPaymentAmount?: keyof typeof SortOrder;
+
+    @Field(() => SortOrder, {nullable:true})
+    amountToPay?: keyof typeof SortOrder;
 }

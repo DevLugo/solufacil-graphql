@@ -1,7 +1,6 @@
 import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
 import { SortOrder } from '../prisma/sort-order.enum';
-import { Prisma } from '@prisma/client';
 import { HideField } from '@nestjs/graphql';
 import { ContractCountOrderByAggregateInput } from './contract-count-order-by-aggregate.input';
 import { ContractAvgOrderByAggregateInput } from './contract-avg-order-by-aggregate.input';
@@ -16,13 +15,19 @@ export class ContractOrderByWithAggregationInput {
     id?: keyof typeof SortOrder;
 
     @Field(() => SortOrder, {nullable:true})
-    amount?: Prisma.Decimal;
+    amount?: keyof typeof SortOrder;
 
     @Field(() => SortOrder, {nullable:true})
     borrowerId?: keyof typeof SortOrder;
 
     @HideField()
     createdAt?: keyof typeof SortOrder;
+
+    @Field(() => SortOrder, {nullable:true})
+    dueDate?: keyof typeof SortOrder;
+
+    @Field(() => SortOrder, {nullable:true})
+    signDate?: keyof typeof SortOrder;
 
     @HideField()
     updatedAt?: keyof typeof SortOrder;

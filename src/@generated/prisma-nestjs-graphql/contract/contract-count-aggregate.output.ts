@@ -1,7 +1,6 @@
 import { Field } from '@nestjs/graphql';
 import { ObjectType } from '@nestjs/graphql';
 import { Int } from '@nestjs/graphql';
-import { Prisma } from '@prisma/client';
 
 @ObjectType()
 export class ContractCountAggregate {
@@ -10,13 +9,19 @@ export class ContractCountAggregate {
     id!: number;
 
     @Field(() => Int, {nullable:false})
-    amount!: Prisma.Decimal;
+    amount!: number;
 
     @Field(() => Int, {nullable:false})
     borrowerId!: number;
 
     @Field(() => Int, {nullable:false})
     createdAt!: number;
+
+    @Field(() => Int, {nullable:false})
+    dueDate!: number;
+
+    @Field(() => Int, {nullable:false})
+    signDate!: number;
 
     @Field(() => Int, {nullable:false})
     updatedAt!: number;

@@ -15,9 +15,6 @@ export class LoantypeCountAggregate {
     weekDuration!: number;
 
     @Field(() => Int, {nullable:false})
-    MaxAmount!: number;
-
-    @Field(() => Int, {nullable:false})
     rate!: number;
 
     @Field(() => Int, {nullable:false})

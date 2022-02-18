@@ -16,9 +16,6 @@ export class LoantypeMaxAggregate {
     weekDuration?: number;
 
     @Field(() => Float, {nullable:true})
-    MaxAmount?: number;
-
-    @Field(() => Float, {nullable:true})
     rate?: number;
 
     @Field(() => Float, {nullable:true})

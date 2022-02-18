@@ -27,9 +27,6 @@ export class LoantypeScalarWhereWithAggregatesInput {
     weekDuration?: IntWithAggregatesFilter;
 
     @Field(() => FloatWithAggregatesFilter, {nullable:true})
-    MaxAmount?: FloatWithAggregatesFilter;
-
-    @Field(() => FloatWithAggregatesFilter, {nullable:true})
     rate?: FloatWithAggregatesFilter;
 
     @Field(() => FloatWithAggregatesFilter, {nullable:true})

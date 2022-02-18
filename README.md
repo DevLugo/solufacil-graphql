@@ -26,6 +26,20 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
+
+### Solar System Exploration, 1950s – 1960s
+
+- [x] JWT Login
+- [x] Create emplyees account
+- [] Create clients account
+- [] notification to clients on each payment
+- [ ] get information from INE
+- [ ] upload documentation from camera
+- [ ] create paments date in base of the type of loan
+- [ ] (Mobile application)
+- [ ] option to delay a payment (clients with sickness)
+
+
 ## Installation
 
 ```bash

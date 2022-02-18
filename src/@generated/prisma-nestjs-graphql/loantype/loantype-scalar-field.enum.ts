@@ -4,7 +4,6 @@ export enum LoantypeScalarFieldEnum {
     id = "id",
     name = "name",
     weekDuration = "weekDuration",
-    MaxAmount = "MaxAmount",
     rate = "rate",
     overdueRate = "overdueRate",
     createdAt = "createdAt",
