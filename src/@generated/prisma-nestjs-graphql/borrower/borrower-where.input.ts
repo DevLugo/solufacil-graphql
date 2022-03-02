@@ -7,7 +7,7 @@ import { DocumentListRelationFilter } from '../document/document-list-relation-f
 import { DateTimeFilter } from '../prisma/date-time-filter.input';
 import { HideField } from '@nestjs/graphql';
 import { ContractListRelationFilter } from '../contract/contract-list-relation-filter.input';
-
+import { LocalListRelationFilter } from '../local/local-list-relation-filter.input';
 @InputType()
 export class BorrowerWhereInput {
 
@@ -46,4 +46,7 @@ export class BorrowerWhereInput {
 
     @Field(() => ContractListRelationFilter, {nullable:true})
     Contract?: ContractListRelationFilter;
+
+    @Field(() => LocalListRelationFilter, {nullable:true})
+    Local?: LocalListRelationFilter;
 }

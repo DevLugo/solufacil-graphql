@@ -83,7 +83,7 @@ export class LoanResolver {
         return await this.LoanTypeService.create(data);
     }
 
-    @ResolveField('totalPaidAmount')
+    @ResolveField('totalPaidAmount', returns => Number)
     async totalPaidAmount(@Parent() root: Loan) {
         const { id } = root;
         return await this.LoanPaymentService.getTotalPaidAmount(id);

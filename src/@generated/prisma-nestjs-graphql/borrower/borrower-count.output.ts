@@ -13,4 +13,7 @@ export class BorrowerCount {
 
     @Field(() => Int, {nullable:false})
     Contract!: number;
+
+    @Field(() => Int, {nullable:false})
+    Local!: number;
 }

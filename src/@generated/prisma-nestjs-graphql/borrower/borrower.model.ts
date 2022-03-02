@@ -4,6 +4,7 @@ import { ID } from '@nestjs/graphql';
 import { Phone } from '../phone/phone.model';
 import { Document } from '../document/document.model';
 import { Contract } from '../contract/contract.model';
+import { Local } from '../local/local.model';
 import { BorrowerCount } from './borrower-count.output';
 
 @ObjectType()
@@ -35,6 +36,9 @@ export class Borrower {
 
     @Field(() => [Contract], {nullable:true})
     Contract?: Array<Contract>;
+
+    @Field(() => [Local], {nullable:true})
+    Local?: Array<Local>;
 
     @Field(() => BorrowerCount, {nullable:false})
     _count?: BorrowerCount;

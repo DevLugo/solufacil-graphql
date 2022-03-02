@@ -7,6 +7,7 @@ import { HideField } from '@nestjs/graphql';
 import { PhoneUncheckedUpdateManyWithoutBorrowerInput } from '../phone/phone-unchecked-update-many-without-borrower.input';
 import { DocumentUncheckedUpdateManyWithoutBorrowerInput } from '../document/document-unchecked-update-many-without-borrower.input';
 import { ContractUncheckedUpdateManyWithoutBorrowerInput } from '../contract/contract-unchecked-update-many-without-borrower.input';
+import { LocalUncheckedUpdateManyWithoutBorrowerInput } from '../local/local-unchecked-update-many-without-borrower.input';
 
 @InputType()
 export class BorrowerUncheckedUpdateInput {
@@ -37,4 +38,7 @@ export class BorrowerUncheckedUpdateInput {
 
     @Field(() => ContractUncheckedUpdateManyWithoutBorrowerInput, {nullable:true})
     Contract?: ContractUncheckedUpdateManyWithoutBorrowerInput;
+
+    @Field(() => LocalUncheckedUpdateManyWithoutBorrowerInput, {nullable:true})
+    Local?: LocalUncheckedUpdateManyWithoutBorrowerInput;
 }

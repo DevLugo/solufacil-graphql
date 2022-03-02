@@ -5,6 +5,7 @@ import { PhoneOrderByRelationAggregateInput } from '../phone/phone-order-by-rela
 import { DocumentOrderByRelationAggregateInput } from '../document/document-order-by-relation-aggregate.input';
 import { HideField } from '@nestjs/graphql';
 import { ContractOrderByRelationAggregateInput } from '../contract/contract-order-by-relation-aggregate.input';
+import { LocalOrderByRelationAggregateInput } from '../local/local-order-by-relation-aggregate.input';
 
 @InputType()
 export class BorrowerOrderByWithRelationInput {
@@ -35,4 +36,7 @@ export class BorrowerOrderByWithRelationInput {
 
     @Field(() => ContractOrderByRelationAggregateInput, {nullable:true})
     Contract?: ContractOrderByRelationAggregateInput;
+
+    @Field(() => LocalOrderByRelationAggregateInput, {nullable:true})
+    Local?: LocalOrderByRelationAggregateInput;
 }

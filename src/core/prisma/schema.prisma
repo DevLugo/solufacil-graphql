@@ -131,6 +131,20 @@ model Borrower {
   Contract  Contract[]
   //borrowerId String?
   //Borrower   Borrower[] @relation("BorrowerToBorrower")
+  Local     Local[]
+}
+
+model Local {
+  /// @HideField({ match: 'LocalCreate*Input' })
+  id         String   @id @default(uuid())
+  name       String
+  address    String
+  /// @HideField({ output: false, input:true })
+  createdAt  DateTime @default(now())
+  /// @HideField({ output: false, input: true })
+  updatedAt  DateTime @updatedAt
+  borrower   Borrower @relation(fields: [borrowerId], references: [id])
+  borrowerId String
 }
 
 model Phone {

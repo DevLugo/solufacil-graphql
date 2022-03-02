@@ -6,6 +6,7 @@ import { DateTimeFieldUpdateOperationsInput } from '../prisma/date-time-field-up
 import { HideField } from '@nestjs/graphql';
 import { PhoneUncheckedUpdateManyWithoutBorrowerInput } from '../phone/phone-unchecked-update-many-without-borrower.input';
 import { ContractUncheckedUpdateManyWithoutBorrowerInput } from '../contract/contract-unchecked-update-many-without-borrower.input';
+import { LocalUncheckedUpdateManyWithoutBorrowerInput } from '../local/local-unchecked-update-many-without-borrower.input';
 
 @InputType()
 export class BorrowerUncheckedUpdateWithoutDocumentsInput {
@@ -33,4 +34,7 @@ export class BorrowerUncheckedUpdateWithoutDocumentsInput {
 
     @Field(() => ContractUncheckedUpdateManyWithoutBorrowerInput, {nullable:true})
     Contract?: ContractUncheckedUpdateManyWithoutBorrowerInput;
+
+    @Field(() => LocalUncheckedUpdateManyWithoutBorrowerInput, {nullable:true})
+    Local?: LocalUncheckedUpdateManyWithoutBorrowerInput;
 }

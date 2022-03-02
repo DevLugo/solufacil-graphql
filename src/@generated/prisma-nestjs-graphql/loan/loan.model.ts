@@ -57,7 +57,4 @@ export class Loan {
 
     @Field(() => LoanCount, {nullable:false})
     _count?: LoanCount;
-
-    @Field(() => Number)
-    totalPaidAmount?: Number;
 }

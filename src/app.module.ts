@@ -9,6 +9,7 @@ import { ContractModule } from './modules/contract/contract.module';
 import { LoanModule } from './modules/loan/loan.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { PhoneModule } from './modules/phone/phone.module';
+import { LocalModule } from './modules/local/local.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { PhoneModule } from './modules/phone/phone.module';
      SocialAuthModule,
      AuthModule,
      PhoneModule,
+     LocalModule,
     ],
   providers: [PrismaService],
 })

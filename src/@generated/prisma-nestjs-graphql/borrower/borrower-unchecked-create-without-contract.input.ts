@@ -4,6 +4,7 @@ import * as Scalars from 'graphql-scalars';
 import { HideField } from '@nestjs/graphql';
 import { PhoneUncheckedCreateNestedManyWithoutBorrowerInput } from '../phone/phone-unchecked-create-nested-many-without-borrower.input';
 import { DocumentUncheckedCreateNestedManyWithoutBorrowerInput } from '../document/document-unchecked-create-nested-many-without-borrower.input';
+import { LocalUncheckedCreateNestedManyWithoutBorrowerInput } from '../local/local-unchecked-create-nested-many-without-borrower.input';
 
 @InputType()
 export class BorrowerUncheckedCreateWithoutContractInput {
@@ -31,4 +32,7 @@ export class BorrowerUncheckedCreateWithoutContractInput {
 
     @Field(() => DocumentUncheckedCreateNestedManyWithoutBorrowerInput, {nullable:true})
     documents?: DocumentUncheckedCreateNestedManyWithoutBorrowerInput;
+
+    @Field(() => LocalUncheckedCreateNestedManyWithoutBorrowerInput, {nullable:true})
+    Local?: LocalUncheckedCreateNestedManyWithoutBorrowerInput;
 }
