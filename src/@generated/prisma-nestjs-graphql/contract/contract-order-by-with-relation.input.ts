@@ -6,15 +6,13 @@ import { EmployeeOrderByWithRelationInput } from '../employee/employee-order-by-
 import { DocumentOrderByRelationAggregateInput } from '../document/document-order-by-relation-aggregate.input';
 import { LoanOrderByRelationAggregateInput } from '../loan/loan-order-by-relation-aggregate.input';
 import { HideField } from '@nestjs/graphql';
+import { ContractTypeOrderByWithRelationInput } from '../contract-type/contract-type-order-by-with-relation.input';
 
 @InputType()
 export class ContractOrderByWithRelationInput {
 
     @Field(() => SortOrder, {nullable:true})
     id?: keyof typeof SortOrder;
-
-    @Field(() => SortOrder, {nullable:true})
-    amount?: keyof typeof SortOrder;
 
     @Field(() => BorrowerOrderByWithRelationInput, {nullable:true})
     borrower?: BorrowerOrderByWithRelationInput;
@@ -45,4 +43,10 @@ export class ContractOrderByWithRelationInput {
 
     @Field(() => SortOrder, {nullable:true})
     employeeId?: keyof typeof SortOrder;
+
+    @Field(() => ContractTypeOrderByWithRelationInput, {nullable:true})
+    contractType?: ContractTypeOrderByWithRelationInput;
+
+    @Field(() => SortOrder, {nullable:true})
+    contractTypeId?: keyof typeof SortOrder;
 }

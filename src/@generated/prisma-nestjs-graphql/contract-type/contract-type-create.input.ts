@@ -4,6 +4,7 @@ import { HideField } from '@nestjs/graphql';
 import * as Validator from 'class-validator';
 import { Int } from '@nestjs/graphql';
 import { GraphQLDecimal } from 'prisma-graphql-type-decimal';
+import { ContractCreateNestedManyWithoutContractTypeInput } from '../contract/contract-create-nested-many-without-contract-type.input';
 
 @InputType()
 export class ContractTypeCreateInput {
@@ -21,9 +22,15 @@ export class ContractTypeCreateInput {
     @Field(() => GraphQLDecimal, {nullable:false})
     amount!: any;
 
+    @Field(() => GraphQLDecimal, {nullable:false})
+    maxRate!: any;
+
     @HideField()
     createdAt?: Date | string;
 
     @HideField()
     updatedAt?: Date | string;
+
+    @Field(() => ContractCreateNestedManyWithoutContractTypeInput, {nullable:true})
+    contract?: ContractCreateNestedManyWithoutContractTypeInput;
 }

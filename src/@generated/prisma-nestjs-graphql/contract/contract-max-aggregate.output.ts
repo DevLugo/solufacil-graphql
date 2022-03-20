@@ -1,15 +1,11 @@
 import { Field } from '@nestjs/graphql';
 import { ObjectType } from '@nestjs/graphql';
-import { GraphQLDecimal } from 'prisma-graphql-type-decimal';
 
 @ObjectType()
 export class ContractMaxAggregate {
 
     @Field(() => String, {nullable:true})
     id?: string;
-
-    @Field(() => GraphQLDecimal, {nullable:true})
-    amount?: any;
 
     @Field(() => String, {nullable:true})
     borrowerId?: string;
@@ -28,4 +24,7 @@ export class ContractMaxAggregate {
 
     @Field(() => String, {nullable:true})
     employeeId?: string;
+
+    @Field(() => String, {nullable:true})
+    contractTypeId?: string;
 }

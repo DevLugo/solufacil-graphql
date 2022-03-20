@@ -1,7 +1,6 @@
 import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
 import { StringFilter } from '../prisma/string-filter.input';
-import { DecimalFilter } from '../prisma/decimal-filter.input';
 import { DateTimeFilter } from '../prisma/date-time-filter.input';
 import { HideField } from '@nestjs/graphql';
 
@@ -20,9 +19,6 @@ export class ContractScalarWhereInput {
     @Field(() => StringFilter, {nullable:true})
     id?: StringFilter;
 
-    @Field(() => DecimalFilter, {nullable:true})
-    amount?: DecimalFilter;
-
     @Field(() => StringFilter, {nullable:true})
     borrowerId?: StringFilter;
 
@@ -40,4 +36,7 @@ export class ContractScalarWhereInput {
 
     @Field(() => StringFilter, {nullable:true})
     employeeId?: StringFilter;
+
+    @Field(() => StringFilter, {nullable:true})
+    contractTypeId?: StringFilter;
 }

@@ -17,13 +17,13 @@ export class Document {
     type!: keyof typeof DocumentType;
 
     @Field(() => Borrower, {nullable:true})
-    Borrower?: Borrower | null;
+    borrower?: Borrower | null;
 
     @Field(() => String, {nullable:true})
     borrowerId!: string | null;
 
     @Field(() => Employee, {nullable:true})
-    Employee?: Employee | null;
+    employee?: Employee | null;
 
     @Field(() => Aval, {nullable:true})
     aval?: Aval | null;
@@ -32,7 +32,7 @@ export class Document {
     avalId!: string | null;
 
     @Field(() => Contract, {nullable:true})
-    Contract?: Contract | null;
+    contract?: Contract | null;
 
     @Field(() => String, {nullable:true})
     contractId!: string | null;

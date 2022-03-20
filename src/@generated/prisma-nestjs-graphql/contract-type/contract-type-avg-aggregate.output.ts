@@ -11,4 +11,7 @@ export class ContractTypeAvgAggregate {
 
     @Field(() => GraphQLDecimal, {nullable:true})
     amount?: any;
+
+    @Field(() => GraphQLDecimal, {nullable:true})
+    maxRate?: any;
 }

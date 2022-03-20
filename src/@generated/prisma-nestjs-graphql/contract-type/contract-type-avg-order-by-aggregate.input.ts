@@ -10,4 +10,7 @@ export class ContractTypeAvgOrderByAggregateInput {
 
     @Field(() => SortOrder, {nullable:true})
     amount?: keyof typeof SortOrder;
+
+    @Field(() => SortOrder, {nullable:true})
+    maxRate?: keyof typeof SortOrder;
 }

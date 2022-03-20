@@ -9,9 +9,6 @@ export class ContractCountAggregate {
     id!: number;
 
     @Field(() => Int, {nullable:false})
-    amount!: number;
-
-    @Field(() => Int, {nullable:false})
     borrowerId!: number;
 
     @Field(() => Int, {nullable:false})
@@ -28,6 +25,9 @@ export class ContractCountAggregate {
 
     @Field(() => Int, {nullable:false})
     employeeId!: number;
+
+    @Field(() => Int, {nullable:false})
+    contractTypeId!: number;
 
     @Field(() => Int, {nullable:false})
     _all!: number;

@@ -16,13 +16,13 @@ export class DocumentOrderByWithRelationInput {
     type?: keyof typeof SortOrder;
 
     @Field(() => BorrowerOrderByWithRelationInput, {nullable:true})
-    Borrower?: BorrowerOrderByWithRelationInput;
+    borrower?: BorrowerOrderByWithRelationInput;
 
     @Field(() => SortOrder, {nullable:true})
     borrowerId?: keyof typeof SortOrder;
 
     @Field(() => EmployeeOrderByWithRelationInput, {nullable:true})
-    Employee?: EmployeeOrderByWithRelationInput;
+    employee?: EmployeeOrderByWithRelationInput;
 
     @Field(() => AvalOrderByWithRelationInput, {nullable:true})
     aval?: AvalOrderByWithRelationInput;
@@ -31,7 +31,7 @@ export class DocumentOrderByWithRelationInput {
     avalId?: keyof typeof SortOrder;
 
     @Field(() => ContractOrderByWithRelationInput, {nullable:true})
-    Contract?: ContractOrderByWithRelationInput;
+    contract?: ContractOrderByWithRelationInput;
 
     @Field(() => SortOrder, {nullable:true})
     contractId?: keyof typeof SortOrder;

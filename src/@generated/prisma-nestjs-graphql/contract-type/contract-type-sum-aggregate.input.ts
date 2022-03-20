@@ -9,4 +9,7 @@ export class ContractTypeSumAggregateInput {
 
     @Field(() => Boolean, {nullable:true})
     amount?: true;
+
+    @Field(() => Boolean, {nullable:true})
+    maxRate?: true;
 }

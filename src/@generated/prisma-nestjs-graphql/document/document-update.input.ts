@@ -17,14 +17,14 @@ export class DocumentUpdateInput {
     type?: EnumDocumentTypeFieldUpdateOperationsInput;
 
     @Field(() => BorrowerUpdateOneWithoutDocumentsInput, {nullable:true})
-    Borrower?: BorrowerUpdateOneWithoutDocumentsInput;
+    borrower?: BorrowerUpdateOneWithoutDocumentsInput;
 
     @Field(() => EmployeeUpdateOneWithoutDocumentsInput, {nullable:true})
-    Employee?: EmployeeUpdateOneWithoutDocumentsInput;
+    employee?: EmployeeUpdateOneWithoutDocumentsInput;
 
     @Field(() => AvalUpdateOneWithoutDocumentsInput, {nullable:true})
     aval?: AvalUpdateOneWithoutDocumentsInput;
 
     @Field(() => ContractUpdateOneWithoutDocumentsInput, {nullable:true})
-    Contract?: ContractUpdateOneWithoutDocumentsInput;
+    contract?: ContractUpdateOneWithoutDocumentsInput;
 }

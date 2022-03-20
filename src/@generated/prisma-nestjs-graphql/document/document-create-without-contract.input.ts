@@ -15,10 +15,10 @@ export class DocumentCreateWithoutContractInput {
     type!: keyof typeof DocumentType;
 
     @Field(() => BorrowerCreateNestedOneWithoutDocumentsInput, {nullable:true})
-    Borrower?: BorrowerCreateNestedOneWithoutDocumentsInput;
+    borrower?: BorrowerCreateNestedOneWithoutDocumentsInput;
 
     @Field(() => EmployeeCreateNestedOneWithoutDocumentsInput, {nullable:true})
-    Employee?: EmployeeCreateNestedOneWithoutDocumentsInput;
+    employee?: EmployeeCreateNestedOneWithoutDocumentsInput;
 
     @Field(() => AvalCreateNestedOneWithoutDocumentsInput, {nullable:true})
     aval?: AvalCreateNestedOneWithoutDocumentsInput;

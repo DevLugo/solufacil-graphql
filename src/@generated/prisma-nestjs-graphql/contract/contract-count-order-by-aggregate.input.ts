@@ -10,9 +10,6 @@ export class ContractCountOrderByAggregateInput {
     id?: keyof typeof SortOrder;
 
     @Field(() => SortOrder, {nullable:true})
-    amount?: keyof typeof SortOrder;
-
-    @Field(() => SortOrder, {nullable:true})
     borrowerId?: keyof typeof SortOrder;
 
     @HideField()
@@ -29,4 +26,7 @@ export class ContractCountOrderByAggregateInput {
 
     @Field(() => SortOrder, {nullable:true})
     employeeId?: keyof typeof SortOrder;
+
+    @Field(() => SortOrder, {nullable:true})
+    contractTypeId?: keyof typeof SortOrder;
 }

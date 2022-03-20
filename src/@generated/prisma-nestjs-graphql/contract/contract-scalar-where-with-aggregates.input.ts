@@ -1,7 +1,6 @@
 import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
 import { StringWithAggregatesFilter } from '../prisma/string-with-aggregates-filter.input';
-import { DecimalWithAggregatesFilter } from '../prisma/decimal-with-aggregates-filter.input';
 import { DateTimeWithAggregatesFilter } from '../prisma/date-time-with-aggregates-filter.input';
 import { HideField } from '@nestjs/graphql';
 
@@ -20,9 +19,6 @@ export class ContractScalarWhereWithAggregatesInput {
     @Field(() => StringWithAggregatesFilter, {nullable:true})
     id?: StringWithAggregatesFilter;
 
-    @Field(() => DecimalWithAggregatesFilter, {nullable:true})
-    amount?: DecimalWithAggregatesFilter;
-
     @Field(() => StringWithAggregatesFilter, {nullable:true})
     borrowerId?: StringWithAggregatesFilter;
 
@@ -40,4 +36,7 @@ export class ContractScalarWhereWithAggregatesInput {
 
     @Field(() => StringWithAggregatesFilter, {nullable:true})
     employeeId?: StringWithAggregatesFilter;
+
+    @Field(() => StringWithAggregatesFilter, {nullable:true})
+    contractTypeId?: StringWithAggregatesFilter;
 }

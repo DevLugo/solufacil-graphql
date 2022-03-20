@@ -9,9 +9,6 @@ export class ContractCountAggregateInput {
     id?: true;
 
     @Field(() => Boolean, {nullable:true})
-    amount?: true;
-
-    @Field(() => Boolean, {nullable:true})
     borrowerId?: true;
 
     @HideField()
@@ -28,6 +25,9 @@ export class ContractCountAggregateInput {
 
     @Field(() => Boolean, {nullable:true})
     employeeId?: true;
+
+    @Field(() => Boolean, {nullable:true})
+    contractTypeId?: true;
 
     @Field(() => Boolean, {nullable:true})
     _all?: true;

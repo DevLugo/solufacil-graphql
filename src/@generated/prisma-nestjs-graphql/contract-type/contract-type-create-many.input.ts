@@ -21,6 +21,9 @@ export class ContractTypeCreateManyInput {
     @Field(() => GraphQLDecimal, {nullable:false})
     amount!: any;
 
+    @Field(() => GraphQLDecimal, {nullable:false})
+    maxRate!: any;
+
     @HideField()
     createdAt?: Date | string;
 

@@ -11,7 +11,7 @@ import { ContractTypeSumOrderByAggregateInput } from './contract-type-sum-order-
 @InputType()
 export class ContractTypeOrderByWithAggregationInput {
 
-    @HideField()
+    @Field(() => SortOrder, {nullable:true})
     id?: keyof typeof SortOrder;
 
     @Field(() => SortOrder, {nullable:true})
@@ -22,6 +22,9 @@ export class ContractTypeOrderByWithAggregationInput {
 
     @Field(() => SortOrder, {nullable:true})
     amount?: keyof typeof SortOrder;
+
+    @Field(() => SortOrder, {nullable:true})
+    maxRate?: keyof typeof SortOrder;
 
     @HideField()
     createdAt?: keyof typeof SortOrder;

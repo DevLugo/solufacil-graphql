@@ -5,7 +5,7 @@ import { HideField } from '@nestjs/graphql';
 @InputType()
 export class ContractTypeCountAggregateInput {
 
-    @HideField()
+    @Field(() => Boolean, {nullable:true})
     id?: true;
 
     @Field(() => Boolean, {nullable:true})
@@ -16,6 +16,9 @@ export class ContractTypeCountAggregateInput {
 
     @Field(() => Boolean, {nullable:true})
     amount?: true;
+
+    @Field(() => Boolean, {nullable:true})
+    maxRate?: true;
 
     @HideField()
     createdAt?: true;

@@ -5,8 +5,6 @@ import { ContractOrderByWithRelationInput } from './contract-order-by-with-relat
 import { ContractWhereUniqueInput } from './contract-where-unique.input';
 import { Int } from '@nestjs/graphql';
 import { ContractCountAggregateInput } from './contract-count-aggregate.input';
-import { ContractAvgAggregateInput } from './contract-avg-aggregate.input';
-import { ContractSumAggregateInput } from './contract-sum-aggregate.input';
 import { ContractMinAggregateInput } from './contract-min-aggregate.input';
 import { ContractMaxAggregateInput } from './contract-max-aggregate.input';
 
@@ -30,12 +28,6 @@ export class ContractAggregateArgs {
 
     @Field(() => ContractCountAggregateInput, {nullable:true})
     _count?: ContractCountAggregateInput;
-
-    @Field(() => ContractAvgAggregateInput, {nullable:true})
-    _avg?: ContractAvgAggregateInput;
-
-    @Field(() => ContractSumAggregateInput, {nullable:true})
-    _sum?: ContractSumAggregateInput;
 
     @Field(() => ContractMinAggregateInput, {nullable:true})
     _min?: ContractMinAggregateInput;

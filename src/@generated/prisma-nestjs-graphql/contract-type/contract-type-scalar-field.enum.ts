@@ -5,6 +5,7 @@ export enum ContractTypeScalarFieldEnum {
     name = "name",
     monthDuration = "monthDuration",
     amount = "amount",
+    maxRate = "maxRate",
     createdAt = "createdAt",
     updatedAt = "updatedAt"
 }

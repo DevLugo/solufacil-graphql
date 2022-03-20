@@ -6,8 +6,6 @@ import { ContractScalarFieldEnum } from './contract-scalar-field.enum';
 import { ContractScalarWhereWithAggregatesInput } from './contract-scalar-where-with-aggregates.input';
 import { Int } from '@nestjs/graphql';
 import { ContractCountAggregateInput } from './contract-count-aggregate.input';
-import { ContractAvgAggregateInput } from './contract-avg-aggregate.input';
-import { ContractSumAggregateInput } from './contract-sum-aggregate.input';
 import { ContractMinAggregateInput } from './contract-min-aggregate.input';
 import { ContractMaxAggregateInput } from './contract-max-aggregate.input';
 
@@ -34,12 +32,6 @@ export class ContractGroupByArgs {
 
     @Field(() => ContractCountAggregateInput, {nullable:true})
     _count?: ContractCountAggregateInput;
-
-    @Field(() => ContractAvgAggregateInput, {nullable:true})
-    _avg?: ContractAvgAggregateInput;
-
-    @Field(() => ContractSumAggregateInput, {nullable:true})
-    _sum?: ContractSumAggregateInput;
 
     @Field(() => ContractMinAggregateInput, {nullable:true})
     _min?: ContractMinAggregateInput;

@@ -9,9 +9,6 @@ export class ContractMinAggregateInput {
     id?: true;
 
     @Field(() => Boolean, {nullable:true})
-    amount?: true;
-
-    @Field(() => Boolean, {nullable:true})
     borrowerId?: true;
 
     @HideField()
@@ -28,4 +25,7 @@ export class ContractMinAggregateInput {
 
     @Field(() => Boolean, {nullable:true})
     employeeId?: true;
+
+    @Field(() => Boolean, {nullable:true})
+    contractTypeId?: true;
 }

@@ -8,6 +8,7 @@ import { DateTimeFilter } from '../prisma/date-time-filter.input';
 import { HideField } from '@nestjs/graphql';
 import { ContractListRelationFilter } from '../contract/contract-list-relation-filter.input';
 import { LocalListRelationFilter } from '../local/local-list-relation-filter.input';
+
 @InputType()
 export class BorrowerWhereInput {
 

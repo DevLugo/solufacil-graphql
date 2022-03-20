@@ -27,13 +27,13 @@ export class DocumentWhereInput {
     type?: EnumDocumentTypeFilter;
 
     @Field(() => BorrowerRelationFilter, {nullable:true})
-    Borrower?: BorrowerRelationFilter;
+    borrower?: BorrowerRelationFilter;
 
     @Field(() => StringNullableFilter, {nullable:true})
     borrowerId?: StringNullableFilter;
 
     @Field(() => EmployeeRelationFilter, {nullable:true})
-    Employee?: EmployeeRelationFilter;
+    employee?: EmployeeRelationFilter;
 
     @Field(() => AvalRelationFilter, {nullable:true})
     aval?: AvalRelationFilter;
@@ -42,7 +42,7 @@ export class DocumentWhereInput {
     avalId?: StringNullableFilter;
 
     @Field(() => ContractRelationFilter, {nullable:true})
-    Contract?: ContractRelationFilter;
+    contract?: ContractRelationFilter;
 
     @Field(() => StringNullableFilter, {nullable:true})
     contractId?: StringNullableFilter;

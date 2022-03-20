@@ -18,6 +18,9 @@ export class ContractTypeMinAggregate {
     @Field(() => GraphQLDecimal, {nullable:true})
     amount?: any;
 
+    @Field(() => GraphQLDecimal, {nullable:true})
+    maxRate?: any;
+
     @Field(() => Date, {nullable:true})
     createdAt?: Date | string;
 

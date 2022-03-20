@@ -73,7 +73,7 @@ export class LoanPaymentService {
             _sum:{ amount:true },
             where:{ loanId }
         });
-        return result._sum.amount;
+        return result._sum.amount || 0;
     }
     
     async gePayments(loanId:string){

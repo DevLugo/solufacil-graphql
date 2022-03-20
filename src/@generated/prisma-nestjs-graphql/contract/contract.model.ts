@@ -1,11 +1,11 @@
 import { Field } from '@nestjs/graphql';
 import { ObjectType } from '@nestjs/graphql';
 import { ID } from '@nestjs/graphql';
-import { GraphQLDecimal } from 'prisma-graphql-type-decimal';
 import { Borrower } from '../borrower/borrower.model';
 import { Employee } from '../employee/employee.model';
 import { Document } from '../document/document.model';
 import { Loan } from '../loan/loan.model';
+import { ContractType } from '../contract-type/contract-type.model';
 import { ContractCount } from './contract-count.output';
 
 @ObjectType()
@@ -13,9 +13,6 @@ export class Contract {
 
     @Field(() => ID, {nullable:false})
     id!: string;
-
-    @Field(() => GraphQLDecimal, {nullable:false})
-    amount!: any;
 
     @Field(() => Borrower, {nullable:false})
     borrower?: Borrower;
@@ -46,6 +43,12 @@ export class Contract {
 
     @Field(() => String, {nullable:false})
     employeeId!: string;
+
+    @Field(() => ContractType, {nullable:false})
+    contractType?: ContractType;
+
+    @Field(() => String, {nullable:false})
+    contractTypeId!: string;
 
     @Field(() => ContractCount, {nullable:false})
     _count?: ContractCount;

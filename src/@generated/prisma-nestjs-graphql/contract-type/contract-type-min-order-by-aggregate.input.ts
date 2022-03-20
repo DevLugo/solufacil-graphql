@@ -6,7 +6,7 @@ import { HideField } from '@nestjs/graphql';
 @InputType()
 export class ContractTypeMinOrderByAggregateInput {
 
-    @HideField()
+    @Field(() => SortOrder, {nullable:true})
     id?: keyof typeof SortOrder;
 
     @Field(() => SortOrder, {nullable:true})
@@ -17,6 +17,9 @@ export class ContractTypeMinOrderByAggregateInput {
 
     @Field(() => SortOrder, {nullable:true})
     amount?: keyof typeof SortOrder;
+
+    @Field(() => SortOrder, {nullable:true})
+    maxRate?: keyof typeof SortOrder;
 
     @HideField()
     createdAt?: keyof typeof SortOrder;

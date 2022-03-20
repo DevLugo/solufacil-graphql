@@ -42,13 +42,15 @@ async function main() {
         data: [
             {
                 name: "Tiendas, anual, 20%",
-                amount: 50000,
+                maxRate:.30,
                 monthDuration: 12,
+                amount:50000,
             },
             {
                 name: "Tiendas, anual, 30%",
-                amount: 50000,
+                maxRate:.30,
                 monthDuration: 12,
+                amount:50000,
             }
         ],
     });

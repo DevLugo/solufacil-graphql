@@ -16,11 +16,11 @@ export class DocumentUpdateWithoutBorrowerInput {
     type?: EnumDocumentTypeFieldUpdateOperationsInput;
 
     @Field(() => EmployeeUpdateOneWithoutDocumentsInput, {nullable:true})
-    Employee?: EmployeeUpdateOneWithoutDocumentsInput;
+    employee?: EmployeeUpdateOneWithoutDocumentsInput;
 
     @Field(() => AvalUpdateOneWithoutDocumentsInput, {nullable:true})
     aval?: AvalUpdateOneWithoutDocumentsInput;
 
     @Field(() => ContractUpdateOneWithoutDocumentsInput, {nullable:true})
-    Contract?: ContractUpdateOneWithoutDocumentsInput;
+    contract?: ContractUpdateOneWithoutDocumentsInput;
 }

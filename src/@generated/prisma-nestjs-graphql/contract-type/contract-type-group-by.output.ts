@@ -23,6 +23,9 @@ export class ContractTypeGroupBy {
     @Field(() => GraphQLDecimal, {nullable:false})
     amount!: any;
 
+    @Field(() => GraphQLDecimal, {nullable:false})
+    maxRate!: any;
+
     @Field(() => Date, {nullable:false})
     createdAt!: Date | string;
 

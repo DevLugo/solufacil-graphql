@@ -1,13 +1,13 @@
 import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
 import { StringFilter } from '../prisma/string-filter.input';
-import { DecimalFilter } from '../prisma/decimal-filter.input';
 import { BorrowerRelationFilter } from '../borrower/borrower-relation-filter.input';
 import { EmployeeRelationFilter } from '../employee/employee-relation-filter.input';
 import { DocumentListRelationFilter } from '../document/document-list-relation-filter.input';
 import { LoanListRelationFilter } from '../loan/loan-list-relation-filter.input';
 import { HideField } from '@nestjs/graphql';
 import { DateTimeFilter } from '../prisma/date-time-filter.input';
+import { ContractTypeRelationFilter } from '../contract-type/contract-type-relation-filter.input';
 
 @InputType()
 export class ContractWhereInput {
@@ -23,9 +23,6 @@ export class ContractWhereInput {
 
     @Field(() => StringFilter, {nullable:true})
     id?: StringFilter;
-
-    @Field(() => DecimalFilter, {nullable:true})
-    amount?: DecimalFilter;
 
     @Field(() => BorrowerRelationFilter, {nullable:true})
     borrower?: BorrowerRelationFilter;
@@ -56,4 +53,10 @@ export class ContractWhereInput {
 
     @Field(() => StringFilter, {nullable:true})
     employeeId?: StringFilter;
+
+    @Field(() => ContractTypeRelationFilter, {nullable:true})
+    contractType?: ContractTypeRelationFilter;
+
+    @Field(() => StringFilter, {nullable:true})
+    contractTypeId?: StringFilter;
 }

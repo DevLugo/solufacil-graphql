@@ -18,6 +18,9 @@ export class ContractTypeCountAggregate {
     amount!: number;
 
     @Field(() => Int, {nullable:false})
+    maxRate!: number;
+
+    @Field(() => Int, {nullable:false})
     createdAt!: number;
 
     @Field(() => Int, {nullable:false})

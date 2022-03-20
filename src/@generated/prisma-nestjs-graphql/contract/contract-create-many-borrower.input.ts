@@ -1,16 +1,12 @@
 import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
 import { HideField } from '@nestjs/graphql';
-import { GraphQLDecimal } from 'prisma-graphql-type-decimal';
 
 @InputType()
 export class ContractCreateManyBorrowerInput {
 
     @HideField()
     id?: string;
-
-    @Field(() => GraphQLDecimal, {nullable:false})
-    amount!: any;
 
     @HideField()
     createdAt?: Date | string;
@@ -26,4 +22,7 @@ export class ContractCreateManyBorrowerInput {
 
     @Field(() => String, {nullable:false})
     employeeId!: string;
+
+    @Field(() => String, {nullable:false})
+    contractTypeId!: string;
 }

@@ -27,9 +27,12 @@ export class LoanService {
         const contract = await this.db.contract.findFirst({
             where: {
                 id:data.contract.connect.id
+            },
+            include: {
+                contractType:true
             }
         });
-        if (contract.amount < data.amountToPay)
+        if (contract.contractType.amount < data.amountToPay)
             throw new Error('La cantidad solicitada es mayor a la otorgada en el contrato: TODO: validar que solo tenga un credito activo a la vez');
         const {firstPaymentDate, ...cleanedData} = data;
         const loanType = await this.db.loantype.findFirst({where: {id:data.loanType.connect.id}});
@@ -39,7 +42,7 @@ export class LoanService {
         });
 
         await this.paymentScheduleService.createPaymentSchedule(new Date(data.firstPaymentDate), loanType.weekDuration, loan.id);
-        return await this.db.loan.findUnique({where: {id:loan.id} ,include:{paymentSchedule:true}});
+        return await this.db.loan.findUnique({where: {id:loan.id} ,include:{paymentSchedule:true, employee:{include:{user:true}}}});
     }
 
     async create(data:LoanCreateInput){
