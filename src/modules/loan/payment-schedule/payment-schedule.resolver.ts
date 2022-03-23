@@ -1,0 +1,48 @@
+import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import { Loan } from 'src/@generated/prisma-nestjs-graphql/loan/loan.model';
+import { Loantype } from 'src/@generated/prisma-nestjs-graphql/loantype/loantype.model';
+import { PaymentScheduleWhereInput } from 'src/@generated/prisma-nestjs-graphql/payment-schedule/payment-schedule-where.input';
+import { PaymentSchedule } from 'src/@generated/prisma-nestjs-graphql/payment-schedule/payment-schedule.model';
+import { PrismaService } from 'src/core/prisma/prisma.service';
+import { LoanTypeService } from '../loan-type/loan-type.service';
+import { LoanService } from '../loan.service';
+import { PaymentBreakDown, UtilsService } from '../utils.service';
+import { PaymentScheduleService } from './payment-schedule.service';
+
+@Resolver(() => PaymentSchedule)
+export class PaymentScheduleResolver {
+    constructor(
+        private readonly UtilsService: UtilsService,
+        private readonly LoanService: LoanService,
+        private readonly _db: PrismaService,
+        private readonly LoanPaymentScheduleService: PaymentScheduleService
+        ){}
+    @ResolveField(returns => PaymentBreakDown)
+    async paymentBreakDown(@Parent() root: PaymentSchedule) {
+        const { amountToPay } = root;
+        const data = await this._db.loan.findFirst({
+            where:{id:root.loanId},
+            include:{
+                loanType:true
+            }
+        });
+        const rate = data.loanType.rate
+        console.log(this.UtilsService.paymentBreakDown(amountToPay, rate))
+
+        return this.UtilsService.paymentBreakDown(amountToPay, rate);
+    }
+
+    @ResolveField(returns => Loan)
+    async loan(@Parent() root: PaymentSchedule) {
+        return this.LoanService.get(root.loanId);
+    }
+    
+
+    @Query(() => [PaymentSchedule])
+    async paymentSchedulesWhere(
+        @Args({ name: 'where', type: () =>PaymentScheduleWhereInput})
+        where:PaymentScheduleWhereInput
+    ) {
+        return await this.LoanPaymentScheduleService.getPaymentSchedulesWhere(where);
+    }
+}

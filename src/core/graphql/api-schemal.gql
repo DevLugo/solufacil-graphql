@@ -90,6 +90,7 @@ type PaymentSchedule {
   loanId: String!
   loanPayments: [LoanPayment!]
   _count: PaymentScheduleCount!
+  paymentBreakDown: PaymentBreakDown!
 }
 
 """An arbitrary-precision Decimal type"""
@@ -281,6 +282,12 @@ type ContractType {
 type SignInOutput {
   token: String!
   user: User!
+}
+
+type PaymentBreakDown {
+  amount: Float!
+  profit: Float!
+  returnOfCapital: Float!
 }
 
 type Query {

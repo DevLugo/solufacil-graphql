@@ -1,4 +1,4 @@
-import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Parent, Query, ResolveField, ResolveProperty, Resolver, ResolveReference } from '@nestjs/graphql';
 import { LoantypeCreateInput } from '../../@generated/prisma-nestjs-graphql/loantype/loantype-create.input';
 import { Loantype } from '../../@generated/prisma-nestjs-graphql/loantype/loantype.model';
 import { LoanPaymentCreateInput } from '../../@generated/prisma-nestjs-graphql/loan-payment/loan-payment-create.input';
@@ -12,8 +12,6 @@ import { LoantypeWhereInput } from '../../@generated/prisma-nestjs-graphql/loant
 import { LoanWhereInput } from '../../@generated/prisma-nestjs-graphql/loan/loan-where.input';
 import { CustomCreateLoanInput } from './CustomCreateLoanInput';
 import { LoanPaymentUpdateInput } from '../loan/loan-payment/inputs/UpdatePaymentInput';
-import { PaymentSchedule } from '../../@generated/prisma-nestjs-graphql/payment-schedule/payment-schedule.model';
-import { PaymentScheduleWhereInput } from '../../@generated/prisma-nestjs-graphql/payment-schedule/payment-schedule-where.input';
 import { PaymentScheduleService } from './payment-schedule/payment-schedule.service';
 
 @Resolver(() => Loan)
@@ -101,12 +99,9 @@ export class LoanResolver {
         return await this.LoanPaymentService.gePayments(id);
     }
 
-    @Query(() => [PaymentSchedule])
-    async paymentSchedulesWhere(
-        @Args({ name: 'where', type: () =>PaymentScheduleWhereInput})
-        where:PaymentScheduleWhereInput
-    ) {
-        return await this.LoanPaymentScheduleService.getPaymentSchedulesWhere(where);
+    @ResolveField('loanType')
+    async loanType(@Parent() root: Loan) {
+        return await this.LoanTypeService.get(root.loantypeId);
     }
 
 }

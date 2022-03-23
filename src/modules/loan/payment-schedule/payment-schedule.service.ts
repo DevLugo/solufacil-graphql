@@ -45,10 +45,8 @@ export class PaymentScheduleService {
             orderBy:{numeration:"asc"}
         })
     }
-
+    
     async getPaymentSchedulesWhere(where:PaymentScheduleWhereInput){
-        return await this.db.paymentSchedule.findMany({
-            where, include:{loan:{include:{contract:{include:{ borrower: true}}}}}
-        })
+        return await this.db.paymentSchedule.findMany({where})
     }
 }

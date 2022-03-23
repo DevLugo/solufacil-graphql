@@ -6,9 +6,11 @@ import { AuthModule } from '../auth/auth.module';
 import { LoanPaymentService } from './loan-payment/loan-payment.service';
 import { PaymentScheduleService } from './payment-schedule/payment-schedule.service';
 import { LoanTypeService } from './loan-type/loan-type.service';
+import { UtilsService } from './utils.service';
+import { PaymentScheduleResolver } from './payment-schedule/payment-schedule.resolver';
 
 @Module({
-  providers: [LoanService, LoanPaymentService, LoanTypeService, LoanResolver, PaymentScheduleService],
+  providers: [LoanService, LoanPaymentService, UtilsService, LoanTypeService, LoanResolver, PaymentScheduleResolver, PaymentScheduleService],
   imports: [PrismaModule, AuthModule]
 })
 export class LoanModule {}

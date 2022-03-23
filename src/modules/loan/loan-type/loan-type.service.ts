@@ -11,6 +11,10 @@ export class LoanTypeService {
         return await this.db.loantype.findMany({where});
     }
 
+    async get(id:string){
+        return await this.db.loantype.findUnique({where:{id}});
+    }
+
     async create(data:LoantypeCreateInput){
         return await this.db.loantype.create({data});
     }
