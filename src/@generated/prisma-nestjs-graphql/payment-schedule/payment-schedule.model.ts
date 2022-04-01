@@ -23,6 +23,12 @@ export class PaymentSchedule {
     @Field(() => GraphQLDecimal, {nullable:false})
     paidAmount!: any;
 
+    @Field(() => GraphQLDecimal, {nullable:false,defaultValue:0})
+    returnToCapital!: any;
+
+    @Field(() => GraphQLDecimal, {nullable:false,defaultValue:0})
+    profit!: any;
+
     @Field(() => PaymentState, {nullable:false})
     status!: keyof typeof PaymentState;
 

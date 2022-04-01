@@ -5,6 +5,8 @@ export enum PaymentScheduleScalarFieldEnum {
     numeration = "numeration",
     amountToPay = "amountToPay",
     paidAmount = "paidAmount",
+    returnToCapital = "returnToCapital",
+    profit = "profit",
     status = "status",
     delayed = "delayed",
     dueDate = "dueDate",

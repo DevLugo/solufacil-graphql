@@ -7,4 +7,7 @@ export class UserCount {
 
     @Field(() => Int, {nullable:false})
     Employee!: number;
+
+    @Field(() => Int, {nullable:false})
+    Expenses!: number;
 }

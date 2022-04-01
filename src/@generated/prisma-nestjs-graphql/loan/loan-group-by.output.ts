@@ -24,6 +24,9 @@ export class LoanGroupBy {
     amountToPay!: any;
 
     @Field(() => Date, {nullable:false})
+    signDate!: Date | string;
+
+    @Field(() => Date, {nullable:false})
     createdAt!: Date | string;
 
     @Field(() => Date, {nullable:false})

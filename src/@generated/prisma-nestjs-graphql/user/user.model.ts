@@ -2,6 +2,7 @@ import { Field } from '@nestjs/graphql';
 import { ObjectType } from '@nestjs/graphql';
 import { ID } from '@nestjs/graphql';
 import { Employee } from '../employee/employee.model';
+import { Expenses } from '../expenses/expenses.model';
 import { UserCount } from './user-count.output';
 
 @ObjectType()
@@ -39,6 +40,9 @@ export class User {
 
     @Field(() => [Employee], {nullable:true})
     Employee?: Array<Employee>;
+
+    @Field(() => [Expenses], {nullable:true})
+    Expenses?: Array<Expenses>;
 
     @Field(() => UserCount, {nullable:false})
     _count?: UserCount;

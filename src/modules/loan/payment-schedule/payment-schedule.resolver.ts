@@ -7,6 +7,8 @@ import { PrismaService } from 'src/core/prisma/prisma.service';
 import { LoanTypeService } from '../loan-type/loan-type.service';
 import { LoanService } from '../loan.service';
 import { PaymentBreakDown, UtilsService } from '../utils.service';
+import { RangeDaysInput } from './inputs/RangeDaysInput';
+import { IResumePayload } from './payloads/resume';
 import { PaymentScheduleService } from './payment-schedule.service';
 
 @Resolver(() => PaymentSchedule)
@@ -27,7 +29,6 @@ export class PaymentScheduleResolver {
             }
         });
         const rate = data.loanType.rate
-        console.log(this.UtilsService.paymentBreakDown(amountToPay, rate))
 
         return this.UtilsService.paymentBreakDown(amountToPay, rate);
     }
@@ -44,5 +45,15 @@ export class PaymentScheduleResolver {
         where:PaymentScheduleWhereInput
     ) {
         return await this.LoanPaymentScheduleService.getPaymentSchedulesWhere(where);
+    }
+
+    @Query(() => IResumePayload)
+    async rangeResume(
+        @Args({ name: 'where', type: () => RangeDaysInput})
+        where:RangeDaysInput
+    ) {
+        const { dateStart, dateEnd } = where;
+        return await this.LoanPaymentScheduleService
+            .rangeResume(new Date(dateStart),  new Date(dateEnd));
     }
 }

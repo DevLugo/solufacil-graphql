@@ -30,6 +30,9 @@ export class LoanScalarWhereWithAggregatesInput {
     @Field(() => DecimalWithAggregatesFilter, {nullable:true})
     amountToPay?: DecimalWithAggregatesFilter;
 
+    @Field(() => DateTimeWithAggregatesFilter, {nullable:true})
+    signDate?: DateTimeWithAggregatesFilter;
+
     @HideField()
     createdAt?: DateTimeWithAggregatesFilter;
 

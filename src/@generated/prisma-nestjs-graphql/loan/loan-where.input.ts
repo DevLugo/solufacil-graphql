@@ -41,6 +41,9 @@ export class LoanWhereInput {
     @Field(() => LoantypeRelationFilter, {nullable:true})
     loanType?: LoantypeRelationFilter;
 
+    @Field(() => DateTimeFilter, {nullable:true})
+    signDate?: DateTimeFilter;
+
     @HideField()
     createdAt?: DateTimeFilter;
 

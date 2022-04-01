@@ -18,6 +18,12 @@ export class PaymentScheduleCountAggregate {
     paidAmount!: number;
 
     @Field(() => Int, {nullable:false})
+    returnToCapital!: number;
+
+    @Field(() => Int, {nullable:false})
+    profit!: number;
+
+    @Field(() => Int, {nullable:false})
     status!: number;
 
     @Field(() => Int, {nullable:false})

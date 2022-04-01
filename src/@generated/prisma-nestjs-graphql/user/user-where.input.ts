@@ -6,6 +6,7 @@ import { DateTimeNullableFilter } from '../prisma/date-time-nullable-filter.inpu
 import { StringNullableFilter } from '../prisma/string-nullable-filter.input';
 import { DateTimeFilter } from '../prisma/date-time-filter.input';
 import { EmployeeListRelationFilter } from '../employee/employee-list-relation-filter.input';
+import { ExpensesListRelationFilter } from '../expenses/expenses-list-relation-filter.input';
 
 @InputType()
 export class UserWhereInput {
@@ -51,4 +52,7 @@ export class UserWhereInput {
 
     @Field(() => EmployeeListRelationFilter, {nullable:true})
     Employee?: EmployeeListRelationFilter;
+
+    @Field(() => ExpensesListRelationFilter, {nullable:true})
+    Expenses?: ExpensesListRelationFilter;
 }

@@ -17,6 +17,9 @@ export class LoanMaxAggregateInput {
     @Field(() => Boolean, {nullable:true})
     amountToPay?: true;
 
+    @Field(() => Boolean, {nullable:true})
+    signDate?: true;
+
     @HideField()
     createdAt?: true;
 

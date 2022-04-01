@@ -5,6 +5,7 @@ export enum LoanScalarFieldEnum {
     status = "status",
     weeklyPaymentAmount = "weeklyPaymentAmount",
     amountToPay = "amountToPay",
+    signDate = "signDate",
     createdAt = "createdAt",
     updatedAt = "updatedAt",
     contractId = "contractId",

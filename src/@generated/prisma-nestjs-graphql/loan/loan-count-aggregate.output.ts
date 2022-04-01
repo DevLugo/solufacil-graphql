@@ -18,6 +18,9 @@ export class LoanCountAggregate {
     amountToPay!: number;
 
     @Field(() => Int, {nullable:false})
+    signDate!: number;
+
+    @Field(() => Int, {nullable:false})
     createdAt!: number;
 
     @Field(() => Int, {nullable:false})

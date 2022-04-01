@@ -4,10 +4,13 @@ import { LoanPaymentCreateInput } from '../../../@generated/prisma-nestjs-graphq
 import { PrismaService } from '../../../core/prisma/prisma.service';
 import { PaymentState } from '../../../@generated/prisma-nestjs-graphql/prisma/payment-state.enum';
 import { LoanPaymentUpdateInput } from './inputs/UpdatePaymentInput';
+import { UtilsService } from '../utils.service';
 
 @Injectable()
 export class LoanPaymentService {
-    constructor(private readonly db:PrismaService){}
+    constructor(
+        private readonly UtilsService: UtilsService,
+        private readonly db:PrismaService){}
     async getMany(where:LoanPaymentWhereInput){
         return await this.db.loanPayment.findMany({
             where
@@ -20,6 +23,12 @@ export class LoanPaymentService {
 
     async addPaymentToLoan(data:LoanPaymentUpdateInput){
         let amountForPayment: Number = Number(data.amount);
+        const loan = await this.db.loan.findUnique(
+            {where: {
+            id: data.loanId,
+            },
+            include: {loanType:true}
+        });
         let getNextPayments = await this.db.paymentSchedule.findMany(
             {
                 where: {
@@ -40,9 +49,16 @@ export class LoanPaymentService {
             const status: PaymentState = coverFullAmount ? PaymentState.PAID_OUT:PaymentState.PARTIALLY_PAID;
             const paidAmount = coverFullAmount ? pendingAmount : Number(amountForPayment); 
             amountForPayment = Number(amountForPayment) - Number(paidAmount);
+            const breakDown = this.UtilsService.paymentBreakDown(amountForPayment, loan.loanType.rate);
+            const { returnOfCapital, profit } = breakDown;
             bulkDbActions.push(
                 this.db.paymentSchedule.update({
-                    data: { status, paidAmount },
+                    data: { 
+                        status,
+                        paidAmount,
+                        profit: Number(nextPayment.profit) + Number(profit),
+                        returnToCapital: Number(nextPayment.returnToCapital) + Number(returnOfCapital),
+                    },
                     where: { id:nextPayment.id }
                 })
             );

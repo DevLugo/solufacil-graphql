@@ -35,6 +35,12 @@ export class PaymentScheduleWhereInput {
     @Field(() => DecimalFilter, {nullable:true})
     paidAmount?: DecimalFilter;
 
+    @Field(() => DecimalFilter, {nullable:true})
+    returnToCapital?: DecimalFilter;
+
+    @Field(() => DecimalFilter, {nullable:true})
+    profit?: DecimalFilter;
+
     @HideField()
     status?: EnumPaymentStateFilter;
 

@@ -19,6 +19,9 @@ export class LoanMinAggregate {
     amountToPay?: any;
 
     @Field(() => Date, {nullable:true})
+    signDate?: Date | string;
+
+    @Field(() => Date, {nullable:true})
     createdAt?: Date | string;
 
     @Field(() => Date, {nullable:true})

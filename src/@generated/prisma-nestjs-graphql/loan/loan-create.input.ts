@@ -24,6 +24,9 @@ export class LoanCreateInput {
     @Field(() => GraphQLDecimal, {nullable:true})
     amountToPay?: any;
 
+    @Field(() => Date, {nullable:true})
+    signDate?: Date | string;
+
     @HideField()
     createdAt?: Date | string;
 

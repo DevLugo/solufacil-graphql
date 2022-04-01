@@ -19,6 +19,12 @@ export class PaymentScheduleMaxAggregate {
     @Field(() => GraphQLDecimal, {nullable:true})
     paidAmount?: any;
 
+    @Field(() => GraphQLDecimal, {nullable:true})
+    returnToCapital?: any;
+
+    @Field(() => GraphQLDecimal, {nullable:true})
+    profit?: any;
+
     @Field(() => PaymentState, {nullable:true})
     status?: keyof typeof PaymentState;
 

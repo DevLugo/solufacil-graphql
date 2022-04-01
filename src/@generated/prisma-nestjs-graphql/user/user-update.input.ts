@@ -6,6 +6,7 @@ import { NullableDateTimeFieldUpdateOperationsInput } from '../prisma/nullable-d
 import { NullableStringFieldUpdateOperationsInput } from '../prisma/nullable-string-field-update-operations.input';
 import { DateTimeFieldUpdateOperationsInput } from '../prisma/date-time-field-update-operations.input';
 import { EmployeeUpdateManyWithoutUserInput } from '../employee/employee-update-many-without-user.input';
+import { ExpensesUpdateManyWithoutUserInput } from '../expenses/expenses-update-many-without-user.input';
 
 @InputType()
 export class UserUpdateInput {
@@ -42,4 +43,7 @@ export class UserUpdateInput {
 
     @Field(() => EmployeeUpdateManyWithoutUserInput, {nullable:true})
     Employee?: EmployeeUpdateManyWithoutUserInput;
+
+    @Field(() => ExpensesUpdateManyWithoutUserInput, {nullable:true})
+    Expenses?: ExpensesUpdateManyWithoutUserInput;
 }

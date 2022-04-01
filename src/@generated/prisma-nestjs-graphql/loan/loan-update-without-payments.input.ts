@@ -25,6 +25,9 @@ export class LoanUpdateWithoutPaymentsInput {
     @Field(() => DecimalFieldUpdateOperationsInput, {nullable:true})
     amountToPay?: DecimalFieldUpdateOperationsInput;
 
+    @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
+    signDate?: DateTimeFieldUpdateOperationsInput;
+
     @HideField()
     createdAt?: DateTimeFieldUpdateOperationsInput;
 

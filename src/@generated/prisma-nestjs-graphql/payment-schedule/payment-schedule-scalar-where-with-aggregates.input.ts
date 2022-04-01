@@ -33,6 +33,12 @@ export class PaymentScheduleScalarWhereWithAggregatesInput {
     @Field(() => DecimalWithAggregatesFilter, {nullable:true})
     paidAmount?: DecimalWithAggregatesFilter;
 
+    @Field(() => DecimalWithAggregatesFilter, {nullable:true})
+    returnToCapital?: DecimalWithAggregatesFilter;
+
+    @Field(() => DecimalWithAggregatesFilter, {nullable:true})
+    profit?: DecimalWithAggregatesFilter;
+
     @HideField()
     status?: EnumPaymentStateWithAggregatesFilter;
 

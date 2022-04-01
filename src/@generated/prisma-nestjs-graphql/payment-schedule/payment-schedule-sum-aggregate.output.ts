@@ -14,4 +14,10 @@ export class PaymentScheduleSumAggregate {
 
     @Field(() => GraphQLDecimal, {nullable:true})
     paidAmount?: any;
+
+    @Field(() => GraphQLDecimal, {nullable:true})
+    returnToCapital?: any;
+
+    @Field(() => GraphQLDecimal, {nullable:true})
+    profit?: any;
 }

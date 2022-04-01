@@ -24,6 +24,12 @@ export class PaymentScheduleUncheckedUpdateInput {
     @Field(() => DecimalFieldUpdateOperationsInput, {nullable:true})
     paidAmount?: DecimalFieldUpdateOperationsInput;
 
+    @Field(() => DecimalFieldUpdateOperationsInput, {nullable:true})
+    returnToCapital?: DecimalFieldUpdateOperationsInput;
+
+    @Field(() => DecimalFieldUpdateOperationsInput, {nullable:true})
+    profit?: DecimalFieldUpdateOperationsInput;
+
     @HideField()
     status?: EnumPaymentStateFieldUpdateOperationsInput;
 

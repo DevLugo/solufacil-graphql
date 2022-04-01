@@ -2,6 +2,7 @@ import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
 import * as Scalars from 'graphql-scalars';
 import { HideField } from '@nestjs/graphql';
+import { ExpensesCreateNestedManyWithoutUserInput } from '../expenses/expenses-create-nested-many-without-user.input';
 
 @InputType()
 export class UserCreateWithoutEmployeeInput {
@@ -35,4 +36,7 @@ export class UserCreateWithoutEmployeeInput {
 
     @HideField()
     updatedAt?: Date | string;
+
+    @Field(() => ExpensesCreateNestedManyWithoutUserInput, {nullable:true})
+    Expenses?: ExpensesCreateNestedManyWithoutUserInput;
 }

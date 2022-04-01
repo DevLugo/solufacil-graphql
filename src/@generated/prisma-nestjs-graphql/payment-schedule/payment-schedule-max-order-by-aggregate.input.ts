@@ -18,6 +18,12 @@ export class PaymentScheduleMaxOrderByAggregateInput {
     @Field(() => SortOrder, {nullable:true})
     paidAmount?: keyof typeof SortOrder;
 
+    @Field(() => SortOrder, {nullable:true})
+    returnToCapital?: keyof typeof SortOrder;
+
+    @Field(() => SortOrder, {nullable:true})
+    profit?: keyof typeof SortOrder;
+
     @HideField()
     status?: keyof typeof SortOrder;
 

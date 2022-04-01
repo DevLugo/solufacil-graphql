@@ -24,6 +24,12 @@ export class PaymentScheduleGroupBy {
     @Field(() => GraphQLDecimal, {nullable:false})
     paidAmount!: any;
 
+    @Field(() => GraphQLDecimal, {nullable:false})
+    returnToCapital!: any;
+
+    @Field(() => GraphQLDecimal, {nullable:false})
+    profit!: any;
+
     @Field(() => PaymentState, {nullable:false})
     status!: keyof typeof PaymentState;
 

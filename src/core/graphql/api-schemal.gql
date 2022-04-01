@@ -52,8 +52,30 @@ enum DocumentType {
   LETTER_NO_CRIMINAL_RECORD
 }
 
+type Expenses {
+  id: ID!
+  amountToPay: Decimal!
+  status: PaymentState!
+  dueDate: DateTime!
+  payedAt: DateTime!
+  user: User
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  userId: String
+}
+
+"""An arbitrary-precision Decimal type"""
+scalar Decimal
+
+enum PaymentState {
+  PENDING
+  PAID_OUT
+  PARTIALLY_PAID
+}
+
 type UserCount {
   Employee: Int!
+  Expenses: Int!
 }
 
 type User {
@@ -68,6 +90,7 @@ type User {
   createdAt: DateTime!
   updatedAt: DateTime!
   Employee: [Employee!]
+  Expenses: [Expenses!]
   _count: UserCount!
 }
 
@@ -80,6 +103,8 @@ type PaymentSchedule {
   numeration: Int!
   amountToPay: Decimal!
   paidAmount: Decimal!
+  returnToCapital: Decimal!
+  profit: Decimal!
   status: PaymentState!
   delayed: Boolean!
   dueDate: DateTime!
@@ -91,15 +116,6 @@ type PaymentSchedule {
   loanPayments: [LoanPayment!]
   _count: PaymentScheduleCount!
   paymentBreakDown: PaymentBreakDown!
-}
-
-"""An arbitrary-precision Decimal type"""
-scalar Decimal
-
-enum PaymentState {
-  PENDING
-  PAID_OUT
-  PARTIALLY_PAID
 }
 
 type LoanPaymentCount {
@@ -149,6 +165,7 @@ type Loan {
   weeklyPaymentAmount: Decimal!
   amountToPay: Decimal!
   loanType: Loantype!
+  signDate: DateTime!
   createdAt: DateTime!
   employee: Employee!
   updatedAt: DateTime!
@@ -290,6 +307,14 @@ type PaymentBreakDown {
   returnOfCapital: Float!
 }
 
+type IResumePayload {
+  profit: Float!
+  paidOut: Float!
+  newLoans: Float!
+  returnOfCapital: Float!
+  expenses: Float!
+}
+
 type Query {
   contractTypes: [ContractType!]!
   borrowers(where: BorrowerWhereInput!): [Borrower!]!
@@ -299,6 +324,7 @@ type Query {
   loanTypes(where: LoantypeWhereInput!): [Loantype!]!
   loanPayments(where: LoanPaymentWhereInput!): [LoanPayment!]!
   paymentSchedulesWhere(where: PaymentScheduleWhereInput!): [PaymentSchedule!]!
+  rangeResume(where: RangeDaysInput!): IResumePayload!
   locals(where: LocalWhereInput!): [Local!]!
 }
 
@@ -504,6 +530,7 @@ input UserWhereInput {
   lastName: StringFilter
   password: StringFilter
   Employee: EmployeeListRelationFilter
+  Expenses: ExpensesListRelationFilter
 }
 
 input EmployeeListRelationFilter {
@@ -512,26 +539,59 @@ input EmployeeListRelationFilter {
   none: EmployeeWhereInput
 }
 
-input ContractListRelationFilter {
-  every: ContractWhereInput
-  some: ContractWhereInput
-  none: ContractWhereInput
+input ExpensesListRelationFilter {
+  every: ExpensesWhereInput
+  some: ExpensesWhereInput
+  none: ExpensesWhereInput
 }
 
-input ContractWhereInput {
-  AND: [ContractWhereInput!]
-  OR: [ContractWhereInput!]
-  NOT: [ContractWhereInput!]
+input ExpensesWhereInput {
+  AND: [ExpensesWhereInput!]
+  OR: [ExpensesWhereInput!]
+  NOT: [ExpensesWhereInput!]
   id: StringFilter
-  borrower: BorrowerRelationFilter
-  borrowerId: StringFilter
-  employee: EmployeeRelationFilter
-  documents: DocumentListRelationFilter
+  amountToPay: DecimalFilter
+  status: EnumPaymentStateFilter
   dueDate: DateTimeFilter
-  signDate: DateTimeFilter
-  employeeId: StringFilter
-  contractType: ContractTypeRelationFilter
-  contractTypeId: StringFilter
+  payedAt: DateTimeFilter
+  user: UserRelationFilter
+  userId: StringNullableFilter
+}
+
+input DecimalFilter {
+  equals: Decimal
+  in: [Decimal!]
+  notIn: [Decimal!]
+  lt: Decimal
+  lte: Decimal
+  gt: Decimal
+  gte: Decimal
+  not: NestedDecimalFilter
+}
+
+input NestedDecimalFilter {
+  equals: Decimal
+  in: [Decimal!]
+  notIn: [Decimal!]
+  lt: Decimal
+  lte: Decimal
+  gt: Decimal
+  gte: Decimal
+  not: NestedDecimalFilter
+}
+
+input EnumPaymentStateFilter {
+  equals: PaymentState
+  in: [PaymentState!]
+  notIn: [PaymentState!]
+  not: NestedEnumPaymentStateFilter
+}
+
+input NestedEnumPaymentStateFilter {
+  equals: PaymentState
+  in: [PaymentState!]
+  notIn: [PaymentState!]
+  not: NestedEnumPaymentStateFilter
 }
 
 input DateTimeFilter {
@@ -554,6 +614,28 @@ input NestedDateTimeFilter {
   gt: DateTime
   gte: DateTime
   not: NestedDateTimeFilter
+}
+
+input ContractListRelationFilter {
+  every: ContractWhereInput
+  some: ContractWhereInput
+  none: ContractWhereInput
+}
+
+input ContractWhereInput {
+  AND: [ContractWhereInput!]
+  OR: [ContractWhereInput!]
+  NOT: [ContractWhereInput!]
+  id: StringFilter
+  borrower: BorrowerRelationFilter
+  borrowerId: StringFilter
+  employee: EmployeeRelationFilter
+  documents: DocumentListRelationFilter
+  dueDate: DateTimeFilter
+  signDate: DateTimeFilter
+  employeeId: StringFilter
+  contractType: ContractTypeRelationFilter
+  contractTypeId: StringFilter
 }
 
 input ContractTypeRelationFilter {
@@ -595,28 +677,6 @@ input NestedIntFilter {
   not: NestedIntFilter
 }
 
-input DecimalFilter {
-  equals: Decimal
-  in: [Decimal!]
-  notIn: [Decimal!]
-  lt: Decimal
-  lte: Decimal
-  gt: Decimal
-  gte: Decimal
-  not: NestedDecimalFilter
-}
-
-input NestedDecimalFilter {
-  equals: Decimal
-  in: [Decimal!]
-  notIn: [Decimal!]
-  lt: Decimal
-  lte: Decimal
-  gt: Decimal
-  gte: Decimal
-  not: NestedDecimalFilter
-}
-
 input LoanListRelationFilter {
   every: LoanWhereInput
   some: LoanWhereInput
@@ -631,6 +691,7 @@ input LoanWhereInput {
   weeklyPaymentAmount: DecimalFilter
   amountToPay: DecimalFilter
   loanType: LoantypeRelationFilter
+  signDate: DateTimeFilter
   employee: EmployeeRelationFilter
   contract: ContractRelationFilter
   contractId: StringFilter
@@ -699,6 +760,8 @@ input PaymentScheduleWhereInput {
   numeration: IntFilter
   amountToPay: DecimalFilter
   paidAmount: DecimalFilter
+  returnToCapital: DecimalFilter
+  profit: DecimalFilter
   delayed: BoolFilter
   dueDate: DateTimeFilter
   details: StringNullableFilter
@@ -758,6 +821,11 @@ input LocalWhereInput {
   address: StringFilter
   borrower: BorrowerRelationFilter
   borrowerId: StringFilter
+}
+
+input RangeDaysInput {
+  dateStart: DateTime!
+  dateEnd: DateTime!
 }
 
 type Mutation {
@@ -974,6 +1042,44 @@ input UserCreateWithoutEmployeeInput {
   firstName: String!
   lastName: String!
   password: String!
+  Expenses: ExpensesCreateNestedManyWithoutUserInput
+}
+
+input ExpensesCreateNestedManyWithoutUserInput {
+  create: [ExpensesCreateWithoutUserInput!]
+  connectOrCreate: [ExpensesCreateOrConnectWithoutUserInput!]
+  createMany: ExpensesCreateManyUserInputEnvelope
+  connect: [ExpensesWhereUniqueInput!]
+}
+
+input ExpensesCreateWithoutUserInput {
+  id: String
+  amountToPay: Decimal!
+  status: PaymentState!
+  dueDate: DateTime!
+  payedAt: DateTime!
+}
+
+input ExpensesCreateOrConnectWithoutUserInput {
+  where: ExpensesWhereUniqueInput!
+  create: ExpensesCreateWithoutUserInput!
+}
+
+input ExpensesWhereUniqueInput {
+  id: String
+}
+
+input ExpensesCreateManyUserInputEnvelope {
+  data: [ExpensesCreateManyUserInput!]!
+  skipDuplicates: Boolean
+}
+
+input ExpensesCreateManyUserInput {
+  id: String
+  amountToPay: Decimal!
+  status: PaymentState!
+  dueDate: DateTime!
+  payedAt: DateTime!
 }
 
 input UserCreateOrConnectWithoutEmployeeInput {
@@ -1148,6 +1254,7 @@ input LoanCreateWithoutEmployeeInput {
   id: String
   weeklyPaymentAmount: Decimal!
   amountToPay: Decimal
+  signDate: DateTime
   loanType: LoantypeCreateNestedOneWithoutLoanInput!
   contract: ContractCreateNestedOneWithoutLoansInput!
   paymentSchedule: PaymentScheduleCreateNestedManyWithoutLoanInput
@@ -1209,6 +1316,8 @@ input PaymentScheduleCreateWithoutLoanInput {
   numeration: Int!
   amountToPay: Decimal!
   paidAmount: Decimal!
+  returnToCapital: Decimal
+  profit: Decimal
   delayed: Boolean
   dueDate: DateTime!
   details: String
@@ -1240,6 +1349,7 @@ input LoanCreateWithoutPaymentsInput {
   id: String
   weeklyPaymentAmount: Decimal!
   amountToPay: Decimal
+  signDate: DateTime
   loanType: LoantypeCreateNestedOneWithoutLoanInput!
   employee: EmployeeCreateNestedOneWithoutLoanInput!
   contract: ContractCreateNestedOneWithoutLoansInput!
@@ -1339,6 +1449,8 @@ input PaymentScheduleCreateWithoutLoanPaymentsInput {
   numeration: Int!
   amountToPay: Decimal!
   paidAmount: Decimal!
+  returnToCapital: Decimal
+  profit: Decimal
   delayed: Boolean
   dueDate: DateTime!
   details: String
@@ -1355,6 +1467,7 @@ input LoanCreateWithoutPaymentScheduleInput {
   id: String
   weeklyPaymentAmount: Decimal!
   amountToPay: Decimal
+  signDate: DateTime
   loanType: LoantypeCreateNestedOneWithoutLoanInput!
   employee: EmployeeCreateNestedOneWithoutLoanInput!
   contract: ContractCreateNestedOneWithoutLoansInput!
@@ -1454,6 +1567,8 @@ input PaymentScheduleCreateManyLoanInput {
   numeration: Int!
   amountToPay: Decimal!
   paidAmount: Decimal!
+  returnToCapital: Decimal
+  profit: Decimal
   delayed: Boolean
   dueDate: DateTime!
   details: String
@@ -1473,6 +1588,7 @@ input LoanCreateManyEmployeeInput {
   id: String
   weeklyPaymentAmount: Decimal!
   amountToPay: Decimal
+  signDate: DateTime
   contractId: String!
   loantypeId: String!
 }
@@ -1651,6 +1767,7 @@ input UserCreateInput {
   lastName: String!
   password: String!
   Employee: EmployeeCreateNestedManyWithoutUserInput
+  Expenses: ExpensesCreateNestedManyWithoutUserInput
 }
 
 input EmployeeCreateNestedManyWithoutUserInput {
@@ -1717,6 +1834,7 @@ input ContractCreateInput {
 
 input CustomCreateLoanInput {
   amountToPay: Decimal
+  signDate: DateTime
   loanType: LoantypeCreateNestedOneWithoutLoanInput!
   employee: EmployeeCreateNestedOneWithoutLoanInput!
   contract: ContractCreateNestedOneWithoutLoansInput!
@@ -1773,6 +1891,7 @@ input LoanCreateWithoutLoanTypeInput {
   id: String
   weeklyPaymentAmount: Decimal!
   amountToPay: Decimal
+  signDate: DateTime
   employee: EmployeeCreateNestedOneWithoutLoanInput!
   contract: ContractCreateNestedOneWithoutLoansInput!
   paymentSchedule: PaymentScheduleCreateNestedManyWithoutLoanInput
@@ -1792,6 +1911,7 @@ input LoanCreateManyLoanTypeInput {
   id: String
   weeklyPaymentAmount: Decimal!
   amountToPay: Decimal
+  signDate: DateTime
   contractId: String!
   employeeId: String!
 }

@@ -12,4 +12,10 @@ export class PaymentScheduleSumAggregateInput {
 
     @Field(() => Boolean, {nullable:true})
     paidAmount?: true;
+
+    @Field(() => Boolean, {nullable:true})
+    returnToCapital?: true;
+
+    @Field(() => Boolean, {nullable:true})
+    profit?: true;
 }

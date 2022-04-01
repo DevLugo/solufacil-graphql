@@ -20,6 +20,12 @@ export class PaymentScheduleCreateManyLoanInput {
     @Field(() => GraphQLDecimal, {nullable:false})
     paidAmount!: any;
 
+    @Field(() => GraphQLDecimal, {nullable:true})
+    returnToCapital?: any;
+
+    @Field(() => GraphQLDecimal, {nullable:true})
+    profit?: any;
+
     @HideField()
     status!: keyof typeof PaymentState;
 

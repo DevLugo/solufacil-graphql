@@ -54,6 +54,7 @@ model User {
   /// @HideField({ output: false, input: true })
   updatedAt      DateTime   @updatedAt
   Employee       Employee[]
+  Expenses       Expenses[]
 }
 
 model Employee {
@@ -228,6 +229,7 @@ model Loan {
   weeklyPaymentAmount Decimal           @db.Money
   amountToPay         Decimal           @default(0) @db.Money
   loanType            Loantype          @relation(fields: [loantypeId], references: [id])
+  signDate            DateTime          @default(now())
   /// @HideField({ output: false, input: true })
   createdAt           DateTime          @default(now())
   employee            Employee          @relation(fields: [employeeId], references: [id])
@@ -258,22 +260,39 @@ model LoanPayment {
 
 model PaymentSchedule {
   /// @HideField({ match: 'PaymentScheduleCreate*Input' })
-  id           String        @id @default(uuid())
-  numeration   Int
-  amountToPay  Decimal       @db.Money
-  paidAmount   Decimal       @db.Money
+  id              String        @id @default(uuid())
+  numeration      Int
+  amountToPay     Decimal       @db.Money
+  paidAmount      Decimal       @db.Money
+  returnToCapital Decimal       @default(0) @db.Money
+  profit          Decimal       @default(0) @db.Money
   /// @HideField({ output: false, input: true })
-  status       PaymentState
-  delayed      Boolean       @default(false)
-  dueDate      DateTime
-  details      String?
+  status          PaymentState
+  delayed         Boolean       @default(false)
+  dueDate         DateTime
+  details         String?
   /// @HideField({ output: false, input: true })
-  createdAt    DateTime      @default(now())
+  createdAt       DateTime      @default(now())
   /// @HideField({ output: false, input: true })
-  updatedAt    DateTime      @updatedAt
-  loan         Loan          @relation(fields: [loanId], references: [id])
-  loanId       String
-  loanPayments LoanPayment[]
+  updatedAt       DateTime      @updatedAt
+  loan            Loan          @relation(fields: [loanId], references: [id])
+  loanId          String
+  loanPayments    LoanPayment[]
+}
+
+model Expenses {
+  /// @HideField({ match: 'ExpensesScheduleCreate*Input' })
+  id          String       @id @default(uuid())
+  amountToPay Decimal      @db.Money
+  status      PaymentState
+  dueDate     DateTime
+  payedAt     DateTime
+  user        User?        @relation(fields: [userId], references: [id])
+  /// @HideField({ output: false, input: true })
+  createdAt   DateTime     @default(now())
+  /// @HideField({ output: false, input: true })
+  updatedAt   DateTime     @updatedAt
+  userId      String?
 }
 
 enum LoanState {

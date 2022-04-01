@@ -32,6 +32,9 @@ export class Loan {
     loanType?: Loantype;
 
     @Field(() => Date, {nullable:false})
+    signDate!: Date;
+
+    @Field(() => Date, {nullable:false})
     createdAt!: Date;
 
     @Field(() => Employee, {nullable:false})
