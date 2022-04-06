@@ -4,9 +4,9 @@ import * as fs from 'fs';
 import { parse } from 'dotenv';
 
 async function bootstrap() {
-  const envFilePath = `${__dirname.replace("\\dist",'')}./../.env`;
-  const keyFilePath = `${__dirname.replace("\\dist",'')}/key.pem`;
-  const secretFilePath = `${__dirname.replace("\\dist",'')}/cert.pem`;
+  const envFilePath = `${__dirname.replace("/dist",'')}/../.env`;
+  const keyFilePath = `${__dirname.replace("/dist",'')}/key.pem`;
+  const secretFilePath = `${__dirname.replace("/dist",'')}/cert.pem`;
   
   try {
     const env = parse(fs.readFileSync(envFilePath))
