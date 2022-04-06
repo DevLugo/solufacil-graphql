@@ -14,7 +14,7 @@ CREATE TYPE "DocumentType" AS ENUM ('DNI', 'NSS', 'RFC', 'SHOP_PHOTO', 'BANC_ACC
 CREATE TYPE "PrintableFormat" AS ENUM ('CONTRACT', 'MONEY_REQUEST', 'COLLECTION_LIST', 'RESPONSIVE_LETTER', 'PROMISSORY_NOTES', 'DISPOSAL_ORDER');
 
 -- DropEnum
-DROP TYPE "InteractionType";
+-- DROP TYPE "InteractionType";
 
 -- CreateTable
 CREATE TABLE "Log" (
