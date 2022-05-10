@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ContractTypeCreateInput } from '../../@generated/prisma-nestjs-graphql/contract-type/contract-type-create.input';
+import { ContractTypeCreateInput } from '@generated/prisma-nestjs-graphql/contract-type/contract-type-create.input';
 import { PrismaService } from '../../core/prisma/prisma.service';
 
 @Injectable()

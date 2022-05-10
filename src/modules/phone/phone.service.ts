@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { PhoneCreateInput } from '../../@generated/prisma-nestjs-graphql/phone/phone-create.input';
-import { PrismaService } from '../../core/prisma/prisma.service';
+import { PhoneCreateInput } from '@generated/prisma-nestjs-graphql/phone/phone-create.input';
+import { PrismaService } from 'core/prisma/prisma.service';
 
 @Injectable()
 export class PhoneService {

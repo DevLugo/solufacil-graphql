@@ -1,10 +1,10 @@
 import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GqlAuthGuard } from '../auth/GqlAuthGuard';
-import { EmployeeCreateInput } from '../../@generated/prisma-nestjs-graphql/employee/employee-create.input';
-import { Employee } from '../../@generated/prisma-nestjs-graphql/employee/employee.model';
+import { EmployeeCreateInput } from '@generated/prisma-nestjs-graphql/employee/employee-create.input';
+import { Employee } from '@generated/prisma-nestjs-graphql/employee/employee.model';
 import { EmployeeService } from './employee.service';
-import { EmployerWhereInput } from 'src/@generated/prisma-nestjs-graphql/employer/employer-where.input';
+import { EmployerWhereInput } from '@generated/prisma-nestjs-graphql/employer/employer-where.input';
 
 @UseGuards(GqlAuthGuard)
 @Resolver(() => Employee)

@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { LocalService } from './local.service';
 import { LocalResolver } from './local.resolver';
-import { PrismaModule } from 'src/core/prisma/prisma.module';
+import { PrismaModule } from 'core/prisma/prisma.module';
 import { AuthModule } from '../auth/auth.module';
 
 @Module({

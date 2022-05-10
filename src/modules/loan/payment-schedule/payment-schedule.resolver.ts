@@ -1,9 +1,9 @@
 import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
-import { Loan } from 'src/@generated/prisma-nestjs-graphql/loan/loan.model';
-import { Loantype } from 'src/@generated/prisma-nestjs-graphql/loantype/loantype.model';
-import { PaymentScheduleWhereInput } from 'src/@generated/prisma-nestjs-graphql/payment-schedule/payment-schedule-where.input';
-import { PaymentSchedule } from 'src/@generated/prisma-nestjs-graphql/payment-schedule/payment-schedule.model';
-import { PrismaService } from 'src/core/prisma/prisma.service';
+import { Loan } from '@generated/prisma-nestjs-graphql/loan/loan.model';
+import { Loantype } from '@generated/prisma-nestjs-graphql/loantype/loantype.model';
+import { PaymentScheduleWhereInput } from '@generated/prisma-nestjs-graphql/payment-schedule/payment-schedule-where.input';
+import { PaymentSchedule } from '@generated/prisma-nestjs-graphql/payment-schedule/payment-schedule.model';
+import { PrismaService } from 'core/prisma/prisma.service';
 import { LoanTypeService } from '../loan-type/loan-type.service';
 import { LoanService } from '../loan.service';
 import { PaymentBreakDown, UtilsService } from '../utils.service';

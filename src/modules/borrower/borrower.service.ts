@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { BorrowerWhereInput } from '../../@generated/prisma-nestjs-graphql/borrower/borrower-where.input';
-import { BorrowerCreateInput } from '../../@generated/prisma-nestjs-graphql/borrower/borrower-create.input';
+import { BorrowerWhereInput } from '@generated/prisma-nestjs-graphql/borrower/borrower-where.input';
+import { BorrowerCreateInput } from '@generated/prisma-nestjs-graphql/borrower/borrower-create.input';
 import { PrismaService } from '../../core/prisma/prisma.service';
 
 @Injectable()
