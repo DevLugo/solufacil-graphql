@@ -8,9 +8,10 @@ import { PaymentScheduleService } from './payment-schedule/payment-schedule.serv
 import { LoanTypeService } from './loan-type/loan-type.service';
 import { UtilsService } from './utils.service';
 import { PaymentScheduleResolver } from './payment-schedule/payment-schedule.resolver';
+import { BorrowerService } from '../borrower/borrower.service';
 
 @Module({
-  providers: [LoanService, LoanPaymentService, UtilsService, LoanTypeService, LoanResolver, PaymentScheduleResolver, PaymentScheduleService],
+  providers: [LoanService, LoanPaymentService, BorrowerService, UtilsService, LoanTypeService, LoanResolver, PaymentScheduleResolver, PaymentScheduleService],
   imports: [PrismaModule, AuthModule]
 })
 export class LoanModule {}

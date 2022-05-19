@@ -1,7 +1,7 @@
 import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
-import { PhoneCreateInput } from '../../@generated/prisma-nestjs-graphql/phone/phone-create.input';
-import { Phone } from '../../@generated/prisma-nestjs-graphql/phone/phone.model';
+import { PhoneCreateInput } from '../../@generated/phone/phone-create.input';
+import { Phone } from '../../@generated/phone/phone.model';
 import { GqlAuthGuard } from '../auth/GqlAuthGuard';
 import { PhoneService } from './phone.service';
 

@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { PaymentScheduleWhereInput } from '../../../@generated/prisma-nestjs-graphql/payment-schedule/payment-schedule-where.input';
-import { PaymentState } from '../../../@generated/prisma-nestjs-graphql/prisma/payment-state.enum';
+import { PaymentScheduleWhereInput } from '../../../@generated/payment-schedule/payment-schedule-where.input';
+import { PaymentState } from '../../../@generated/prisma/payment-state.enum';
 import { PrismaService } from '../../../core/prisma/prisma.service';
-import { LoanService } from '../loan.service';
 import { IResumePayload } from './payloads/resume';
 
 @Injectable()

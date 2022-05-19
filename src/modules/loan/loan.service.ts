@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { LoanWhereInput } from '../../@generated/prisma-nestjs-graphql/loan/loan-where.input';
-import { LoanCreateInput } from '../../@generated/prisma-nestjs-graphql/loan/loan-create.input';
+import { LoanWhereInput } from '../../@generated/loan/loan-where.input';
+import { LoanCreateInput } from '../../@generated/loan/loan-create.input';
 import { PrismaService } from '../../core/prisma/prisma.service';
 import { LoanPaymentService } from './loan-payment/loan-payment.service';
 import { CustomCreateLoanInput } from './CustomCreateLoanInput';
@@ -20,7 +20,21 @@ export class LoanService {
         return await this.db.loan.findMany({where});
     }
     async get(id: string){
-        return await this.db.loan.findUnique({where:{id}});
+        return await this.db.loan.findUnique({
+            where:{id},
+            include: {
+                payments: {
+                    include: {
+                        employee:true
+                    }
+                },
+                employee: {
+                    include: {
+                        user: true
+                    }    
+                },
+            }
+        });
     }
 
     async createLoanProccess(data:CustomCreateLoanInput){
@@ -36,7 +50,7 @@ export class LoanService {
             throw new Error('La cantidad solicitada es mayor a la otorgada en el contrato: TODO: validar que solo tenga un credito activo a la vez');
         const {firstPaymentDate, ...cleanedData} = data;
         const loanType = await this.db.loantype.findFirst({where: {id:data.loanType.connect.id}});
-        const weecklyPayment =  (data.amountToPay * (1+loanType.rate)) / loanType.weekDuration;
+        const weecklyPayment =  (+data.amountToPay * (1+loanType.rate)) / loanType.weekDuration;
         const loan = await this.db.loan.create({
             data:{...cleanedData, status: LoanState.APPROVED, weeklyPaymentAmount: weecklyPayment}
         });

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PhoneCreateInput } from '../../@generated/prisma-nestjs-graphql/phone/phone-create.input';
+import { PhoneCreateInput } from '../../@generated/phone/phone-create.input';
 import { PrismaService } from '../../core/prisma/prisma.service';
 
 @Injectable()

@@ -1,6 +1,6 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { ContractTypeCreateInput } from '../../@generated/prisma-nestjs-graphql/contract-type/contract-type-create.input';
-import { ContractType } from '../../@generated/prisma-nestjs-graphql/contract-type/contract-type.model';
+import { ContractTypeCreateInput } from '../../@generated/contract-type/contract-type-create.input';
+import { ContractType } from '../../@generated/contract-type/contract-type.model';
 import { ContractTypeService } from './contract-type.service';
 
 @Resolver(() => ContractType)

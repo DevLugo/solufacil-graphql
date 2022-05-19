@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { LoanPaymentWhereInput } from '../../../@generated/prisma-nestjs-graphql/loan-payment/loan-payment-where.input';
-import { LoanPaymentCreateInput } from '../../../@generated/prisma-nestjs-graphql/loan-payment/loan-payment-create.input';
+import { LoanPaymentWhereInput } from '../../../@generated/loan-payment/loan-payment-where.input';
+import { LoanPaymentCreateInput } from '../../../@generated/loan-payment/loan-payment-create.input';
 import { PrismaService } from '../../../core/prisma/prisma.service';
-import { PaymentState } from '../../../@generated/prisma-nestjs-graphql/prisma/payment-state.enum';
+import { PaymentState } from '../../../@generated/prisma/payment-state.enum';
 import { LoanPaymentUpdateInput } from './inputs/UpdatePaymentInput';
 import { UtilsService } from '../utils.service';
 

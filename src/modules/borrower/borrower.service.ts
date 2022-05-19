@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
-import { BorrowerWhereInput } from '../../@generated/prisma-nestjs-graphql/borrower/borrower-where.input';
-import { BorrowerCreateInput } from '../../@generated/prisma-nestjs-graphql/borrower/borrower-create.input';
+import { BorrowerWhereInput } from '../../@generated/borrower/borrower-where.input';
+import { BorrowerCreateInput } from '../../@generated/borrower/borrower-create.input';
 import { PrismaService } from '../../core/prisma/prisma.service';
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class BorrowerService {
@@ -25,7 +25,10 @@ export class BorrowerService {
                 throw new Error(`El télefono ${dbPhone.number} ya existe`);
         }
         
-        return await this.db.borrower.create({data});
+        return await this.db.borrower.create({data:{
+            name: data.name,
+            address: data.address
+        }});
     }
       
     async getMany(data:BorrowerWhereInput) {

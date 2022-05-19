@@ -1,7 +1,7 @@
 import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UserCreateInput } from '../../@generated/prisma-nestjs-graphql/user/user-create.input';
-import { User } from '../../@generated/prisma-nestjs-graphql/user/user.model';
+import { UserCreateInput } from '../../@generated/user/user-create.input';
+import { User } from '../../@generated/user/user.model';
 import { PrismaService } from '../../core/prisma/prisma.service';
 import { genSalt, hash, compare } from 'bcryptjs';
 import { SignInInput } from './signIn.input';

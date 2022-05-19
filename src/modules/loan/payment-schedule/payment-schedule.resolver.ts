@@ -1,10 +1,10 @@
-import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
-import { Loan } from 'src/@generated/prisma-nestjs-graphql/loan/loan.model';
-import { Loantype } from 'src/@generated/prisma-nestjs-graphql/loantype/loantype.model';
-import { PaymentScheduleWhereInput } from 'src/@generated/prisma-nestjs-graphql/payment-schedule/payment-schedule-where.input';
-import { PaymentSchedule } from 'src/@generated/prisma-nestjs-graphql/payment-schedule/payment-schedule.model';
+import { Args, Float, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import { Borrower } from 'src/@generated/borrower/borrower.model';
+import { Loan } from 'src/@generated/loan/loan.model';
+import { PaymentScheduleWhereInput } from 'src/@generated/payment-schedule/payment-schedule-where.input';
+import { PaymentSchedule } from 'src/@generated/payment-schedule/payment-schedule.model';
 import { PrismaService } from 'src/core/prisma/prisma.service';
-import { LoanTypeService } from '../loan-type/loan-type.service';
+import { BorrowerService } from 'src/modules/borrower/borrower.service';
 import { LoanService } from '../loan.service';
 import { PaymentBreakDown, UtilsService } from '../utils.service';
 import { RangeDaysInput } from './inputs/RangeDaysInput';
@@ -16,10 +16,11 @@ export class PaymentScheduleResolver {
     constructor(
         private readonly UtilsService: UtilsService,
         private readonly LoanService: LoanService,
+        private readonly BorrowerService: BorrowerService,
         private readonly _db: PrismaService,
         private readonly LoanPaymentScheduleService: PaymentScheduleService
         ){}
-    @ResolveField(returns => PaymentBreakDown)
+    @ResolveField(_ => PaymentBreakDown)
     async paymentBreakDown(@Parent() root: PaymentSchedule) {
         const { amountToPay } = root;
         const data = await this._db.loan.findFirst({
@@ -30,12 +31,45 @@ export class PaymentScheduleResolver {
         });
         const rate = data.loanType.rate
 
-        return this.UtilsService.paymentBreakDown(amountToPay, rate);
+        return this.UtilsService.paymentBreakDown(+amountToPay, rate);
     }
+    
 
-    @ResolveField(returns => Loan)
+    @ResolveField(_ => Loan)
     async loan(@Parent() root: PaymentSchedule) {
         return this.LoanService.get(root.loanId);
+    }
+
+    @ResolveField(_ => Number)
+    async pendingAmount(@Parent() root: PaymentSchedule) {
+        const payment = await this._db.paymentSchedule.findUnique({
+            where:{
+                id: root.id
+            }
+        });
+        return Number(payment.amountToPay) - Number(payment.paidAmount); 
+    }
+
+
+    @ResolveField(_ => Borrower)
+    async borrower(@Parent() root: PaymentSchedule) {
+        const data = await this._db.loan.findUnique({
+            where: {
+                id: root.loanId,
+            },
+            include: {
+                contract: {
+                    include: {
+                        borrower:{
+                            include:{
+                                phones: true
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        return data.contract.borrower;
     }
     
 

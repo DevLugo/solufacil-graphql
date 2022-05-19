@@ -1,15 +1,15 @@
 import { Args, Mutation, Parent, Query, ResolveField, ResolveProperty, Resolver, ResolveReference } from '@nestjs/graphql';
-import { LoantypeCreateInput } from '../../@generated/prisma-nestjs-graphql/loantype/loantype-create.input';
-import { Loantype } from '../../@generated/prisma-nestjs-graphql/loantype/loantype.model';
-import { LoanPaymentCreateInput } from '../../@generated/prisma-nestjs-graphql/loan-payment/loan-payment-create.input';
-import { LoanPayment } from '../../@generated/prisma-nestjs-graphql/loan-payment/loan-payment.model';
-import { Loan } from '../../@generated/prisma-nestjs-graphql/loan/loan.model';
+import { LoantypeCreateInput } from '../../@generated/loantype/loantype-create.input';
+import { Loantype } from '../../@generated/loantype/loantype.model';
+import { LoanPaymentCreateInput } from '../../@generated/loan-payment/loan-payment-create.input';
+import { LoanPayment } from '../../@generated/loan-payment/loan-payment.model';
+import { Loan } from '../../@generated/loan/loan.model';
 import { LoanPaymentService } from './loan-payment/loan-payment.service';
 import { LoanTypeService } from './loan-type/loan-type.service';
 import { LoanService } from './loan.service';
-import { LoanPaymentWhereInput } from '../../@generated/prisma-nestjs-graphql/loan-payment/loan-payment-where.input';
-import { LoantypeWhereInput } from '../../@generated/prisma-nestjs-graphql/loantype/loantype-where.input';
-import { LoanWhereInput } from '../../@generated/prisma-nestjs-graphql/loan/loan-where.input';
+import { LoanPaymentWhereInput } from '../../@generated/loan-payment/loan-payment-where.input';
+import { LoantypeWhereInput } from '../../@generated/loantype/loantype-where.input';
+import { LoanWhereInput } from '../../@generated/loan/loan-where.input';
 import { CustomCreateLoanInput } from './CustomCreateLoanInput';
 import { LoanPaymentUpdateInput } from '../loan/loan-payment/inputs/UpdatePaymentInput';
 import { PaymentScheduleService } from './payment-schedule/payment-schedule.service';
@@ -65,7 +65,7 @@ export class LoanResolver {
     }
 
     @Mutation(() => Loan)
-    async setLoanPayment(
+    async payPayment(
         @Args({ name: 'input', type: () => LoanPaymentUpdateInput})
         data: LoanPaymentUpdateInput
     ){

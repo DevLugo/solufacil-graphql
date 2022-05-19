@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import { parse } from 'dotenv';
+import * as path from 'path';
 
 export class ConfigService {
   private readonly envConfig: { [key: string]: string };
@@ -7,7 +8,7 @@ export class ConfigService {
   constructor() {
     const isDevelopmentEnv = process.env.NODE_ENV !== 'production';
     if (isDevelopmentEnv) {
-      const envFilePath = `${__dirname.replace("\\dist",'')}./../../../.env`;
+      const envFilePath = path.resolve(".env");
       const existsPath = fs.existsSync(envFilePath);
 
       if (existsPath) {
