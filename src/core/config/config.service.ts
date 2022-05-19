@@ -13,7 +13,7 @@ export class ConfigService {
 
       if (existsPath) {
         this.envConfig = parse(fs.readFileSync(envFilePath));
-      }else{
+      } else {
         console.log('.env file does not exist');
         process.exit(0);
       }
