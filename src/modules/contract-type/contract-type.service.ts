@@ -7,7 +7,16 @@ export class ContractTypeService {
     constructor(private readonly db: PrismaService) {}
 
     create(data: ContractTypeCreateInput){
-      return this.db.contractType.create({data});
+      return this.db.contractType.create(
+        {
+          data: {
+            amount:data.amount,
+            maxRate: data.maxRate,
+            monthDuration: data.monthDuration,
+            name: data.name
+          }
+        }
+      );
     }
     
     async getMany() {
