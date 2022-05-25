@@ -1,0 +1,31 @@
+import { StringFilter } from '../prisma/string-filter.input';
+import { EnumLoanStateFilter } from '../prisma/enum-loan-state-filter.input';
+import { LoanPaymentListRelationFilter } from '../loan-payment/loan-payment-list-relation-filter.input';
+import { DecimalFilter } from '../prisma/decimal-filter.input';
+import { LoantypeRelationFilter } from '../loantype/loantype-relation-filter.input';
+import { DateTimeFilter } from '../prisma/date-time-filter.input';
+import { EmployeeRelationFilter } from '../employee/employee-relation-filter.input';
+import { ContractRelationFilter } from '../contract/contract-relation-filter.input';
+import { PaymentScheduleListRelationFilter } from '../payment-schedule/payment-schedule-list-relation-filter.input';
+import { CommissionPaymentListRelationFilter } from '../commission-payment/commission-payment-list-relation-filter.input';
+export declare class LoanWhereInput {
+    AND?: Array<LoanWhereInput>;
+    OR?: Array<LoanWhereInput>;
+    NOT?: Array<LoanWhereInput>;
+    id?: StringFilter;
+    status?: EnumLoanStateFilter;
+    payments?: LoanPaymentListRelationFilter;
+    weeklyPaymentAmount?: DecimalFilter;
+    amountToPay?: DecimalFilter;
+    loanType?: LoantypeRelationFilter;
+    signDate?: DateTimeFilter;
+    createdAt?: DateTimeFilter;
+    employee?: EmployeeRelationFilter;
+    updatedAt?: DateTimeFilter;
+    contract?: ContractRelationFilter;
+    contractId?: StringFilter;
+    loantypeId?: StringFilter;
+    employeeId?: StringFilter;
+    paymentSchedule?: PaymentScheduleListRelationFilter;
+    CommissionPayment?: CommissionPaymentListRelationFilter;
+}
