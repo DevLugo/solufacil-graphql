@@ -4,8 +4,8 @@ import { LoanCreateInput } from '../../@generated/loan/loan-create.input';
 import { PrismaService } from '../../core/prisma/prisma.service';
 import { LoanPaymentService } from './loan-payment/loan-payment.service';
 import { CustomCreateLoanInput } from './CustomCreateLoanInput';
-import { LoanState } from '@prisma/client';
 import { PaymentScheduleService } from './payment-schedule/payment-schedule.service';
+import { LoanState } from '../../@generated/prisma/loan-state.enum';
 
 @Injectable()
 export class LoanService {
