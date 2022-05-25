@@ -6,7 +6,7 @@ import path from 'path';
 
 async function bootstrap() {
     const v8 = require('v8');
-    // Output available memory in GBs
+    // Output available memory in GBss
     console.log(v8.getHeapStatistics().heap_size_limit / 1024 ** 3);
     const app = await NestFactory.create(AppModule);
     await app.listen(process.env.PORT || 4000);
