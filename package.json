@@ -9,7 +9,7 @@
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "postinstall": "cd ./src/prisma && npx prisma generate",
-    "start": "node dist/main --optimize_for_size --max-old-space-size=460 --gc_interval=100",
+    "start": "node start",
     "start:dev": "nest start --watch --optimize_for_size --max_old_space_size=920 --gc_interval=100",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
