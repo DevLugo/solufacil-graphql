@@ -1,7 +1,7 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { LocalCreateInput } from 'src/@generated/local/local-create.input';
-import { LocalWhereInput } from 'src/@generated/local/local-where.input';
-import { Local } from 'src/@generated/local/local.model';
+import { LocalCreateInput } from '../../@generated/local/local-create.input';
+import { LocalWhereInput } from '../../@generated/local/local-where.input';
+import { Local } from '../../@generated/local/local.model';
 import { LocalService } from './local.service';
 
 @Resolver()
