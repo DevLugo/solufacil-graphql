@@ -1,5 +1,8 @@
 {
     "version": 2,
+    "env": {
+        "JWT_SECRET": "@jwt_secret"
+    },
     "builds": [
         {
             "src": "src/main.ts",
