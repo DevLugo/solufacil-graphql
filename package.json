@@ -7,7 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "yarn install && prisma:generate && nest build",
+    "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "postinstall": "cd ./src/prisma && npx prisma generate",
     "start": "node dist/main --optimize_for_size --max-old-space-size=460 --gc_interval=100",
