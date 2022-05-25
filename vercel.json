@@ -3,6 +3,9 @@
     "env": {
         "JWT_SECRET": "@jwt_secret_"
     },
+    "build": {
+        "JWT_SECRET": "@jwt_secret_"
+    },
     "builds": [
         {
             "src": "src/main.ts",
