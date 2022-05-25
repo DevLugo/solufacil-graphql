@@ -9,7 +9,7 @@
     "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "node dist/src/main --optimize_for_size --max-old-space-size=460 --gc_interval=100",
+    "start": "node dist/main --optimize_for_size --max-old-space-size=460 --gc_interval=100",
     "start:dev": "nest start --watch --optimize_for_size --max_old_space_size=920 --gc_interval=100",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
@@ -19,11 +19,11 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "db:save": "cd ./prisma && npx prisma migrate dev",
-    "db:reset": "cd ./prisma && npx prisma migrate reset",
-    "db:deploy": "cd ./prisma && npx prisma migrate deploy",
-    "db:generate": "cd ./prisma && npx prisma generate",
-    "db:seed": "cd ./prisma && ts-node seed.ts"
+    "db:save": "cd ./src/prisma && npx prisma migrate dev",
+    "db:reset": "cd ./src/prisma && npx prisma migrate reset",
+    "db:deploy": "cd ./src/prisma && npx prisma migrate deploy",
+    "db:generate": "cd ./src/prisma && npx prisma generate",
+    "db:seed": "cd ./src/prisma && ts-node seed.ts"
   },
   "dependencies": {
     "@nestjs/apollo": "^10.0.12",
