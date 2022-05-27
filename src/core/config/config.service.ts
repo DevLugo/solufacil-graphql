@@ -10,7 +10,6 @@ export class ConfigService {
     if (isDevelopmentEnv) {
       const envFilePath = path.resolve(".env");
       const existsPath = fs.existsSync(envFilePath);
-
       if (existsPath) {
         this.envConfig = parse(fs.readFileSync(envFilePath));
       } else {
@@ -20,6 +19,8 @@ export class ConfigService {
     } else {
       this.envConfig = {
         PORT: process.env.PORT,
+        DATABASE_URL: process.env.DATABASE_URL,
+        JWT_SECRET: process.env.JWT_SECRET
       };
     }
   }
