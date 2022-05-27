@@ -9,6 +9,12 @@ async function bootstrap() {
     // Output available memory in GBsss
     console.log(v8.getHeapStatistics().heap_size_limit / 1024 ** 3);
     const app = await NestFactory.create(AppModule);
-    await app.listen(process.env.PORT || 4000);
-}
+    await app.listen(10000, '0.0.0.0');
+  }
 bootstrap();
+
+
+yarn install && yarn build
+
+
+yarn install && yarn db:generate && yarn:build
