@@ -12,9 +12,3 @@ async function bootstrap() {
     await app.listen(10000, '0.0.0.0');
   }
 bootstrap();
-
-
-yarn install && yarn build
-
-
-yarn install && yarn db:generate && yarn:build
