@@ -4,6 +4,7 @@ import { GqlAuthGuard } from '../auth/GqlAuthGuard';
 import { EmployeeCreateInput } from '../../@generated/employee/employee-create.input';
 import { Employee } from '../../@generated/employee/employee.model';
 import { EmployeeService } from './employee.service';
+import { EmployeeWhereInput } from '../../@generated/employee/employee-where.input';
 
 @UseGuards(GqlAuthGuard)
 @Resolver(() => Employee)
@@ -12,10 +13,10 @@ export class EmployeeResolver {
     
     @Query(() => [Employee])
     async employees(
-        @Args({ name: 'name', type: () => String})
-        name:string
+        @Args({ name: 'where', type: () => EmployeeWhereInput})
+        where:EmployeeWhereInput
     ) {
-        return await this.EmployeeService.getManyByName(name);
+        return await this.EmployeeService.getMany(where);
     }
 
     @Mutation(() => Employee)

@@ -2,12 +2,16 @@ import { Injectable } from '@nestjs/common';
 import { PaymentScheduleWhereInput } from '../../../@generated/payment-schedule/payment-schedule-where.input';
 import { PaymentState } from '../../../@generated/prisma/payment-state.enum';
 import { PrismaService } from '../../../core/prisma/prisma.service';
+import { LoanPaymentService } from '../loan-payment/loan-payment.service';
 import { IResumePayload } from './payloads/resume';
 
 @Injectable()
 export class PaymentScheduleService {
     constructor(
-        private readonly db:PrismaService){}
+        private readonly db:PrismaService,
+        private readonly paymentService:LoanPaymentService
+        
+        ){}
     WEEK_SECONDS =  7 * 24 * 60 * 60 * 1000;
 
     async createPaymentSchedule(firstDayPay: Date, weeksDuration:number, loanId:string){
@@ -22,6 +26,11 @@ export class PaymentScheduleService {
         const transactions = [];
         while (i < weeksDuration){
             nextDateToPay = new Date(nextDateToPay.getTime( ) + weekSeconds);
+            const percentegeToPaid = this.paymentService.calculatePayedPercentege(+loan.weeklyPaymentAmount, +loan.amountToPay);
+            const profit = this.paymentService.getPercentageOf(percentegeToPaid, Number(loan.totalProfitAmount));
+           
+            // const percentegeToPaid = this.calculatePayedPercentege(Number(amountForPayment)+paidAmount, +loan.amountToPay);
+            //const profit = this.getPercentageOf(percentegeToPaid, Number(loan.totalProfitAmount));
             transactions.push(
                 this.db.paymentSchedule.create({
                     data: {
@@ -30,6 +39,8 @@ export class PaymentScheduleService {
                         paidAmount: 0,
                         numeration: i+1,
                         status: PaymentState.PENDING,
+                        profit: +profit,
+                        returnToCapital: +loan.weeklyPaymentAmount-Number(profit),
                         loan: {
                             connect: {id:loan.id}
                         }

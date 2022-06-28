@@ -5,6 +5,7 @@ import { PrismaService } from '../../../core/prisma/prisma.service';
 import { PaymentState } from '../../../@generated/prisma/payment-state.enum';
 import { LoanPaymentUpdateInput } from './inputs/UpdatePaymentInput';
 import { UtilsService } from '../utils.service';
+import { Loan } from 'src/@generated/loan/loan.model';
 
 @Injectable()
 export class LoanPaymentService {
@@ -18,7 +19,9 @@ export class LoanPaymentService {
     }
 
     async create(data:LoanPaymentCreateInput){
-        return await this.db.loanPayment.create({data});
+        return await this.db.loanPayment.create({
+            data:{...data}
+        });
     }
 
     async addPaymentToLoan(data:LoanPaymentUpdateInput){
@@ -29,6 +32,7 @@ export class LoanPaymentService {
             },
             include: {loanType:true}
         });
+        if (Number(amountForPayment) > Number(loan.pendingAmount)) throw new Error("La cantidad es mayor a la deuda pendiente")
         let getNextPayments = await this.db.paymentSchedule.findMany(
             {
                 where: {
@@ -43,35 +47,38 @@ export class LoanPaymentService {
         const bulkDbActions = [];
         const paymentSchedulesIds = [];
         while(amountForPayment){
-            const nextPayment = getNextPayments[0];
-            const pendingAmount = (Number(nextPayment.amountToPay)-Number(nextPayment.paidAmount));
+            const currentPayment = getNextPayments[0];
+            const pendingAmount = (Number(currentPayment.amountToPay)-Number(currentPayment.paidAmount));
             const coverFullAmount = Number(amountForPayment) >= pendingAmount;
             const status: PaymentState = coverFullAmount ? PaymentState.PAID_OUT:PaymentState.PARTIALLY_PAID;
             const paidAmount = coverFullAmount ? pendingAmount : Number(amountForPayment); 
             amountForPayment = Number(amountForPayment) - Number(paidAmount);
-            const breakDown = this.UtilsService.paymentBreakDown(amountForPayment, loan.loanType.rate);
-            const { returnOfCapital, profit } = breakDown;
+            
             bulkDbActions.push(
                 this.db.paymentSchedule.update({
                     data: { 
                         status,
                         paidAmount,
-                        profit: Number(nextPayment.profit) + Number(profit),
-                        returnToCapital: Number(nextPayment.returnToCapital) + Number(returnOfCapital),
                     },
-                    where: { id:nextPayment.id }
+                    where: { id:currentPayment.id }
                 })
             );
-            
-            paymentSchedulesIds.push(nextPayment.id);
+            paymentSchedulesIds.push(currentPayment.id);
             getNextPayments.shift();
         }
+
+        const percentegeToPaid = this.calculatePayedPercentege(Number(data.amount), +loan.amountToPay);
+        const totalProfitToPaid = this.getPercentageOf(percentegeToPaid, Number(loan.totalProfitAmount));
+        
         bulkDbActions.push(
             this.db.loanPayment.create({
                 data: {
                     amount: Number(data.amount),
+                    profitAmount: Number(totalProfitToPaid),
+                    returnToCapital: data.amount-Number(totalProfitToPaid),
+                    percentage: Number(10.285714286),
                     date: new Date(String(data.paidDate)),
-                    comments: String(data.details),
+                    //TODO: add one comment at time
                     paymentSchedules:{connect:paymentSchedulesIds.map(id => { 
                         return {id}})
                     },
@@ -80,8 +87,19 @@ export class LoanPaymentService {
                 }
             })
         );
+       
+        bulkDbActions.push(
+            this.db.loan.update({
+                where:{
+                    id:loanId
+                },
+                data:{
+                    paidAmount: Number(loan.paidAmount) + Number(data.amount),
+                    pendingAmount: +loan.pendingAmount - data.amount,
+                }
+            })
+        );
         await this.db.$transaction(bulkDbActions);
-
     }
 
     async getTotalPaidAmount(loanId:string){
@@ -101,5 +119,17 @@ export class LoanPaymentService {
 
     async createPayment(data:LoanPaymentCreateInput){
         return await this.db.loanPayment.create({data});
+    }
+
+    calculatePayedPercentege(amountToPay: number, totalAmount:number){
+        try {
+            return Number(((amountToPay * 100)/+totalAmount).toFixed(9));
+        } catch (error) {
+            return 0
+        }    
+    }
+    getPercentageOf(percent: number, total: number): Number{
+        console.log(percent, total)
+        return Number(((percent/ 100) * total).toFixed(2));
     }
 }

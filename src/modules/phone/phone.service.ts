@@ -10,8 +10,8 @@ export class PhoneService {
         return await this._db.phone.create({
             data:{
                 number: data.number,
-                Borrower: data.Borrower
-            } 
-        }); 
+                borrowerId: data.borrowerId
+            }
+        });
     }
 }

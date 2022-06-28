@@ -9,11 +9,16 @@ export class ContractService {
 
     async create(data: ContractCreateInput) {
         const {contractTypeId, borrowerId, employeeId, signDate} = data;
+        
+        const existBorrower = await this._db.borrower.findUnique({where:{id:borrowerId}})
+        if (!existBorrower) throw new Error("Invalid BorrowerId")
         const { monthDuration } = await this._db.contractType.findFirst({
             where: {
                 id: data.contractTypeId
-            }
+            },
+            rejectOnNotFound: true
         })
+        console.log(monthDuration)
         const signDateObj = new Date(signDate);
         const dueDate = new Date(signDate);
         dueDate.setMonth(dueDate.getMonth() + monthDuration);

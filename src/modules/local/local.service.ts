@@ -10,7 +10,17 @@ export class LocalService {
 
     ){}
     async create(data:LocalCreateInput){
-        return await this.db.local.create({data});
+        return await this.db.local.create({
+            data: {
+                name: data.name,
+                borrower:{
+                    connect:{
+                        id: data.borrower.connect.id
+                    }
+                }
+
+            }
+        });
     }
 
     async getMany(where: LocalWhereInput){

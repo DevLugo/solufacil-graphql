@@ -31,11 +31,19 @@ export class AuthService {
         const newUser = await this._db.user.create({
             data:{ 
                 email:data.email,
-                lastName:data.lastName,
-                firstName:data.firstName,
-                fullName: data.firstName + data.lastName,
-                password: passwordHashed
-
+                password: passwordHashed,
+                employee:{
+                  create:{
+                    type: 'LIAISON_EXECUTIVE',
+                    personalData:{
+                      create:{
+                        lastName: data.employee.create[0].personalData.create.lastName,
+                        firstName:  data.employee.create[0].personalData.create.firstName,
+                        fullName:   data.employee.create[0].personalData.create.firstName + data.employee.create[0].personalData.create.lastName,
+                      }
+                    }
+                  }
+                }
             }
         });
         return newUser;

@@ -6,4 +6,6 @@ import { LoanCreateInput } from "../../@generated/loan/loan-create.input";
 export class CustomCreateLoanInput extends LoanCreateInput{
     @Field(() => GraphQLDate, {nullable:false})
     firstPaymentDate?: Date | string;
+    @Field(() => String, {nullable:true})
+    renovatedFromId?: string
 }

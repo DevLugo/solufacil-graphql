@@ -17,7 +17,7 @@ export class BorrowerService {
                 throw new Error(`El email ${dbEmail.email} ya existe`);
         }
         //Validate  Unique Phone number
-        for(const phone of data.phones.create){
+        for(const phone of data.personalData.create.phones.create){
             const dbPhone = await this.db.phone.findUnique({
                 where: {number: phone.number}
             });
@@ -26,8 +26,7 @@ export class BorrowerService {
         }
         
         return await this.db.borrower.create({data:{
-            name: data.name,
-            address: data.address
+            personalData: data.personalData
         }});
     }
       

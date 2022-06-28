@@ -43,7 +43,7 @@ export class PaymentScheduleResolver {
     @ResolveField(_ => Number)
     async pendingAmount(@Parent() root: PaymentSchedule) {
         const payment = await this._db.paymentSchedule.findUnique({
-            where:{
+            where: {
                 id: root.id
             }
         });
@@ -62,7 +62,11 @@ export class PaymentScheduleResolver {
                     include: {
                         borrower:{
                             include:{
-                                phones: true
+                                personalData:{
+                                    include:{
+                                        phones:true
+                                    }
+                                }
                             }
                         }
                     }
