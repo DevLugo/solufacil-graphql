@@ -2,15 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { PaymentScheduleWhereInput } from '../../../@generated/payment-schedule/payment-schedule-where.input';
 import { PaymentState } from '../../../@generated/prisma/payment-state.enum';
 import { PrismaService } from '../../../core/prisma/prisma.service';
-import { LoanPaymentService } from '../loan-payment/loan-payment.service';
 import { IResumePayload } from './payloads/resume';
+import { UtilsService } from '../utils.service';
 
 @Injectable()
 export class PaymentScheduleService {
     constructor(
         private readonly db:PrismaService,
-        private readonly paymentService:LoanPaymentService
-        
+        private readonly utilsService:UtilsService,
         ){}
     WEEK_SECONDS =  7 * 24 * 60 * 60 * 1000;
 
@@ -26,11 +25,9 @@ export class PaymentScheduleService {
         const transactions = [];
         while (i < weeksDuration){
             nextDateToPay = new Date(nextDateToPay.getTime( ) + weekSeconds);
-            const percentegeToPaid = this.paymentService.calculatePayedPercentege(+loan.weeklyPaymentAmount, +loan.amountToPay);
-            const profit = this.paymentService.getPercentageOf(percentegeToPaid, Number(loan.totalProfitAmount));
+            const percentegeToPaid = this.utilsService.calculatePayedPercentege(+loan.weeklyPaymentAmount, +loan.amountToPay);
+            const profit = this.utilsService.getPercentageOf(percentegeToPaid, Number(loan.totalProfitAmount));
            
-            // const percentegeToPaid = this.calculatePayedPercentege(Number(amountForPayment)+paidAmount, +loan.amountToPay);
-            //const profit = this.getPercentageOf(percentegeToPaid, Number(loan.totalProfitAmount));
             transactions.push(
                 this.db.paymentSchedule.create({
                     data: {

@@ -65,11 +65,13 @@ export class LoanService {
             where: {id:data.loanType.connect.id},
             rejectOnNotFound:true
         }, );
-        console.log(loanType, data.loanType.connect.id)
+
         let renovationPendingAmount:any = 0;
         let renovationAmountToPayPercentege = 0;
         let renovationProfitAmountToPay = 0;
         data.amountToPay = data.amountGived as any;
+        
+        // custom calculation when is a renovation
         if(previousLoan){
             renovationPendingAmount = previousLoan.pendingAmount;
             renovationAmountToPayPercentege = (+previousLoan.pendingAmount * 100)/+previousLoan.amountToPay;
@@ -77,18 +79,14 @@ export class LoanService {
             data.amountToPay = (Number(data.amountGived) + Number(previousLoan.pendingAmount)) as any;
         }
         data.amountToPay = (+data.amountToPay * (1+loanType.rate)) as any;
-        console.log("Dragon", data.amountToPay, loanType.rate)
-        //TODO: Calcular el renovationprofit amount
+        
         if (contract.contractType.amount < data.amountToPay){
             throw new Error('La cantidad solicitada es mayor a la otorgada en el contrato: TODO: validar que solo tenga un credito activo a la vez');
         }
         const {firstPaymentDate, ...cleanedData} = data;
-        console.log("DRAKE", data.amountToPay, loanType.weekDuration);
 
         const weecklyPayment = +data.amountToPay / loanType.weekDuration;
         //(4200*.40)/(10+(.40+10))*10
-        console.log("ROCKO");
-        console.log(+data.amountToPay + renovationPendingAmount);
         const baseProfitAmount = (Number(data.amountGived) + Number(renovationPendingAmount)) * loanType.rate;
         const loan = await this.db.loan.create({
             data:{
@@ -105,7 +103,6 @@ export class LoanService {
                 renovatedFromId: data.renovatedFromId ? data.renovatedFromId: null,
             }
         });
-        
         
         await this.paymentScheduleService.createPaymentSchedule(new Date(data.firstPaymentDate), loanType.weekDuration, loan.id);
         return await this.db.loan.findUnique({

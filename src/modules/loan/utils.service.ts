@@ -20,7 +20,6 @@ export class UtilsService {
         //(1000*.2)/12 * 10;
         //(650*.3)/13 * 10;
         console.log(rate);
-        rate = .40;
         const profit = (Number(amount) / rate) / Number((10 + (rate * 10) * 10));
         const returnOfCapital = Number(amount)-profit;
         const breakDown:PaymentBreakDown = {
@@ -32,4 +31,16 @@ export class UtilsService {
         return breakDown
     }
 
+    calculatePayedPercentege(amountToPay: number, totalAmount:number){
+        try {
+            return Number(((amountToPay * 100)/+totalAmount).toFixed(9));
+        } catch (error) {
+            return 0
+        }    
+    }
+
+    getPercentageOf(percent: number, total: number): Number{
+        console.log(percent, total)
+        return Number(((percent/ 100) * total).toFixed(2));
+    }
 }

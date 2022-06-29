@@ -5,7 +5,6 @@ import { PrismaService } from '../../../core/prisma/prisma.service';
 import { PaymentState } from '../../../@generated/prisma/payment-state.enum';
 import { LoanPaymentUpdateInput } from './inputs/UpdatePaymentInput';
 import { UtilsService } from '../utils.service';
-import { Loan } from 'src/@generated/loan/loan.model';
 
 @Injectable()
 export class LoanPaymentService {
@@ -67,8 +66,8 @@ export class LoanPaymentService {
             getNextPayments.shift();
         }
 
-        const percentegeToPaid = this.calculatePayedPercentege(Number(data.amount), +loan.amountToPay);
-        const totalProfitToPaid = this.getPercentageOf(percentegeToPaid, Number(loan.totalProfitAmount));
+        const percentegeToPaid = this.UtilsService.calculatePayedPercentege(Number(data.amount), +loan.amountToPay);
+        const totalProfitToPaid = this.UtilsService.getPercentageOf(percentegeToPaid, Number(loan.totalProfitAmount));
         
         bulkDbActions.push(
             this.db.loanPayment.create({
@@ -121,15 +120,5 @@ export class LoanPaymentService {
         return await this.db.loanPayment.create({data});
     }
 
-    calculatePayedPercentege(amountToPay: number, totalAmount:number){
-        try {
-            return Number(((amountToPay * 100)/+totalAmount).toFixed(9));
-        } catch (error) {
-            return 0
-        }    
-    }
-    getPercentageOf(percent: number, total: number): Number{
-        console.log(percent, total)
-        return Number(((percent/ 100) * total).toFixed(2));
-    }
+
 }
