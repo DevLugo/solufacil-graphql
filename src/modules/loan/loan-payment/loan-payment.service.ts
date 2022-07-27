@@ -19,7 +19,9 @@ export class LoanPaymentService {
 
     async create(data:LoanPaymentCreateInput){
         return await this.db.loanPayment.create({
-            data:{...data}
+            data:{
+                ...data
+            }
         });
     }
 

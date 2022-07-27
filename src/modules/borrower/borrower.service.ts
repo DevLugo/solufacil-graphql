@@ -26,7 +26,9 @@ export class BorrowerService {
         }
         
         return await this.db.borrower.create({data:{
-            personalData: data.personalData
+            personalData: {
+                ...data.personalData
+            }
         }});
     }
       

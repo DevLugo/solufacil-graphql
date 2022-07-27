@@ -18,7 +18,9 @@ export class LoanTypeService {
     async create(data:LoantypeCreateInput){
         return await this.db.loantype.create({
             data:{
-                ...data
+                ...data,
+                name:data.name
+                
             }
         });
     }

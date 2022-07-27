@@ -368,7 +368,6 @@ model PaymentSchedule {
   paidAmount        Decimal             @db.Money
   returnToCapital   Decimal             @default(0) @db.Money
   profit            Decimal             @default(0) @db.Money
-  /// @HideField({ output: false, input: true })
   status            PaymentState
   delayed           Boolean             @default(false)
   dueDate           DateTime

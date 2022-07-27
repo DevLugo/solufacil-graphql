@@ -9,7 +9,8 @@ export class EmployeeService {
     async create(data: EmployeeCreateInput) {
         return await this.db.employee.create({
             data: {
-                ...data
+                ...data,
+                type: data.type,
             }, 
             include:{
                 user:true

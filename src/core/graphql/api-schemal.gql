@@ -983,12 +983,27 @@ input PaymentScheduleWhereInput {
   paidAmount: DecimalFilter
   returnToCapital: DecimalFilter
   profit: DecimalFilter
+  status: EnumPaymentStateFilter
   delayed: BoolFilter
   dueDate: DateTimeFilter
   details: StringNullableFilter
   loan: LoanRelationFilter
   loanId: StringFilter
   loanPayments: LoanPaymentListRelationFilter
+}
+
+input EnumPaymentStateFilter {
+  equals: PaymentState
+  in: [PaymentState!]
+  notIn: [PaymentState!]
+  not: NestedEnumPaymentStateFilter
+}
+
+input NestedEnumPaymentStateFilter {
+  equals: PaymentState
+  in: [PaymentState!]
+  notIn: [PaymentState!]
+  not: NestedEnumPaymentStateFilter
 }
 
 input BoolFilter {
@@ -1111,20 +1126,6 @@ input ExpensesWhereInput {
   employee: EmployeeRelationFilter
   userId: StringNullableFilter
   employeeId: StringFilter
-}
-
-input EnumPaymentStateFilter {
-  equals: PaymentState
-  in: [PaymentState!]
-  notIn: [PaymentState!]
-  not: NestedEnumPaymentStateFilter
-}
-
-input NestedEnumPaymentStateFilter {
-  equals: PaymentState
-  in: [PaymentState!]
-  notIn: [PaymentState!]
-  not: NestedEnumPaymentStateFilter
 }
 
 input AvalRelationFilter {
@@ -1818,6 +1819,7 @@ input PaymentScheduleCreateWithoutLoanPaymentsInput {
   paidAmount: Decimal!
   returnToCapital: Decimal
   profit: Decimal
+  status: PaymentState!
   delayed: Boolean
   dueDate: DateTime!
   details: String
@@ -1889,6 +1891,7 @@ input PaymentScheduleCreateWithoutCommissionPaymentInput {
   paidAmount: Decimal!
   returnToCapital: Decimal
   profit: Decimal
+  status: PaymentState!
   delayed: Boolean
   dueDate: DateTime!
   details: String
@@ -1947,6 +1950,7 @@ input PaymentScheduleCreateWithoutLoanInput {
   paidAmount: Decimal!
   returnToCapital: Decimal
   profit: Decimal
+  status: PaymentState!
   delayed: Boolean
   dueDate: DateTime!
   details: String
@@ -1973,6 +1977,7 @@ input PaymentScheduleCreateManyLoanInput {
   paidAmount: Decimal!
   returnToCapital: Decimal
   profit: Decimal
+  status: PaymentState!
   delayed: Boolean
   dueDate: DateTime!
   details: String

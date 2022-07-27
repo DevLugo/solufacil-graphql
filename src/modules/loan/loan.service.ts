@@ -117,6 +117,6 @@ export class LoanService {
     }
 
     async create(data:LoanCreateInput){
-        return await this.db.loan.create({data});
+        return await this.db.loan.create({data:{...data}});
     }
 }
