@@ -37,19 +37,19 @@ model SystemSection {
 }
 
 model User {
-  id             String     @id @default(uuid())
+  id             String    @id @default(uuid())
   /// @FieldType({ name: 'Scalars.GraphQLEmailAddress', from: 'graphql-scalars', input: true })
-  email          String     @unique
+  email          String    @unique
   password       String
   /// @HideField({ output: false, input: true })
   lastLogin      DateTime?
   /// @HideField({ output: false, input: true })
   profilePicture String?
   /// @HideField({ output: false, input: true })
-  createdAt      DateTime   @default(now())
+  createdAt      DateTime  @default(now())
   /// @HideField({ output: false, input: true })
-  updatedAt      DateTime   @updatedAt
-  employee       Employee[]
+  updatedAt      DateTime  @updatedAt
+  employee       Employee?
 }
 
 model Employee {

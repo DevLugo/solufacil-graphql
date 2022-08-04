@@ -25,6 +25,7 @@ export class BorrowerService {
                 throw new Error(`El télefono ${dbPhone.number} ya existe`);
         }
         
+        // @ts-ignore
         return await this.db.borrower.create({data:{
             personalData: {
                 ...data.personalData

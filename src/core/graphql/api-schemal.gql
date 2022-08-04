@@ -2,10 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type UserCount {
-  employee: Int!
-}
-
 type User {
   id: ID!
   email: String!
@@ -14,8 +10,7 @@ type User {
   profilePicture: String
   createdAt: DateTime!
   updatedAt: DateTime!
-  employee: [Employee!]
-  _count: UserCount!
+  employee: Employee
 }
 
 """
@@ -618,13 +613,7 @@ input UserWhereInput {
   id: StringFilter
   email: StringFilter
   password: StringFilter
-  employee: EmployeeListRelationFilter
-}
-
-input EmployeeListRelationFilter {
-  every: EmployeeWhereInput
-  some: EmployeeWhereInput
-  none: EmployeeWhereInput
+  employee: EmployeeRelationFilter
 }
 
 input PersonalDataRelationFilter {
@@ -716,6 +705,12 @@ input LocalWhereInput {
   addresses: AddressListRelationFilter
   borrower: BorrowerRelationFilter
   borrowerId: StringFilter
+}
+
+input EmployeeListRelationFilter {
+  every: EmployeeWhereInput
+  some: EmployeeWhereInput
+  none: EmployeeWhereInput
 }
 
 input AvalListRelationFilter {
@@ -2665,14 +2660,13 @@ input UserCreateInput {
   id: String
   email: EmailAddress!
   password: String!
-  employee: EmployeeCreateNestedManyWithoutUserInput
+  employee: EmployeeCreateNestedOneWithoutUserInput
 }
 
-input EmployeeCreateNestedManyWithoutUserInput {
-  create: [EmployeeCreateWithoutUserInput!]
-  connectOrCreate: [EmployeeCreateOrConnectWithoutUserInput!]
-  createMany: EmployeeCreateManyUserInputEnvelope
-  connect: [EmployeeWhereUniqueInput!]
+input EmployeeCreateNestedOneWithoutUserInput {
+  create: EmployeeCreateWithoutUserInput
+  connectOrCreate: EmployeeCreateOrConnectWithoutUserInput
+  connect: EmployeeWhereUniqueInput
 }
 
 input EmployeeCreateWithoutUserInput {
@@ -2691,16 +2685,6 @@ input EmployeeCreateWithoutUserInput {
 input EmployeeCreateOrConnectWithoutUserInput {
   where: EmployeeWhereUniqueInput!
   create: EmployeeCreateWithoutUserInput!
-}
-
-input EmployeeCreateManyUserInputEnvelope {
-  data: [EmployeeCreateManyUserInput!]!
-  skipDuplicates: Boolean
-}
-
-input EmployeeCreateManyUserInput {
-  type: EmployeesTypes!
-  personalDataId: String!
 }
 
 input SignInInput {

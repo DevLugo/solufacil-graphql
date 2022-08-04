@@ -25,6 +25,9 @@ CREATE TYPE "CommissionGoalType" AS ENUM ('NEW_LOAN', 'PAYMENT_RECEIVED');
 -- CreateEnum
 CREATE TYPE "CommissionType" AS ENUM ('FIXED_AMOUNT', 'PERCENTAGE');
 
+-- DropEnum
+DROP TYPE "InteractionType";
+
 -- CreateTable
 CREATE TABLE "Log" (
     "id" TEXT NOT NULL,

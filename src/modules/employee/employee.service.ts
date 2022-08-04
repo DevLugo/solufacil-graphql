@@ -7,6 +7,7 @@ import { PrismaService } from '../../core/prisma/prisma.service';
 export class EmployeeService {
     constructor(private readonly db: PrismaService){}
     async create(data: EmployeeCreateInput) {
+        // @ts-ignore
         return await this.db.employee.create({
             data: {
                 ...data,

@@ -18,6 +18,7 @@ export class LoanPaymentService {
     }
 
     async create(data:LoanPaymentCreateInput){
+        // @ts-ignore
         return await this.db.loanPayment.create({
             data:{
                 ...data
