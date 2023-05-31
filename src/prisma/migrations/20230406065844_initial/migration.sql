@@ -2,6 +2,9 @@
 CREATE TYPE "ExpensesType" AS ENUM ('LODGMENT', 'STATIONERY', 'GASOLINE', 'MECHANIC', 'SALARY', 'FOOD');
 
 -- CreateEnum
+CREATE TYPE "LeadPaymentTypes" AS ENUM ('PENDING_MONEY', 'COMPENSATORY_PENDING_MONEY');
+
+-- CreateEnum
 CREATE TYPE "CommissionPaymentStatus" AS ENUM ('PAID_OUT', 'PENDING', 'REJECTED');
 
 -- CreateEnum
@@ -72,6 +75,7 @@ CREATE TABLE "Employee" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "userId" TEXT NOT NULL,
     "personalDataId" TEXT NOT NULL,
+    "amountGivedIncreased" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "Employee_pkey" PRIMARY KEY ("id")
 );
@@ -81,9 +85,10 @@ CREATE TABLE "Document" (
     "id" TEXT NOT NULL,
     "type" "DocumentType" NOT NULL,
     "borrowerId" TEXT,
-    "avalId" TEXT,
     "contractId" TEXT,
     "employeeId" TEXT,
+    "personalDataId" TEXT,
+    "loanId" TEXT,
 
     CONSTRAINT "Document_pkey" PRIMARY KEY ("id")
 );
@@ -101,17 +106,6 @@ CREATE TABLE "Customer" (
 );
 
 -- CreateTable
-CREATE TABLE "Aval" (
-    "id" TEXT NOT NULL,
-    "email" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-    "personalDataId" TEXT NOT NULL,
-
-    CONSTRAINT "Aval_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "PersonalData" (
     "id" TEXT NOT NULL,
     "fullName" TEXT NOT NULL,
@@ -119,6 +113,7 @@ CREATE TABLE "PersonalData" (
     "lastName" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "loanId" TEXT,
 
     CONSTRAINT "PersonalData_pkey" PRIMARY KEY ("id")
 );
@@ -144,9 +139,10 @@ CREATE TABLE "Municipality" (
 CREATE TABLE "Address" (
     "id" TEXT NOT NULL,
     "street" TEXT NOT NULL,
-    "exteriorNumber" TEXT NOT NULL,
+    "exteriorNumber" TEXT,
     "interiorNumber" TEXT NOT NULL,
     "postalCode" TEXT NOT NULL,
+    "references" TEXT,
     "locationId" TEXT NOT NULL,
     "localId" TEXT,
     "personalDataId" TEXT,
@@ -158,6 +154,8 @@ CREATE TABLE "Address" (
 CREATE TABLE "Location" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
+    "municipalityId" TEXT NOT NULL,
+    "routeId" TEXT,
 
     CONSTRAINT "Location_pkey" PRIMARY KEY ("id")
 );
@@ -168,7 +166,9 @@ CREATE TABLE "Borrower" (
     "email" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "loanFinishedCount" INTEGER NOT NULL DEFAULT 0,
     "personalDataId" TEXT NOT NULL,
+    "employeeId" TEXT,
 
     CONSTRAINT "Borrower_pkey" PRIMARY KEY ("id")
 );
@@ -191,8 +191,6 @@ CREATE TABLE "Phone" (
     "borrowerId" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "avalId" TEXT,
-    "employeeId" TEXT,
     "personalDataId" TEXT,
 
     CONSTRAINT "Phone_pkey" PRIMARY KEY ("id")
@@ -217,11 +215,52 @@ CREATE TABLE "Loantype" (
     "name" TEXT NOT NULL,
     "weekDuration" INTEGER NOT NULL,
     "rate" DOUBLE PRECISION NOT NULL,
+    "weeksToRenew" INTEGER NOT NULL,
     "overdueRate" DOUBLE PRECISION NOT NULL,
+    "initialAmount" DOUBLE PRECISION NOT NULL DEFAULT 3000,
+    "maximunAmount" DOUBLE PRECISION NOT NULL DEFAULT 5000,
+    "amountToIncrease" DOUBLE PRECISION NOT NULL DEFAULT 500,
+    "increaseEveryNLoans" INTEGER NOT NULL DEFAULT 2,
+    "leadsOnly" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Loantype_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Route" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+
+    CONSTRAINT "Route_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "FalcoCompensatoryPayment" (
+    "id" TEXT NOT NULL,
+    "amount" MONEY NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "leadPaymentReceivedId" TEXT,
+
+    CONSTRAINT "FalcoCompensatoryPayment_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "LeadPaymentReceived" (
+    "id" TEXT NOT NULL,
+    "type" "LeadPaymentTypes" NOT NULL,
+    "expectedAmount" MONEY NOT NULL,
+    "paidAmount" MONEY NOT NULL,
+    "falco" MONEY NOT NULL,
+    "pendingFalcoAmount" MONEY NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "leadId" TEXT NOT NULL,
+    "agentId" TEXT NOT NULL,
+
+    CONSTRAINT "LeadPaymentReceived_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -244,6 +283,7 @@ CREATE TABLE "Loan" (
     "id" TEXT NOT NULL,
     "status" "LoanState" NOT NULL,
     "weeklyPaymentAmount" MONEY NOT NULL,
+    "previousAmountGived" MONEY,
     "amountGived" MONEY NOT NULL DEFAULT 0,
     "amountToPay" MONEY NOT NULL DEFAULT 0,
     "paidAmount" MONEY NOT NULL DEFAULT 0,
@@ -253,6 +293,7 @@ CREATE TABLE "Loan" (
     "baseProfitAmount" MONEY NOT NULL DEFAULT 0,
     "totalProfitAmount" MONEY NOT NULL DEFAULT 0,
     "signDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "finishedDate" TIMESTAMP(3),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "contractId" TEXT NOT NULL,
@@ -275,6 +316,7 @@ CREATE TABLE "LoanPayment" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "loanId" TEXT NOT NULL,
     "employeeId" TEXT NOT NULL,
+    "leadPaymentReceivedId" TEXT,
 
     CONSTRAINT "LoanPayment_pkey" PRIMARY KEY ("id")
 );
@@ -298,6 +340,8 @@ CREATE TABLE "ComissionPaymentConfiguration" (
     "loantypeId" TEXT NOT NULL,
     "commissionGoalType" "CommissionGoalType" NOT NULL,
     "commissionType" "CommissionType" NOT NULL,
+    "amount" DECIMAL(65,30) NOT NULL,
+    "employeeId" TEXT,
 
     CONSTRAINT "ComissionPaymentConfiguration_pkey" PRIMARY KEY ("id")
 );
@@ -349,6 +393,18 @@ CREATE TABLE "Expenses" (
 );
 
 -- CreateTable
+CREATE TABLE "_EmployeeToRoute" (
+    "A" TEXT NOT NULL,
+    "B" TEXT NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "_LoantypeToRoute" (
+    "A" TEXT NOT NULL,
+    "B" TEXT NOT NULL
+);
+
+-- CreateTable
 CREATE TABLE "_LoanPaymentToPaymentSchedule" (
     "A" TEXT NOT NULL,
     "B" TEXT NOT NULL
@@ -361,13 +417,25 @@ CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 CREATE UNIQUE INDEX "Employee_userId_key" ON "Employee"("userId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Aval_email_key" ON "Aval"("email");
+CREATE UNIQUE INDEX "Location_name_key" ON "Location"("name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Borrower_email_key" ON "Borrower"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Phone_number_key" ON "Phone"("number");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "_EmployeeToRoute_AB_unique" ON "_EmployeeToRoute"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_EmployeeToRoute_B_index" ON "_EmployeeToRoute"("B");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "_LoantypeToRoute_AB_unique" ON "_LoantypeToRoute"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_LoantypeToRoute_B_index" ON "_LoantypeToRoute"("B");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_LoanPaymentToPaymentSchedule_AB_unique" ON "_LoanPaymentToPaymentSchedule"("A", "B");
@@ -388,7 +456,7 @@ ALTER TABLE "Employee" ADD CONSTRAINT "Employee_personalDataId_fkey" FOREIGN KEY
 ALTER TABLE "Document" ADD CONSTRAINT "Document_employeeId_fkey" FOREIGN KEY ("employeeId") REFERENCES "Employee"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Document" ADD CONSTRAINT "Document_avalId_fkey" FOREIGN KEY ("avalId") REFERENCES "Aval"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Document" ADD CONSTRAINT "Document_personalDataId_fkey" FOREIGN KEY ("personalDataId") REFERENCES "PersonalData"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Document" ADD CONSTRAINT "Document_borrowerId_fkey" FOREIGN KEY ("borrowerId") REFERENCES "Borrower"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -397,7 +465,10 @@ ALTER TABLE "Document" ADD CONSTRAINT "Document_borrowerId_fkey" FOREIGN KEY ("b
 ALTER TABLE "Document" ADD CONSTRAINT "Document_contractId_fkey" FOREIGN KEY ("contractId") REFERENCES "Contract"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Aval" ADD CONSTRAINT "Aval_personalDataId_fkey" FOREIGN KEY ("personalDataId") REFERENCES "PersonalData"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Document" ADD CONSTRAINT "Document_loanId_fkey" FOREIGN KEY ("loanId") REFERENCES "Loan"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "PersonalData" ADD CONSTRAINT "PersonalData_loanId_fkey" FOREIGN KEY ("loanId") REFERENCES "Loan"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Municipality" ADD CONSTRAINT "Municipality_stateId_fkey" FOREIGN KEY ("stateId") REFERENCES "State"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -412,6 +483,15 @@ ALTER TABLE "Address" ADD CONSTRAINT "Address_locationId_fkey" FOREIGN KEY ("loc
 ALTER TABLE "Address" ADD CONSTRAINT "Address_localId_fkey" FOREIGN KEY ("localId") REFERENCES "Local"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "Location" ADD CONSTRAINT "Location_municipalityId_fkey" FOREIGN KEY ("municipalityId") REFERENCES "Municipality"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Location" ADD CONSTRAINT "Location_routeId_fkey" FOREIGN KEY ("routeId") REFERENCES "Route"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Borrower" ADD CONSTRAINT "Borrower_employeeId_fkey" FOREIGN KEY ("employeeId") REFERENCES "Employee"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "Borrower" ADD CONSTRAINT "Borrower_personalDataId_fkey" FOREIGN KEY ("personalDataId") REFERENCES "PersonalData"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -419,6 +499,15 @@ ALTER TABLE "Local" ADD CONSTRAINT "Local_borrowerId_fkey" FOREIGN KEY ("borrowe
 
 -- AddForeignKey
 ALTER TABLE "Phone" ADD CONSTRAINT "Phone_personalDataId_fkey" FOREIGN KEY ("personalDataId") REFERENCES "PersonalData"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "FalcoCompensatoryPayment" ADD CONSTRAINT "FalcoCompensatoryPayment_leadPaymentReceivedId_fkey" FOREIGN KEY ("leadPaymentReceivedId") REFERENCES "LeadPaymentReceived"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "LeadPaymentReceived" ADD CONSTRAINT "LeadPaymentReceived_agentId_fkey" FOREIGN KEY ("agentId") REFERENCES "Employee"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "LeadPaymentReceived" ADD CONSTRAINT "LeadPaymentReceived_leadId_fkey" FOREIGN KEY ("leadId") REFERENCES "Employee"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Contract" ADD CONSTRAINT "Contract_loanLeadId_fkey" FOREIGN KEY ("loanLeadId") REFERENCES "Employee"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -445,6 +534,9 @@ ALTER TABLE "Loan" ADD CONSTRAINT "Loan_contractId_fkey" FOREIGN KEY ("contractI
 ALTER TABLE "LoanPayment" ADD CONSTRAINT "LoanPayment_employeeId_fkey" FOREIGN KEY ("employeeId") REFERENCES "Employee"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "LoanPayment" ADD CONSTRAINT "LoanPayment_leadPaymentReceivedId_fkey" FOREIGN KEY ("leadPaymentReceivedId") REFERENCES "LeadPaymentReceived"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "LoanPayment" ADD CONSTRAINT "LoanPayment_loanId_fkey" FOREIGN KEY ("loanId") REFERENCES "Loan"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -452,6 +544,9 @@ ALTER TABLE "Comment" ADD CONSTRAINT "Comment_employeeId_fkey" FOREIGN KEY ("emp
 
 -- AddForeignKey
 ALTER TABLE "Comment" ADD CONSTRAINT "Comment_loanPaymentId_fkey" FOREIGN KEY ("loanPaymentId") REFERENCES "LoanPayment"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ComissionPaymentConfiguration" ADD CONSTRAINT "ComissionPaymentConfiguration_employeeId_fkey" FOREIGN KEY ("employeeId") REFERENCES "Employee"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "ComissionPaymentConfiguration" ADD CONSTRAINT "ComissionPaymentConfiguration_loantypeId_fkey" FOREIGN KEY ("loantypeId") REFERENCES "Loantype"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -470,6 +565,18 @@ ALTER TABLE "PaymentSchedule" ADD CONSTRAINT "PaymentSchedule_loanId_fkey" FOREI
 
 -- AddForeignKey
 ALTER TABLE "Expenses" ADD CONSTRAINT "Expenses_employeeId_fkey" FOREIGN KEY ("employeeId") REFERENCES "Employee"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_EmployeeToRoute" ADD CONSTRAINT "_EmployeeToRoute_A_fkey" FOREIGN KEY ("A") REFERENCES "Employee"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_EmployeeToRoute" ADD CONSTRAINT "_EmployeeToRoute_B_fkey" FOREIGN KEY ("B") REFERENCES "Route"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_LoantypeToRoute" ADD CONSTRAINT "_LoantypeToRoute_A_fkey" FOREIGN KEY ("A") REFERENCES "Loantype"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_LoantypeToRoute" ADD CONSTRAINT "_LoantypeToRoute_B_fkey" FOREIGN KEY ("B") REFERENCES "Route"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_LoanPaymentToPaymentSchedule" ADD CONSTRAINT "_LoanPaymentToPaymentSchedule_A_fkey" FOREIGN KEY ("A") REFERENCES "LoanPayment"("id") ON DELETE CASCADE ON UPDATE CASCADE;

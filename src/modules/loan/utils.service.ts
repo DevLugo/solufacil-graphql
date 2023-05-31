@@ -36,7 +36,7 @@ export class UtilsService {
             return Number(((amountToPay * 100)/+totalAmount).toFixed(9));
         } catch (error) {
             return 0
-        }    
+        }
     }
 
     getPercentageOf(percent: number, total: number): Number{

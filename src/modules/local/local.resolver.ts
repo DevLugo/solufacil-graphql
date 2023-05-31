@@ -8,7 +8,6 @@ import { LocalService } from './local.service';
 export class LocalResolver {
     constructor(
         private readonly LocaService: LocalService,
-
         ){}
     @Mutation(() => Local)
     async createLocal(
@@ -20,7 +19,7 @@ export class LocalResolver {
 
     @Query(() => [Local])
     async locals(
-        @Args({ name: 'where', type: () =>LocalWhereInput})
+        @Args({ name: 'where', type: () => LocalWhereInput})
         where:LocalWhereInput
     ) {
         return await this.LocaService.getMany(where);

@@ -54,38 +54,46 @@ model User {
 
 model Employee {
   /// @HideField({ match: 'EmployeeCreate*Input' })
-  id                String              @id @default(uuid())
-  type              EmployeesTypes
-  documents         Document[]
-  user              User                @relation(fields: [userId], references: [id])
-  personalData      PersonalData        @relation(fields: [personalDataId], references: [id])
+  id                            String                          @id @default(uuid())
+  type                          EmployeesTypes
+  documents                     Document[]
+  user                          User                            @relation(fields: [userId], references: [id])
+  personalData                  PersonalData                    @relation(fields: [personalDataId], references: [id])
   /// @HideField({ output: false, input: true })
-  createdAt         DateTime            @default(now())
+  createdAt                     DateTime                        @default(now())
   /// @HideField({ output: false, input: true })
-  updatedAt         DateTime            @updatedAt
-  loan              Loan[]
-  userId            String              @unique()
-  loanPayment       LoanPayment[]
-  commissionPayment CommissionPayment[]
-  contractEmployee  Contract[]          @relation("Contract_employee")
-  contractLoanLead  Contract[]          @relation("Contract_loanLean")
-  expenses          Expenses[]
-  personalDataId    String
-  Comment           Comment[]
+  updatedAt                     DateTime                        @updatedAt
+  loan                          Loan[]
+  userId                        String                          @unique()
+  loanPayment                   LoanPayment[]
+  commissionPayment             CommissionPayment[]
+  contractEmployee              Contract[]                      @relation("Contract_employee")
+  contractLoanLead              Contract[]                      @relation("Contract_loanLean")
+  expenses                      Expenses[]
+  personalDataId                String
+  amountGivedIncreased          Boolean                         @default(false)
+  comments                      Comment[]
+  routes                        Route[]
+  borrower                      Borrower[]
+  leadPaymentsReceivedLead      LeadPaymentReceived[]           @relation("LeadPaymentsReceived_Lead")
+  leadPaymentReceivedAgent      LeadPaymentReceived[]           @relation("LeadPaymentsReceived_Agent")
+  comissionPaymentConfiguration ComissionPaymentConfiguration[]
 }
 
 model Document {
   id   String       @id @default(uuid())
   type DocumentType
 
-  borrower   Borrower? @relation(fields: [borrowerId], references: [id])
-  borrowerId String?
-  employee   Employee? @relation(fields: [employeeId], references: [id])
-  aval       Aval?     @relation(fields: [avalId], references: [id])
-  avalId     String?
-  contract   Contract? @relation(fields: [contractId], references: [id])
-  contractId String?
-  employeeId String?
+  borrower       Borrower?     @relation(fields: [borrowerId], references: [id])
+  borrowerId     String?
+  employee       Employee?     @relation(fields: [employeeId], references: [id])
+  contract       Contract?     @relation(fields: [contractId], references: [id])
+  contractId     String?
+  employeeId     String?
+  PersonalData   PersonalData? @relation(fields: [personalDataId], references: [id])
+  personalDataId String?
+  Loan           Loan?         @relation(fields: [loanId], references: [id])
+  loanId         String?
 }
 
 model Customer {
@@ -97,25 +105,12 @@ model Customer {
   updatedAt DateTime @updatedAt
 }
 
-model Aval {
-  /// @HideField({ match: 'BorrowerCreate*Input' })
-  id             String       @id @default(uuid())
-  /// @FieldType({ name: 'Scalars.GraphQLEmailAddress', from: 'graphql-scalars', input: true })
-  email          String       @unique
-  personalData   PersonalData @relation(fields: [personalDataId], references: [id])
-  documents      Document[]
-  /// @HideField({ output: false, input: true })
-  createdAt      DateTime     @default(now())
-  /// @HideField({ output: false, input: true })
-  updatedAt      DateTime     @updatedAt
-  personalDataId String
-}
-
 model PersonalData {
   id        String     @id @default(uuid())
   fullName  String
   firstName String
   lastName  String
+  documents Document[]
   phones    Phone[]
   addresses Address[]
   /// @HideField({ output: false, input: true })
@@ -123,8 +118,9 @@ model PersonalData {
   /// @HideField({ output: false, input: true })
   updatedAt DateTime   @updatedAt
   employee  Employee[]
-  aval      Aval[]
   borrower  Borrower[]
+  Loan      Loan?      @relation(fields: [loanId], references: [id])
+  loanId    String?
 }
 
 model State {
@@ -134,19 +130,21 @@ model State {
 }
 
 model Municipality {
-  id      String @id @default(uuid())
-  name    String
-  state   State  @relation(fields: [stateId], references: [id])
-  stateId String
+  id       String     @id @default(uuid())
+  name     String
+  state    State      @relation(fields: [stateId], references: [id])
+  stateId  String
+  location Location[]
 }
 
 model Address {
   /// @HideField({ match: 'BorrowerCreate*Input' })
   id             String        @id @default(uuid())
   street         String
-  exteriorNumber String
+  exteriorNumber String?
   interiorNumber String
   postalCode     String
+  references     String?
   location       Location      @relation(fields: [locationId], references: [id])
   locationId     String
   local          Local?        @relation(fields: [localId], references: [id])
@@ -157,29 +155,36 @@ model Address {
 
 model Location {
   /// @HideField({ match: 'BorrowerCreate*Input' })
-  id        String    @id @default(uuid())
-  name      String
-  addresses Address[]
+  id             String       @id @default(uuid())
+  name           String       @unique
+  address        Address[]
+  municipality   Municipality @relation(fields: [municipalityId], references: [id])
+  municipalityId String
+  route          Route?       @relation(fields: [routeId], references: [id])
+  routeId        String?
 }
 
 //Prestatario
 model Borrower {
   /// @HideField({ match: 'BorrowerCreate*Input' })
-  id             String       @id @default(uuid())
+  id                String       @id @default(uuid())
   /// @FieldType({ name: 'Scalars.GraphQLEmailAddress', from: 'graphql-scalars', input: true })
-  email          String?      @unique
-  documents      Document[]
-  personalData   PersonalData @relation(fields: [personalDataId], references: [id])
+  email             String?      @unique
+  documents         Document[]
+  personalData      PersonalData @relation(fields: [personalDataId], references: [id])
   //reference Borrower?  @relation("BorrowerToBorrower", fields: [borrowerId], references: [id])
   /// @HideField({ output: false, input: true })
-  createdAt      DateTime     @default(now())
+  createdAt         DateTime     @default(now())
   /// @HideField({ output: false, input: true })
-  updatedAt      DateTime     @updatedAt
-  contract       Contract[]
+  updatedAt         DateTime     @updatedAt
+  contract          Contract[]
+  loanFinishedCount Int          @default(0)
   //borrowerId String?
   //Borrower   Borrower[] @relation("BorrowerToBorrower")
-  local          Local[]
-  personalDataId String
+  local             Local[]
+  employee          Employee?    @relation(fields: [employeeId], references: [id])
+  personalDataId    String
+  employeeId        String?
 }
 
 model Local {
@@ -206,8 +211,6 @@ model Phone {
   createdAt      DateTime      @default(now())
   /// @HideField({ output: false, input: true })
   updatedAt      DateTime      @updatedAt
-  avalId         String?
-  employeeId     String?
   personalDataId String?
   personalData   PersonalData? @relation(fields: [personalDataId], references: [id])
 }
@@ -237,11 +240,52 @@ model Loantype {
   name                          String
   weekDuration                  Int
   rate                          Float //percentege
+  weeksToRenew                  Int
   overdueRate                   Float
+  initialAmount                 Float                           @default(3000)
+  maximunAmount                 Float                           @default(5000)
+  amountToIncrease              Float                           @default(500)
+  increaseEveryNLoans           Int                             @default(2) //each 2 loan can increase the max amount of the loan
+  leadsOnly                     Boolean                         @default(false)
   createdAt                     DateTime                        @default(now())
   updatedAt                     DateTime                        @updatedAt
   loan                          Loan[]
   comissionPaymentConfiguration ComissionPaymentConfiguration[]
+  routes                        Route[]
+}
+
+model Route {
+  id         String     @id @default(uuid())
+  name       String
+  employees  Employee[]
+  loantypes  Loantype[]
+  localities Location[]
+}
+
+model FalcoCompensatoryPayment {
+  id                    String               @id @default(uuid())
+  amount                Decimal              @db.Money
+  createdAt             DateTime             @default(now())
+  updatedAt             DateTime             @updatedAt
+  leadPaymentReceived   LeadPaymentReceived? @relation(fields: [leadPaymentReceivedId], references: [id])
+  leadPaymentReceivedId String?
+}
+
+model LeadPaymentReceived {
+  id                        String                     @id @default(uuid())
+  type                      LeadPaymentTypes
+  expectedAmount            Decimal                    @db.Money
+  paidAmount                Decimal                    @db.Money
+  falco                     Decimal                    @db.Money
+  pendingFalcoAmount        Decimal                    @db.Money
+  falcoCompensatoryPayments FalcoCompensatoryPayment[]
+  createdAt                 DateTime                   @default(now())
+  updatedAt                 DateTime                   @updatedAt
+  leadId                    String
+  agentId                   String
+  payments                  LoanPayment[]
+  agent                     Employee                   @relation("LeadPaymentsReceived_Agent", fields: [agentId], references: [id])
+  lead                      Employee                   @relation("LeadPaymentsReceived_Lead", fields: [leadId], references: [id])
 }
 
 model Contract {
@@ -254,6 +298,7 @@ model Contract {
   loans          Loan[]
   /// @HideField({ output: false, input: true })
   createdAt      DateTime     @default(now())
+  /// @HideField({ output: false, input: true })
   dueDate        DateTime
   signDate       DateTime
   /// @HideField({ output: false, input: true })
@@ -268,60 +313,66 @@ model Contract {
 
 model Loan {
   /// @HideField({ match: 'LoanCreateInput' })
-  id                      String              @id @default(uuid())
+  id                      String         @id @default(uuid())
   /// @HideField({ output: false, input: true })
   status                  LoanState
   /// @HideField({ output: false, input: true })
   payments                LoanPayment[]
   /// @HideField({ match: 'LoanCreateInput' })
-  weeklyPaymentAmount     Decimal             @db.Money
-  amountGived             Decimal             @default(0) @db.Money
+  weeklyPaymentAmount     Decimal        @db.Money
+  previousAmountGived     Decimal?       @db.Money
+  amountGived             Decimal        @default(0) @db.Money
+  amountToPay             Decimal        @default(0) @db.Money
   /// @HideField({ output: false, input: true })
-  amountToPay             Decimal             @default(0) @db.Money
+  paidAmount              Decimal        @default(0) @db.Money
   /// @HideField({ output: false, input: true })
-  paidAmount              Decimal             @default(0) @db.Money
+  pendingAmount           Decimal        @default(0) @db.Money
   /// @HideField({ output: false, input: true })
-  pendingAmount           Decimal             @default(0) @db.Money
+  renovationProfitAmount  Decimal        @default(0) @db.Money
   /// @HideField({ output: false, input: true })
-  renovationProfitAmount  Decimal             @default(0) @db.Money
+  renovationPendingAmount Decimal        @default(0) @db.Money
   /// @HideField({ output: false, input: true })
-  renovationPendingAmount Decimal             @default(0) @db.Money
+  baseProfitAmount        Decimal        @default(0) @db.Money
   /// @HideField({ output: false, input: true })
-  baseProfitAmount        Decimal             @default(0) @db.Money
+  totalProfitAmount       Decimal        @default(0) @db.Money
+  loanType                Loantype       @relation(fields: [loantypeId], references: [id])
+  signDate                DateTime       @default(now())
+  finishedDate            DateTime?
+  avals                   PersonalData[]
+  documents               Document[]
+
   /// @HideField({ output: false, input: true })
-  totalProfitAmount       Decimal             @default(0) @db.Money
-  loanType                Loantype            @relation(fields: [loantypeId], references: [id])
-  signDate                DateTime            @default(now())
-  /// @HideField({ output: false, input: true })
-  createdAt               DateTime            @default(now())
-  employee                Employee            @relation(fields: [employeeId], references: [id])
-  updatedAt               DateTime            @updatedAt
-  contract                Contract            @relation(fields: [contractId], references: [id])
-  contractId              String
-  loantypeId              String
-  employeeId              String
-  paymentSchedule         PaymentSchedule[]
-  commissionPayment       CommissionPayment[]
-  renovatedFromId         String?
+  createdAt         DateTime            @default(now())
+  employee          Employee            @relation(fields: [employeeId], references: [id])
+  updatedAt         DateTime            @updatedAt
+  contract          Contract            @relation(fields: [contractId], references: [id])
+  contractId        String
+  loantypeId        String
+  employeeId        String
+  paymentSchedule   PaymentSchedule[]
+  commissionPayment CommissionPayment[]
+  renovatedFromId   String?
 }
 
 model LoanPayment {
-  id               String            @id @default(uuid())
-  amount           Decimal           @db.Money
-  profitAmount     Decimal           @db.Money
-  returnToCapital  Decimal           @db.Money
-  date             DateTime
-  percentage       Decimal           @db.Decimal(100, 9)
-  comments         Comment[]
+  id                    String               @id @default(uuid())
+  amount                Decimal              @db.Money
+  profitAmount          Decimal              @db.Money
+  returnToCapital       Decimal              @db.Money
+  date                  DateTime
+  percentage            Decimal              @db.Decimal(100, 9)
+  comments              Comment[]
   /// @HideField({ output: false, input: true })
-  createdAt        DateTime          @default(now())
+  createdAt             DateTime             @default(now())
   /// @HideField({ output: false, input: true })
-  updatedAt        DateTime          @updatedAt
-  paymentSchedules PaymentSchedule[]
-  loan             Loan              @relation(fields: [loanId], references: [id])
-  loanId           String
-  employee         Employee          @relation(fields: [employeeId], references: [id])
-  employeeId       String
+  updatedAt             DateTime             @updatedAt
+  paymentSchedules      PaymentSchedule[]
+  loan                  Loan                 @relation(fields: [loanId], references: [id])
+  loanId                String
+  employee              Employee             @relation(fields: [employeeId], references: [id])
+  employeeId            String
+  leadPaymentReceived   LeadPaymentReceived? @relation(fields: [leadPaymentReceivedId], references: [id])
+  leadPaymentReceivedId String?
 }
 
 model Comment {
@@ -341,10 +392,13 @@ model ComissionPaymentConfiguration {
   /// @HideField({ match: 'PaymentScheduleCreate*Input' })
   id                 String             @id @default(uuid())
   employeeType       EmployeesTypes
-  loanType           Loantype           @relation(fields: [loantypeId], references: [id])
   loantypeId         String
   commissionGoalType CommissionGoalType
   commissionType     CommissionType
+  amount             Decimal
+  loanType           Loantype?          @relation(fields: [loantypeId], references: [id])
+  leadId             Employee?          @relation(fields: [employeeId], references: [id])
+  employeeId         String? //When employee is is setter, this is to overwrite the default loan configuration
 }
 
 model CommissionPayment {
@@ -406,6 +460,11 @@ enum ExpensesType {
   MECHANIC
   SALARY
   FOOD
+}
+
+enum LeadPaymentTypes {
+  PENDING_MONEY
+  COMPENSATORY_PENDING_MONEY
 }
 
 enum CommissionPaymentStatus {

@@ -6,6 +6,7 @@ import { ApolloDriver } from '@nestjs/apollo';
 @Module({
   imports: [
     GraphQLModule.forRoot({
+      context: ({ req }) => ({ req }),
       driver: ApolloDriver,
       introspection: true,
       playground: true,

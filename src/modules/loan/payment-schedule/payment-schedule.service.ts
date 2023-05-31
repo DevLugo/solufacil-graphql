@@ -4,13 +4,20 @@ import { PaymentState } from '../../../@generated/prisma/payment-state.enum';
 import { PrismaService } from '../../../core/prisma/prisma.service';
 import { IResumePayload } from './payloads/resume';
 import { UtilsService } from '../utils.service';
+import { Prisma } from '@prisma/client';
+import { PaymentScheduleOrderByWithRelationInput } from 'src/@generated/payment-schedule/payment-schedule-order-by-with-relation.input';
 
 @Injectable()
 export class PaymentScheduleService {
     constructor(
         private readonly db:PrismaService,
         private readonly utilsService:UtilsService,
-        ){}
+        ){
+            /* db.$on<any>('query', (event: Prisma.QueryEvent) => {
+                console.log('Query: ' + event.query);
+                console.log('Duration: ' + event.duration + 'ms');
+              }); */
+        }
     WEEK_SECONDS =  7 * 24 * 60 * 60 * 1000;
 
     async createPaymentSchedule(firstDayPay: Date, weeksDuration:number, loanId:string){
@@ -57,7 +64,12 @@ export class PaymentScheduleService {
     }
     
     async getPaymentSchedulesWhere(where:PaymentScheduleWhereInput){
-        return await this.db.paymentSchedule.findMany({where})
+        return await this.db.paymentSchedule.findMany(
+            {
+                where:where,
+                orderBy: {"numeration":"asc"}
+            }
+        );
     }
 
     async rangeResume(dateStart:Date, dateEnd: Date): Promise<IResumePayload>{

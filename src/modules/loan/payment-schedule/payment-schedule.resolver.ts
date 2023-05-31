@@ -37,7 +37,7 @@ export class PaymentScheduleResolver {
 
     @ResolveField(_ => Loan)
     async loan(@Parent() root: PaymentSchedule) {
-        return this.LoanService.get(root.loanId);
+        return await this.LoanService.get(root.loanId);
     }
 
     @ResolveField(_ => Number)
@@ -51,7 +51,7 @@ export class PaymentScheduleResolver {
     }
 
 
-    @ResolveField(_ => Borrower)
+    @ResolveField(_ => Borrower, {nullable:true})
     async borrower(@Parent() root: PaymentSchedule) {
         const data = await this._db.loan.findUnique({
             where: {
@@ -64,15 +64,15 @@ export class PaymentScheduleResolver {
                             include:{
                                 personalData:{
                                     include:{
-                                        phones:true
+                                        phones:true,
+                                        },
                                     }
                                 }
                             }
                         }
                     }
                 }
-            }
-        });
+            })
         return data.contract.borrower;
     }
     

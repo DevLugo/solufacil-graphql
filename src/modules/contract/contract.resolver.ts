@@ -1,10 +1,10 @@
 import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { ContractCreateInput } from 'src/@generated/contract/contract-create.input';
 import { ContractWhereInput } from 'src/@generated/contract/contract-where.input';
 import { Contract } from '../../@generated/contract/contract.model';
 import { GqlAuthGuard } from '../auth/GqlAuthGuard';
 import { ContractService } from './contract.service';
-import { ContractCreateInput } from './inputs/contractCreateInput';
 
 @UseGuards(GqlAuthGuard)
 @Resolver(() => Contract)
@@ -23,6 +23,7 @@ export class ContractResolver {
         @Args({ name: 'input', type: () => ContractCreateInput})
         data:ContractCreateInput
     ){
-        return await this.ContractService.create(data);
+        return {}
+        //return await this.ContractService.create(data);
     }
 }
