@@ -17,10 +17,6 @@ export class LoanTypeService {
 
     async create(data:LoantypeCreateInput){
         // @ts-ignore
-        return await this.db.loantype.create({
-            data:{
-                ...data,
-            }
-        });
+        return await this.db.loantype.create({data});
     }
 }

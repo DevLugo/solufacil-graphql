@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
-import { LocalService } from './local.service';
-import { LocalResolver } from './local.resolver';
 import { PrismaModule } from '../../core/prisma/prisma.module';
 import { AuthModule } from '../auth/auth.module';
+import { LocationService } from '../location/location.service';
+import { RouteResolver } from './route.resolver';
 
 @Module({
-  providers: [LocalService, LocalResolver],
+  providers: [RouteResolver,LocationService],
   imports: [PrismaModule, AuthModule]
+
 })
-export class LocalModule {}
+export class RouteModule {}

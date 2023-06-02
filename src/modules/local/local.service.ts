@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { LocalCreateInput } from 'src/@generated/local/local-create.input';
-import { LocalWhereInput } from 'src/@generated/local/local-where.input';
-import { PrismaService } from 'src/core/prisma/prisma.service';
+import { LocalCreateInput } from '../../@generated/local/local-create.input';
+import { LocalWhereInput } from '../../@generated/local/local-where.input';
+import { PrismaService } from '../../core/prisma/prisma.service';
 
 @Injectable()
 export class LocalService {

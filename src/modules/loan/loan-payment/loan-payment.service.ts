@@ -11,19 +11,16 @@ export class LoanPaymentService {
     constructor(
         private readonly UtilsService: UtilsService,
         private readonly db:PrismaService){}
+
     async getMany(where:LoanPaymentWhereInput){
         return await this.db.loanPayment.findMany({
             where
         });
     }
-
+    
     async create(data:LoanPaymentCreateInput){
         // @ts-ignore
-        return await this.db.loanPayment.create({
-            data:{
-                ...data
-            }
-        });
+        return await this.db.loanPayment.create({data});
     }
 
     async addPaymentToLoan(data:LoanPaymentUpdateInput){
@@ -34,6 +31,8 @@ export class LoanPaymentService {
             },
             include: {loanType:true}
         });
+        if(!loan) throw new Error("Invalid Loan Id");
+        console.log("DROKO",loan)
         if (Number(amountForPayment) > Number(loan.pendingAmount)) throw new Error("La cantidad es mayor a la deuda pendiente")
         let getNextPayments = await this.db.paymentSchedule.findMany(
             {
@@ -115,13 +114,42 @@ export class LoanPaymentService {
     async gePayments(loanId:string){
         return await this.db.loanPayment.findMany({
             where:{loanId},
-            orderBy:{createdAt:"asc"}
+            orderBy:{createdAt:"asc"},
+            include: {
+                employee:{
+                    include:{
+                        user:true
+                    }
+                }
+            }
         })
     }
 
     async createPayment(data:LoanPaymentCreateInput){
+        // @ts-ignore
         return await this.db.loanPayment.create({data});
     }
+    //document this function
 
+    // This code gets the total amount of loan payments for a loan between two dates by an employee. 
+    // The function takes the loanId, startDate, endDate, and employeeId as parameters. 
+    // It then uses the aggregate function to sum all of the loan payments for the specified loan, 
+    // employee, and dates. 
+    // Finally, it returns the total amount of loan payments made for the specified loan, 
+    // employee, and dates. 
 
+async getAmountsBetweenDatesByEmployee(loanId:string, startDate:Date, endDate:Date, employeeId:string){
+        const result = await this.db.loanPayment.aggregate({
+            _sum:{ amount:true }, // sum up the loan payments
+            where:{ 
+                loanId,
+                employeeId,
+                date: {
+                    gte: startDate,
+                    lte: endDate
+                }
+            }
+        });
+        return result._sum.amount || 0; // return the sum, or 0 if there are no payments
+    }
 }

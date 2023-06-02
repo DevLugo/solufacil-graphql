@@ -2,6 +2,7 @@ import { BorrowerWhereInput } from '../../@generated/borrower/borrower-where.inp
 import { BorrowerCreateInput } from '../../@generated/borrower/borrower-create.input';
 import { PrismaService } from '../../core/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
+import { BorrowerWhereUniqueInput } from 'src/@generated/borrower/borrower-where-unique.input';
 
 @Injectable()
 export class BorrowerService {
@@ -27,6 +28,7 @@ export class BorrowerService {
         
         // @ts-ignore
         return await this.db.borrower.create({data:{
+        // @ts-ignore
             personalData: {
                 ...data.personalData
             }
@@ -34,7 +36,112 @@ export class BorrowerService {
     }
       
     async getMany(data:BorrowerWhereInput) {
-        return await this.db.borrower.findMany({where:data});
+        return await this.db.borrower.findMany(
+            {where:data, 
+                include:{
+                    personalData:{
+                        include:{
+                            /* aval:{
+                                include:{
+                                    personalData:{
+                                        include:{
+                                            phones:true,
+                                            addresses:{
+                                                include:{
+                                                    location:{
+                                                        include:{
+                                                            address:true
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }, */
+                            phones:true,
+                            addresses:{
+                                include:{
+                                    location:{
+                                        include:{
+                                            address:true
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+
+                }
+            });
+    }
+
+    async findOne(where:BorrowerWhereUniqueInput) {
+       /*  console.log("ELE", where)
+        const a = await this.db.borrower.findUnique({
+            where
+           
+        });
+        console.log("-------", a)
+ */
+        return await this.db.borrower.findUnique({
+            where:{
+                email:where.email,
+                id:where.id,
+            },
+            include:{
+                personalData:{
+                    include:{
+                        addresses:{
+                            include:{
+                                location:true
+                            }
+                        }
+                    }
+                },
+
+            }
+        });
+    }
+
+    async activeLoan(borrowerId:string) {
+        return await this.db.loan.findFirst({
+            where:{
+                status:"APPROVED",
+                contract:{
+                    borrowerId
+                }
+            },
+            include:{
+                employee:{
+                    include:{
+                        user:true
+                    }
+                }
+            }
+        });
+    }
+
+    async calculateMaximumAmountToGive(
+        increasedPerLoan: number, 
+        initialMaxamount: number,
+        increaseEveryNLoans: number,
+        loansFinishedCount: number, 
+        ){
+             //TODO: 
+            //Store a maximum amount gived in to de db.  
+            // Todo:  Obtain the last 2 loans
+            // check if the last two loan are equals of the maximum amount.
+            // if are equals, then increase by {increasedPerLoan}
+        /* const maxAmount = initialMaxamount;
+        
+        if(increaseEveryNLoans / loansFinishedCount){
+
+        }
+        while (){
+            if()
+        } */
+
     }
 
 }

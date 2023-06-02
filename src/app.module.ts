@@ -10,6 +10,9 @@ import { LoanModule } from './modules/loan/loan.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { PhoneModule } from './modules/phone/phone.module';
 import { LocalModule } from './modules/local/local.module';
+import { LocationModule } from './modules/location/location.module';
+import { RouteModule } from './modules/route/route.module';
+import { LoanRenovationModule } from './modules/loan-renovation/loan-renovation.module';
 
 @Module({
   imports: [
@@ -24,6 +27,9 @@ import { LocalModule } from './modules/local/local.module';
      AuthModule,
      PhoneModule,
      LocalModule,
+     LocationModule,
+     LoanRenovationModule,
+     RouteModule,
     ],
   providers: [PrismaService],
 })
