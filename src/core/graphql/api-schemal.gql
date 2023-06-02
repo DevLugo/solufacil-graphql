@@ -1479,7 +1479,7 @@ type Mutation {
   createBorrower(input: BorrowerCreateInput!): Borrower!
   createEmployee(input: EmployeeCreateInput!): Employee!
   createContract(input: ContractCreateInput!): Contract!
-  createLoan(input: CustomCreateLoanInput!): Loan!
+  createLoanBulk(input: CustomCreateManyLoanInput!): [Loan!]!
   createContractAndLoan(input: CustomCreateLoanInput!): Loan!
   createLoanPayment(input: LoanPaymentCreateInput!): LoanPayment!
   payPayment(input: [LoanPaymentBulkUpdate!]!): [Loan!]!
@@ -3907,6 +3907,10 @@ input ContractCreateInput {
   contractType: ContractTypeCreateNestedOneWithoutContractInput!
   loanLead: EmployeeCreateNestedOneWithoutContractLoanLeadInput
   employee: EmployeeCreateNestedOneWithoutContractEmployeeInput!
+}
+
+input CustomCreateManyLoanInput {
+  loans: [CustomCreateLoanInput!]!
 }
 
 input CustomCreateLoanInput {

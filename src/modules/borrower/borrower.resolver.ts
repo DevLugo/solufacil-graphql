@@ -1,8 +1,8 @@
 import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
-import { BorrowerWhereUniqueInput } from 'src/@generated/borrower/borrower-where-unique.input';
-import { BorrowerWhereInput } from 'src/@generated/borrower/borrower-where.input';
-import { Loan } from 'src/@generated/loan/loan.model';
+import { BorrowerWhereUniqueInput } from '../../@generated/borrower/borrower-where-unique.input';
+import { BorrowerWhereInput } from '../../@generated/borrower/borrower-where.input';
+import { Loan } from '../../@generated/loan/loan.model';
 import { BorrowerCreateInput } from '../../@generated/borrower/borrower-create.input';
 import { Borrower } from '../../@generated/borrower/borrower.model';
 import { GqlAuthGuard } from '../auth/GqlAuthGuard';

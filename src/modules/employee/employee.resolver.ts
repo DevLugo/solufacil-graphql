@@ -5,7 +5,7 @@ import { EmployeeCreateInput } from '../../@generated/employee/employee-create.i
 import { Employee } from '../../@generated/employee/employee.model';
 import { EmployeeService } from './employee.service';
 import { EmployeeWhereInput } from '../../@generated/employee/employee-where.input';
-import { EmployeeWhereUniqueInput } from 'src/@generated/employee/employee-where-unique.input';
+import { EmployeeWhereUniqueInput } from '../../@generated/employee/employee-where-unique.input';
 
 @UseGuards(GqlAuthGuard)
 @Resolver(() => Employee)

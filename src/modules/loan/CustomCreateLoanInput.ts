@@ -9,3 +9,9 @@ export class CustomCreateLoanInput extends LoanCreateInput{
     @Field(() => String, {nullable:true})
     renovatedFromId?: string
 }
+
+@InputType()
+export class CustomCreateManyLoanInput{
+    @Field(() => [CustomCreateLoanInput], {nullable:false})
+    loans?: CustomCreateLoanInput[];
+}

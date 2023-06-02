@@ -10,7 +10,7 @@ import { LoanService } from './loan.service';
 import { LoanPaymentWhereInput } from '../../@generated/loan-payment/loan-payment-where.input';
 import { LoantypeWhereInput } from '../../@generated/loantype/loantype-where.input';
 import { LoanWhereInput } from '../../@generated/loan/loan-where.input';
-import { CustomCreateLoanInput } from './CustomCreateLoanInput';
+import { CustomCreateLoanInput, CustomCreateManyLoanInput } from './CustomCreateLoanInput';
 import { LoanPaymentBulkUpdate, LoanPaymentUpdateInput } from '../loan/loan-payment/inputs/UpdatePaymentInput';
 import { PaymentScheduleService } from './payment-schedule/payment-schedule.service';
 import { ExecutionContext } from '@nestjs/common';
@@ -59,14 +59,14 @@ export class LoanResolver {
         return await this.LoanPaymentService.getMany(where);
     }
 
-    @Mutation(() => Loan)
+ /*    @Mutation(() => Loan)
     async createLoan(
         @Args({ name: 'input', type: () => CustomCreateLoanInput})
         data: CustomCreateLoanInput
     ){
-        const newLoan = await this.LoanService.createLoanProccess(data);
+        const newLoan = await this.LoanService.createLoansProcess([data]);
         return newLoan;
-    }
+    } */
 
     /**
      * Creates new loans.
@@ -75,12 +75,11 @@ export class LoanResolver {
      * @returns {Promise<Loan[]>} - A promise that resolves to an array of newly created loans.
      */
     @Mutation(() => [Loan])
-    async createLoans(
-        @Args({ name: 'input', type: () => [CustomCreateLoanInput]})
-        data: [CustomCreateLoanInput]
+    async createLoanBulk(
+        @Args({ name: 'input', type: () => CustomCreateManyLoanInput})
+        data: CustomCreateManyLoanInput
     ): Promise<Loan[]> {
-        const newLoans = await Promise.all(data.map(async (e) => await this.LoanService.createLoanProccess(e)));
-        return newLoans;
+        return this.LoanService.createLoansProcess(data.loans);
     }
 
 

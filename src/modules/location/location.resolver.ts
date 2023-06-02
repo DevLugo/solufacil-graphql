@@ -1,12 +1,12 @@
 import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
-import { Employee } from 'src/@generated/employee/employee.model';
-import { LocationWhereUniqueInput } from 'src/@generated/location/location-where-unique.input';
-import { LocationWhereInput } from 'src/@generated/location/location-where.input';
-import { Location } from 'src/@generated/location/location.model';
-import { Municipality } from 'src/@generated/municipality/municipality.model';
-import { State } from 'src/@generated/state/state.model';
-import { User } from 'src/@generated/user/user.model';
-import { PrismaService } from 'src/core/prisma/prisma.service';
+import { Employee } from '../../@generated/employee/employee.model';
+import { LocationWhereUniqueInput } from '../../@generated/location/location-where-unique.input';
+import { LocationWhereInput } from '../../@generated/location/location-where.input';
+import { Location } from '../../@generated/location/location.model';
+import { Municipality } from '../../@generated/municipality/municipality.model';
+import { State } from '../../@generated/state/state.model';
+import { User } from '../../@generated/user/user.model';
+import { PrismaService } from '../../core/prisma/prisma.service';
 
 
 function calculateDaysBetweenDates(begin, end){

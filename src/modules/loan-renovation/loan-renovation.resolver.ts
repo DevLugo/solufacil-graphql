@@ -1,6 +1,6 @@
 import { Args, Query, Resolver } from '@nestjs/graphql';
 import { Prisma } from '@prisma/client';
-import { PrismaService } from 'src/core/prisma/prisma.service';
+import { PrismaService } from '../../core/prisma/prisma.service';
 import { LoanRenovationWhereInput } from './inputs/LoanRenovationWhereInput';
 import { ILoanRenovationPayload } from './payloads/ILoanRenovationPayload';
 

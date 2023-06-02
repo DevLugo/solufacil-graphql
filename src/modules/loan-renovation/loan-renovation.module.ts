@@ -1,9 +1,8 @@
 
 import { Module } from '@nestjs/common';
-import { PrismaModule } from 'src/core/prisma/prisma.module';
+import { PrismaModule } from '../../core/prisma/prisma.module';
 import { LoanRenovationResolver } from './loan-renovation.resolver';
 import { LoanRenovationService } from './loan-renovation.service';
-import { AuthModule } from '../auth/auth.module'; 
 @Module({
   providers: [LoanRenovationResolver, LoanRenovationService],
   imports: [PrismaModule]

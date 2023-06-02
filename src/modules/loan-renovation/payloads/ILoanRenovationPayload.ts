@@ -1,6 +1,6 @@
 import { Field, ObjectType } from "@nestjs/graphql";
 import { Decimal } from "@prisma/client/runtime";
-import { Loan } from "src/@generated/loan/loan.model";
+import { Loan } from "../../../@generated/loan/loan.model";
 import { GraphQLDecimal } from "prisma-graphql-type-decimal";
 
 @ObjectType()

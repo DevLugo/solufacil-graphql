@@ -53,7 +53,7 @@ export class PaymentScheduleService {
             )
             i++;
         }
-        await this.db.$transaction(transactions);
+        return await this.db.$transaction(transactions);
     }
 
     async getPaymentSchedules(loanId:string){

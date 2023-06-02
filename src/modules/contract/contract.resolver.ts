@@ -1,7 +1,7 @@
 import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { ContractCreateInput } from 'src/@generated/contract/contract-create.input';
-import { ContractWhereInput } from 'src/@generated/contract/contract-where.input';
+import { ContractCreateInput } from '../../@generated/contract/contract-create.input';
+import { ContractWhereInput } from '../../@generated/contract/contract-where.input';
 import { Contract } from '../../@generated/contract/contract.model';
 import { GqlAuthGuard } from '../auth/GqlAuthGuard';
 import { ContractService } from './contract.service';

@@ -1,10 +1,10 @@
 import { Args, Float, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
-import { Borrower } from 'src/@generated/borrower/borrower.model';
-import { Loan } from 'src/@generated/loan/loan.model';
-import { PaymentScheduleWhereInput } from 'src/@generated/payment-schedule/payment-schedule-where.input';
-import { PaymentSchedule } from 'src/@generated/payment-schedule/payment-schedule.model';
-import { PrismaService } from 'src/core/prisma/prisma.service';
-import { BorrowerService } from 'src/modules/borrower/borrower.service';
+import { Borrower } from '../../../@generated/borrower/borrower.model';
+import { Loan } from '../../../@generated/loan/loan.model';
+import { PaymentScheduleWhereInput } from '../../../@generated/payment-schedule/payment-schedule-where.input';
+import { PaymentSchedule } from '../../../@generated/payment-schedule/payment-schedule.model';
+import { PrismaService } from '../../../core/prisma/prisma.service';
+import { BorrowerService } from '../../../modules/borrower/borrower.service';
 import { LoanService } from '../loan.service';
 import { PaymentBreakDown, UtilsService } from '../utils.service';
 import { RangeDaysInput } from './inputs/RangeDaysInput';
