@@ -8,8 +8,6 @@ import { PaymentScheduleService } from './payment-schedule/payment-schedule.serv
 import { LoanState } from '../../@generated/prisma/loan-state.enum';
 import { Contract, ContractType, Employee, Loan, Loantype, PaymentSchedule, PaymentState, Prisma, PrismaClient, User } from '@prisma/client';
 import { UtilsService } from './utils.service';
-import { LoanCreateManyInput } from 'src/@generated/loan/loan-create-many.input';
-import { PaymentScheduleCreateInput } from 'src/@generated/payment-schedule/payment-schedule-create.input';
 import { Decimal } from '@prisma/client/runtime';
 export type LoanWithAdditionalData = Loan & {
   employee: Employee & {
@@ -62,13 +60,12 @@ export class LoanService {
       }
     });
   }
-  async createLoansProcess(loansData: CustomCreateLoanInputWithoutWeeklyPaymentAmount[]): Promise<LoanWithAdditionalData[]> {
+  async createLoansProcess(loansData: CustomCreateLoanInput[]): Promise<LoanWithAdditionalData[]> {
     const dbActions = [];
     const results =[]
     for (const data of loansData) {
       const amountGived: Number = Number(data.amountGived);
       const contract = await this.findContract(data.contract.connect.id);
-      contract.contractType.amount
       const previousLoan = await this.findPreviousLoan(data.renovatedFromId);
       const loanType = await this.findLoanType(data.loanType.connect.id);
       const amountToPay = this.calculateAmountToPay(Number(amountGived), previousLoan, loanType, contract);

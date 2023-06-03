@@ -1,5 +1,5 @@
 import { PrismaService } from '../../core/prisma/prisma.service';
-import { CustomCreateLoanInputWithoutWeeklyPaymentAmount, LoanService } from './loan.service';
+import { LoanService } from './loan.service';
 import { LoanPaymentService } from './loan-payment/loan-payment.service';
 import { PaymentScheduleService } from './payment-schedule/payment-schedule.service';
 import { UtilsService } from './utils.service';
@@ -27,8 +27,9 @@ describe('LoanService', () => {
 
     it('should create loans and return an array of loan objects', async () => {
       //const formattedFirstPaymentDate = formatDate(firstPaymentDate);
-      const loansData: CustomCreateLoanInputWithoutWeeklyPaymentAmount[] = [
+      const loansData: CustomCreateLoanInput[] = [
         {
+          borrowerId: '1',
           amountGived: new Decimal(3000), // convert number to Decimal
           loanType: { connect: { id: '14' } },
           signDate: '2022-06-12',
@@ -36,7 +37,7 @@ describe('LoanService', () => {
           contract: { connect: { id: '1' } },
           status: 'APPROVED',
           employee: { connect: { id: '1' } },
-          //weeklyPaymentAmount: new Decimal(10),
+          weeklyPaymentAmount: new Decimal(10),
         },
       ];
       const createdLoans = await loanService.createLoansProcess(loansData);

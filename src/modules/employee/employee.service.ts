@@ -6,89 +6,68 @@ import { EmployeeWhereUniqueInput } from 'src/@generated/employee/employee-where
 
 @Injectable()
 export class EmployeeService {
-    constructor(private readonly db: PrismaService){}
+    constructor(private readonly db: PrismaService) { }
     async create(data: EmployeeCreateInput) {
         // @ts-ignore
         return await this.db.employee.create({
-        // @ts-ignore
+            // @ts-ignore
             data: {
                 ...data,
                 type: data.type,
-            }, 
-            include:{
-                user:true
+            },
+            include: {
+                user: true
             }
         });
     }
-    
+
     async getManyByName(name: string) {
         return await this.db.employee.findMany({
-            where:{
-                personalData:{
-                    fullName:{
+            where: {
+                personalData: {
+                    fullName: {
                         contains: name,
                         mode: "insensitive"
                     }
                 }
             },
-            include: { user:true }
+            include: { user: true }
         });
-      }
+    }
 
-      async getMany(where: EmployeeWhereInput) {
+    async getMany(where: EmployeeWhereInput) {
         return await this.db.employee.findMany({
             where,
-            include: { user:{
-                include:{
-                    employee:{
-                        include:{
-                            personalData:true
-                        }
-                    }
-                }
-            } }
-        });
-      }
-
-      async getUnique(where: EmployeeWhereUniqueInput) {
-        const e = await this.db.employee.findUnique({
-            where,
-            include: { user:{
-                include:{
-                    employee:{
-                        include:{
-                            personalData:{
-                                include:{
-                                    addresses:{
-                                        include:{
-                                            location:{
-                                                include:{
-                                                    municipality:true
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
+            include: {
+                user: {
+                    include: {
+                        employee: {
+                            include: {
+                                personalData: true
                             }
                         }
                     }
                 }
-            } }
+            }
         });
-        console.log("------", e.user.employee.personalData.addresses[0].location.municipality.name)
+    }
+
+    async getUnique(where: EmployeeWhereUniqueInput) {
         return await this.db.employee.findUnique({
             where,
-            include: { user:{
-                include:{
-                    employee:{
-                        include:{
-                            personalData:{
-                                include:{
-                                    addresses:{
-                                        include:{
-                                            location:{
-                                                include:{
-                                                    municipality:true
+            include: {
+                user: {
+                    include: {
+                        employee: {
+                            include: {
+                                personalData: {
+                                    include: {
+                                        addresses: {
+                                            include: {
+                                                location: {
+                                                    include: {
+                                                        municipality: true
+                                                    }
                                                 }
                                             }
                                         }
@@ -98,9 +77,9 @@ export class EmployeeService {
                         }
                     }
                 }
-            } }
+            }
         });
-      }
+    }
 }
 
 

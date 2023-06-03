@@ -10,8 +10,8 @@ import { LoanService } from './loan.service';
 import { LoanPaymentWhereInput } from '../../@generated/loan-payment/loan-payment-where.input';
 import { LoantypeWhereInput } from '../../@generated/loantype/loantype-where.input';
 import { LoanWhereInput } from '../../@generated/loan/loan-where.input';
-import { CustomCreateLoanInput, CustomCreateManyLoanInput } from './CustomCreateLoanInput';
-import { LoanPaymentBulkUpdate, LoanPaymentUpdateInput } from '../loan/loan-payment/inputs/UpdatePaymentInput';
+import { CustomCreateManyLoanInput } from './CustomCreateLoanInput';
+import { LoanPaymentBulkUpdate } from '../loan/loan-payment/inputs/UpdatePaymentInput';
 import { PaymentScheduleService } from './payment-schedule/payment-schedule.service';
 import { ExecutionContext } from '@nestjs/common';
 import { GqlAuthGuard } from '../auth/GqlAuthGuard';
@@ -19,54 +19,42 @@ import { UseGuards } from '@nestjs/common';
 import { CurrentUser } from './../auth/auth.decorator';
 import { EmployeeService } from '../employee/employee.service';
 import { ContractService } from '../contract/contract.service';
-import { BorrowerService } from '../borrower/borrower.service';
-
 @Resolver(() => Loan)
 @UseGuards(GqlAuthGuard)
 
 export class LoanResolver {
     constructor(
-        private readonly LoanService: LoanService,
-        private readonly LoanTypeService: LoanTypeService,
-        private readonly LoanPaymentService: LoanPaymentService,
-        private readonly LoanPaymentScheduleService: PaymentScheduleService,
-        private readonly EmployeeService: EmployeeService,
-        private readonly ContractService: ContractService,
-        private readonly BorrowerService: BorrowerService,
-
-        ){}
+        private readonly _loanService: LoanService,
+        private readonly _loanTypeService: LoanTypeService,
+        private readonly _loanPaymentService: LoanPaymentService,
+        private readonly _loanPaymentScheduleService: PaymentScheduleService,
+        private readonly _employeeService: EmployeeService,
+        private readonly _contractService: ContractService,
+    ) { }
     @Query(() => [Loan])
     async loans(
-        @Args({ name: 'where', type: () =>LoanWhereInput})
-        where:LoanWhereInput
+        @Args({ name: 'where', type: () => LoanWhereInput })
+        where: LoanWhereInput
     ) {
-        return await this.LoanService.getMany(where);
+        return await this._loanService.getMany(where);
     }
 
     @Query(() => [Loantype])
     async loanTypes(
-        @Args({ name: 'where', type: () =>LoantypeWhereInput})
-        where:LoantypeWhereInput
+        @Args({ name: 'where', type: () => LoantypeWhereInput })
+        where: LoantypeWhereInput
     ) {
-        return await this.LoanTypeService.getMany(where);
+        return await this._loanTypeService.getMany(where);
     }
 
     @Query(() => [LoanPayment])
     async loanPayments(
-        @Args({ name: 'where', type: () =>LoanPaymentWhereInput})
-        where:LoanPaymentWhereInput
+        @Args({ name: 'where', type: () => LoanPaymentWhereInput })
+        where: LoanPaymentWhereInput
     ) {
-        return await this.LoanPaymentService.getMany(where);
+        return await this._loanPaymentService.getMany(where);
     }
 
- /*    @Mutation(() => Loan)
-    async createLoan(
-        @Args({ name: 'input', type: () => CustomCreateLoanInput})
-        data: CustomCreateLoanInput
-    ){
-        const newLoan = await this.LoanService.createLoansProcess([data]);
-        return newLoan;
-    } */
 
     /**
      * Creates new loans.
@@ -76,132 +64,107 @@ export class LoanResolver {
      */
     @Mutation(() => [Loan])
     async createLoanBulk(
-        @Args({ name: 'input', type: () => CustomCreateManyLoanInput})
-        data: CustomCreateManyLoanInput
+        @Args({ name: 'input', type: () => CustomCreateManyLoanInput })
+        @CurrentUser() user: any,
+        data: CustomCreateManyLoanInput,
     ): Promise<Loan[]> {
-        return this.LoanService.createLoansProcess(data.loans);
-    }
-
-
-
-    @Mutation(() => Loan)
-    async createContractAndLoan(
-        @Args({ name: 'input', type: () => CustomCreateLoanInput})
-        data: CustomCreateLoanInput
-    ){
-        const borrower = this.BorrowerService.create({
-            personalData:{
-                create:{
-                    firstName:"",
-                    fullName: "",
-                    lastName: "",
-                    addresses: {
-                        create: [
-                            {
-                                interiorNumber: "",
-                                location: {
-                                    connect: {id: "1"}
-                                },
-                                street: "",
-                                postalCode: "",
-                                exteriorNumber: "",
-                            }]
+        const loans = [];
+        for (const loanData of data.loans) {
+            //get contract type from db
+            const { borrowerId, } = loanData;
+            
+            const loanType = await this._loanTypeService.get(loanData.contract.connect.id);
+            //calculate the end date of the contract. Using as base the sign date and the weeks duration of the type contract
+            const endDate = new Date(loanData.signDate);
+            endDate.setDate(endDate.getDate() + (loanType.weekDuration * 7));
+            
+            //get the employee from the user
+            let contract = await this._contractService.getActiveContract(borrowerId, endDate);
+            
+            if (!contract) {
+                //if the employee doesn't have an active contract, create a new one
+                contract = await this._contractService.create({
+                    signDate: new Date(loanData.signDate),
+                    contractTypeId: "14",
+                    borrowerId,
+                    employeeId: borrowerId || user.id,
+                });
+                
+                const loan = {
+                    ...loanData,
+                    employee: {
+                        connect: {
+                            id: borrowerId,
+                        },
                     },
-                    phones:{
-                        create:[{
-                            number:"123"
-                        }]
-                    } 
-                }
-            },
-            email:"asd",
-            contract:{
-                create:[
-                    {
-                        dueDate: new Date(),
-                        signDate: new Date(),
-                        employee: {
-                            connect:{
-                                userId: "as",
-                            }
-                        },
-                        loanLead: {
-                            connect: {
-                                id: "a"
-                            }
-                        },
-                        contractType: {
-                            connect: {
-                                id:"2"
-                            }
-                        }
-                    }
-                ]
-            }
-        });
-        return borrower;
+                    contract: contract ? { connect: { id: contract.id } } : undefined,
+                };
+                loans.push(loan);
+            };
+        }
+        return this._loanService.createLoansProcess(loans);
     }
 
     @Mutation(() => LoanPayment)
     async createLoanPayment(
-        @Args({ name: 'input', type: () => LoanPaymentCreateInput})
+        @Args({ name: 'input', type: () => LoanPaymentCreateInput })
         data: LoanPaymentCreateInput
-    ){
-        return await this.LoanPaymentService.create(data);
+    ) {
+        return await this._loanPaymentService.create(data);
     }
 
     @Mutation(() => [Loan])
-    async payPayment(
-        @Args({ name: 'input', type: () => [LoanPaymentBulkUpdate]})
+    async payLoan(
+        @Args({ name: 'input', type: () => [LoanPaymentBulkUpdate] })
         data: [LoanPaymentBulkUpdate],
         @CurrentUser() user: any,
-    ){
-        
-        const employee = await this.EmployeeService.getUnique({userId:user.id});
-        for (const e of data){
-            await this.LoanPaymentService.addPaymentToLoan({
+    ) {
+
+        const employee = await this._employeeService.getUnique({ userId: user.id });
+        for (const e of data) {
+            await this._loanPaymentService.addPaymentToLoan({
                 amount: e.amount,
                 loanId: e.loanId,
                 paidDate: new Date(),
                 employeeId: employee.id
             });
         }
-        return await this.LoanService.getMany(
+        return await this._loanService.getMany(
             {
-                id:{in: data.map(e => e.loanId)}
+                id: { in: data.map(e => e.loanId) }
             }
         );
     }
 
     @Mutation(() => Loantype)
     async createLoanType(
-        @Args({ name: 'input', type: () => LoantypeCreateInput})
+        @Args({ name: 'input', type: () => LoantypeCreateInput })
         data: LoantypeCreateInput
-    ){
-        return await this.LoanTypeService.create(data);
+    ) {
+        return await this._loanTypeService.create(data);
     }
 
     @ResolveField('totalPaidAmount', returns => Number)
     async totalPaidAmount(@Parent() root: Loan) {
         const { id } = root;
-        return await this.LoanPaymentService.getTotalPaidAmount(id);
+        return await this._loanPaymentService.getTotalPaidAmount(id);
     }
 
     @ResolveField('paymentSchedule')
     async paymentSchedule(@Parent() root: Loan) {
         const { id } = root;
-        return await this.LoanPaymentScheduleService.getPaymentSchedules(id);
+        return await this._loanPaymentScheduleService.getPaymentSchedules(id);
     }
 
     @ResolveField('payments')
     async payments(@Parent() root: Loan) {
         const { id } = root;
-        return await this.LoanPaymentService.gePayments(id);
+        return await this._loanPaymentService.gePayments(id);
     }
 
     @ResolveField('loanType')
     async loanType(@Parent() root: Loan) {
-        return await this.LoanTypeService.get(root.loantypeId);
+        return await this._loanTypeService.get(root.loantypeId);
     }
 
 }

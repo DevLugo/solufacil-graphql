@@ -344,6 +344,7 @@ model Loan {
   /// @HideField({ output: false, input: true })
   createdAt         DateTime            @default(now())
   employee          Employee            @relation(fields: [employeeId], references: [id])
+  /// @HideField({ output: false, input: true })
   updatedAt         DateTime            @updatedAt
   contract          Contract            @relation(fields: [contractId], references: [id])
   contractId        String

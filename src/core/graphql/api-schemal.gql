@@ -1012,7 +1012,6 @@ input LoanWhereInput {
   avals: PersonalDataListRelationFilter
   documents: DocumentListRelationFilter
   employee: EmployeeRelationFilter
-  updatedAt: DateTimeFilter
   contract: ContractRelationFilter
   contractId: StringFilter
   loantypeId: StringFilter
@@ -1480,7 +1479,6 @@ type Mutation {
   createEmployee(input: EmployeeCreateInput!): Employee!
   createContract(input: ContractCreateInput!): Contract!
   createLoanBulk(input: CustomCreateManyLoanInput!): [Loan!]!
-  createContractAndLoan(input: CustomCreateLoanInput!): Loan!
   createLoanPayment(input: LoanPaymentCreateInput!): LoanPayment!
   payPayment(input: [LoanPaymentBulkUpdate!]!): [Loan!]!
   createLoanType(input: LoantypeCreateInput!): Loantype!
@@ -1891,7 +1889,6 @@ input LoanCreateWithoutEmployeeInput {
   finishedDate: DateTime
   avals: PersonalDataCreateNestedManyWithoutLoanInput
   documents: DocumentCreateNestedManyWithoutLoanInput
-  updatedAt: DateTime
   contract: ContractCreateNestedOneWithoutLoansInput!
   paymentSchedule: PaymentScheduleCreateNestedManyWithoutLoanInput
   commissionPayment: CommissionPaymentCreateNestedManyWithoutLoanInput
@@ -2054,7 +2051,6 @@ input LoanCreateWithoutPaymentScheduleInput {
   avals: PersonalDataCreateNestedManyWithoutLoanInput
   documents: DocumentCreateNestedManyWithoutLoanInput
   employee: EmployeeCreateNestedOneWithoutLoanInput!
-  updatedAt: DateTime
   contract: ContractCreateNestedOneWithoutLoansInput!
   commissionPayment: CommissionPaymentCreateNestedManyWithoutLoanInput
   renovatedFromId: String
@@ -2177,7 +2173,6 @@ input LoanCreateWithoutPaymentsInput {
   avals: PersonalDataCreateNestedManyWithoutLoanInput
   documents: DocumentCreateNestedManyWithoutLoanInput
   employee: EmployeeCreateNestedOneWithoutLoanInput!
-  updatedAt: DateTime
   contract: ContractCreateNestedOneWithoutLoansInput!
   paymentSchedule: PaymentScheduleCreateNestedManyWithoutLoanInput
   commissionPayment: CommissionPaymentCreateNestedManyWithoutLoanInput
@@ -2282,7 +2277,6 @@ input LoanCreateWithoutDocumentsInput {
   finishedDate: DateTime
   avals: PersonalDataCreateNestedManyWithoutLoanInput
   employee: EmployeeCreateNestedOneWithoutLoanInput!
-  updatedAt: DateTime
   contract: ContractCreateNestedOneWithoutLoansInput!
   paymentSchedule: PaymentScheduleCreateNestedManyWithoutLoanInput
   commissionPayment: CommissionPaymentCreateNestedManyWithoutLoanInput
@@ -2542,7 +2536,6 @@ input LoanCreateWithoutLoanTypeInput {
   avals: PersonalDataCreateNestedManyWithoutLoanInput
   documents: DocumentCreateNestedManyWithoutLoanInput
   employee: EmployeeCreateNestedOneWithoutLoanInput!
-  updatedAt: DateTime
   contract: ContractCreateNestedOneWithoutLoansInput!
   paymentSchedule: PaymentScheduleCreateNestedManyWithoutLoanInput
   commissionPayment: CommissionPaymentCreateNestedManyWithoutLoanInput
@@ -2736,7 +2729,6 @@ input LoanCreateWithoutAvalsInput {
   finishedDate: DateTime
   documents: DocumentCreateNestedManyWithoutLoanInput
   employee: EmployeeCreateNestedOneWithoutLoanInput!
-  updatedAt: DateTime
   contract: ContractCreateNestedOneWithoutLoansInput!
   paymentSchedule: PaymentScheduleCreateNestedManyWithoutLoanInput
   commissionPayment: CommissionPaymentCreateNestedManyWithoutLoanInput
@@ -3324,7 +3316,6 @@ input LoanCreateManyLoanTypeInput {
   amountToPay: Decimal
   signDate: DateTime
   finishedDate: DateTime
-  updatedAt: DateTime
   contractId: String!
   employeeId: String!
   renovatedFromId: String
@@ -3537,7 +3528,6 @@ input LoanCreateWithoutCommissionPaymentInput {
   avals: PersonalDataCreateNestedManyWithoutLoanInput
   documents: DocumentCreateNestedManyWithoutLoanInput
   employee: EmployeeCreateNestedOneWithoutLoanInput!
-  updatedAt: DateTime
   contract: ContractCreateNestedOneWithoutLoansInput!
   paymentSchedule: PaymentScheduleCreateNestedManyWithoutLoanInput
   renovatedFromId: String
@@ -3677,7 +3667,6 @@ input LoanCreateManyEmployeeInput {
   amountToPay: Decimal
   signDate: DateTime
   finishedDate: DateTime
-  updatedAt: DateTime
   contractId: String!
   loantypeId: String!
   renovatedFromId: String
@@ -3910,25 +3899,19 @@ input ContractCreateInput {
 }
 
 input CustomCreateManyLoanInput {
-  loans: [CustomCreateLoanInput!]!
+  loans: [CustomCreateLoanInputWithoutEmployee!]!
 }
 
-input CustomCreateLoanInput {
-  previousAmountGived: Decimal
+input CustomCreateLoanInputWithoutEmployee {
   amountGived: Decimal
-  amountToPay: Decimal
   loanType: LoantypeCreateNestedOneWithoutLoanInput!
   signDate: DateTime
-  finishedDate: DateTime
   avals: PersonalDataCreateNestedManyWithoutLoanInput
   documents: DocumentCreateNestedManyWithoutLoanInput
-  employee: EmployeeCreateNestedOneWithoutLoanInput!
-  updatedAt: DateTime
   contract: ContractCreateNestedOneWithoutLoansInput!
-  paymentSchedule: PaymentScheduleCreateNestedManyWithoutLoanInput
-  commissionPayment: CommissionPaymentCreateNestedManyWithoutLoanInput
   renovatedFromId: String
   firstPaymentDate: Date!
+  borrowerId: String!
 }
 
 """
