@@ -272,6 +272,11 @@ async function main() {
                         firstName: "Minerva ",
                         lastName: "CORTES GARCIA",
                         fullName: "Minerva CORTES GARCIA",
+                        phones:{
+                            create:{
+                                number: "9999999999",
+                            }
+                        },
                         addresses:{
                             create:{
                                 street: "koben",

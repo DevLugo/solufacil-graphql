@@ -1,38 +1,21 @@
-import { UseGuards } from '@nestjs/common';
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { GqlAuthGuard } from '../auth/GqlAuthGuard';
-import { EmployeeCreateInput } from '../../@generated/employee/employee-create.input';
-import { Employee } from '../../@generated/employee/employee.model';
-import { EmployeeService } from './employee.service';
-import { EmployeeWhereInput } from '../../@generated/employee/employee-where.input';
-import { EmployeeWhereUniqueInput } from '../../@generated/employee/employee-where-unique.input';
+import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
+import { PrismaService } from '../../core/prisma/prisma.service';
+import { Employee } from './types';
+import { PersonalData } from '../personal-data/types';
 
-@UseGuards(GqlAuthGuard)
-@Resolver(() => Employee)
+@Resolver(Employee)
 export class EmployeeResolver {
-    constructor(private readonly EmployeeService: EmployeeService){}
-    
-    @Query(() => [Employee])
-    async employees(
-        @Args({ name: 'where', type: () => EmployeeWhereInput})
-        where:EmployeeWhereInput
-    ) {
-        return await this.EmployeeService.getMany(where);
-    }
+    constructor(
+        private readonly _db: PrismaService,
+    ){}
 
-    @Query(() => Employee)
-    async getEmployee(
-        @Args({ name: 'where', type: () => EmployeeWhereUniqueInput})
-        where:EmployeeWhereUniqueInput
-    ) {
-        return await this.EmployeeService.getUnique(where);
-    }
-
-    @Mutation(() => Employee)
-    async createEmployee(
-        @Args({ name: 'input', type: () =>EmployeeCreateInput})
-        data:EmployeeCreateInput
-    ){
-        return await this.EmployeeService.create(data);
+    @ResolveField(() => PersonalData)
+    async personalData(@Parent() root: Employee): Promise<PersonalData> {
+        const id = root.id
+        console.log(id)
+        const employee = await this._db.personalData.findFirst({
+            where: { employee:{every:{id}} },
+        });
+        return employee;
     }
 }

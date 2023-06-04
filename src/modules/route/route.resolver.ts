@@ -1,8 +1,7 @@
-import { Args, Query, Resolver } from '@nestjs/graphql';
-import { RouteWhereUniqueInput } from '../../@generated/route/route-where-unique.input';
-import { RouteWhereInput } from '../../@generated/route/route-where.input';
-import { Route } from '../../@generated/route/route.model';
+import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { PrismaService } from '../../core/prisma/prisma.service';
+import { Route, RouteWhereInput } from './types';
+import { Location } from '../location/types';
 
 @Resolver(Route)
 export class RouteResolver {
@@ -17,9 +16,14 @@ export class RouteResolver {
     ) {
         return await this._db.route.findMany({
             where,
-            include:{
-                localities:true
-            }
         });
+    }
+    
+    @ResolveField(() => [Location])
+    async locations(@Parent() route: Route): Promise<Location[]> {
+        const locations = await this._db.location.findMany({
+            where: { routeId: route.id },
+        });
+        return locations
     }
 }

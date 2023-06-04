@@ -1,12 +1,8 @@
 import { Module } from '@nestjs/common';
-import { PrismaModule } from '../../core/prisma/prisma.module';
-import { AuthModule } from '../auth/auth.module';
-import { LocationService } from '../location/location.service';
 import { RouteResolver } from './route.resolver';
+import { PrismaService } from 'src/core/prisma/prisma.service';
 
 @Module({
-  providers: [RouteResolver,LocationService],
-  imports: [PrismaModule, AuthModule]
-
+  providers: [RouteResolver, PrismaService]
 })
 export class RouteModule {}
