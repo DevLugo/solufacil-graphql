@@ -374,7 +374,7 @@ async function main() {
                     id: "14"
                 }
             },
-            employee: {
+            grantor: {
                 connect:{
                     id:userId1
                 }

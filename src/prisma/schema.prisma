@@ -67,7 +67,7 @@ model Employee {
   userId                        String                          @unique()
   loanPayment                   LoanPayment[]
   commissionPayment             CommissionPayment[]
-  contractEmployee              Contract[]                      @relation("Contract_employee")
+  contractGrantor               Contract[]                      @relation("Contract_grantor")
   contractLoanLead              Contract[]                      @relation("Contract_loanLean")
   expenses                      Expenses[]
   personalDataId                String
@@ -182,9 +182,9 @@ model Borrower {
   //borrowerId String?
   //Borrower   Borrower[] @relation("BorrowerToBorrower")
   local             Local[]
-  employee          Employee?    @relation(fields: [employeeId], references: [id])
+  grantor           Employee?    @relation(fields: [grantorId], references: [id])
   personalDataId    String
-  employeeId        String?
+  grantorId         String?
 }
 
 model Local {
@@ -244,7 +244,7 @@ model Loantype {
   maximunAmount                 Float                           @default(5000)
   amountToIncrease              Float                           @default(500)
   increaseEveryNLoans           Int                             @default(2) //each 2 loan can increase the max amount of the loan
-  leadsOnly                     Boolean                         @default(false)
+  availableFor                  EmployeesTypes[]
   createdAt                     DateTime                        @default(now())
   updatedAt                     DateTime                        @updatedAt
   loan                          Loan[]
@@ -304,9 +304,9 @@ model Contract {
   contractType   ContractType @relation(fields: [contractTypeId], references: [id])
   contractTypeId String
   loanLeadId     String?
-  employeeId     String
+  grantorId      String
   loanLead       Employee?    @relation("Contract_loanLean", fields: [loanLeadId], references: [id])
-  employee       Employee     @relation("Contract_employee", fields: [employeeId], references: [id])
+  grantor        Employee     @relation("Contract_grantor", fields: [grantorId], references: [id])
 }
 
 model Loan {
@@ -341,13 +341,13 @@ model Loan {
 
   /// @HideField({ output: false, input: true })
   createdAt         DateTime            @default(now())
-  employee          Employee            @relation(fields: [employeeId], references: [id])
+  grantor           Employee            @relation(fields: [grantorId], references: [id])
   /// @HideField({ output: false, input: true })
   updatedAt         DateTime            @updatedAt
   contract          Contract            @relation(fields: [contractId], references: [id])
   contractId        String
   loantypeId        String
-  employeeId        String
+  grantorId         String
   paymentSchedule   PaymentSchedule[]
   commissionPayment CommissionPayment[]
   renovatedFromId   String?
@@ -368,8 +368,8 @@ model LoanPayment {
   paymentSchedules      PaymentSchedule[]
   loan                  Loan                 @relation(fields: [loanId], references: [id])
   loanId                String
-  employee              Employee             @relation(fields: [employeeId], references: [id])
-  employeeId            String
+  collector             Employee             @relation(fields: [collectorId], references: [id])
+  collectorId           String
   leadPaymentReceived   LeadPaymentReceived? @relation(fields: [leadPaymentReceivedId], references: [id])
   leadPaymentReceivedId String?
 }
@@ -409,7 +409,7 @@ model CommissionPayment {
   employee          Employee                @relation(fields: [employeeId], references: [id])
   loanId            String?
   paymentScheduleId String
-  employeeId        String
+  employeeId        String //could be comissio for a loanLead or for a laison executive
   status            CommissionPaymentStatus
 }
 

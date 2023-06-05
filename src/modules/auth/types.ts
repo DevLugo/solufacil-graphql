@@ -1,5 +1,5 @@
 import { Field, InputType, ObjectType } from "@nestjs/graphql";
-import { User } from "../../models/user/user.model";
+import { User } from "../user/types";
 
 @ObjectType()
 export class IJwtPayload {

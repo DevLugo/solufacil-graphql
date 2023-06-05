@@ -1,12 +1,16 @@
-import { Field, HideField, ID, ObjectType } from "@nestjs/graphql";
+import { Field, ID, ObjectType } from "@nestjs/graphql";
 
 @ObjectType()
 export class User {
+
     @Field(() => ID, {nullable:false})
     id!: string;
 
     @Field(() => String, {nullable:false})
     email!: string;
+
+    @Field(() => String, {nullable:false})
+    password!: string;
 
     @Field(() => Date, {nullable:true})
     lastLogin!: Date | null;
@@ -19,4 +23,5 @@ export class User {
 
     @Field(() => Date, {nullable:false})
     updatedAt!: Date;
-}
+
+ }

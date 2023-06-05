@@ -5,6 +5,7 @@
 type User {
   id: ID!
   email: String!
+  password: String!
   lastLogin: DateTime
   profilePicture: String
   createdAt: DateTime!
@@ -23,8 +24,15 @@ type SignInOutput {
 
 type Employee {
   id: ID!
-  name: String!
+  userId: ID
+  type: EmployeesTypes
+  routes: [Route!]!
   personalData: PersonalData!
+}
+
+enum EmployeesTypes {
+  LIAISON_EXECUTIVE
+  LOAN_LEAD
 }
 
 type PersonalData {
@@ -36,6 +44,12 @@ type PersonalData {
   updatedAt: DateTime!
   phones: [Phone!]!
   addresses: [Address!]!
+}
+
+type Route {
+  id: ID!
+  name: String!
+  locations: [Location!]!
 }
 
 type Location {
@@ -60,19 +74,36 @@ type Address {
   references: String
 }
 
-type Route {
+type Borrower {
   id: ID!
-  name: String!
-  locations: [Location!]!
+  email: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  loanFinishedCount: Int!
+  personalDataId: String!
+  grantorId: String
+  grantor: Employee!
+  personalData: PersonalData!
 }
 
 type Query {
   hello: String!
   getRoutes(where: RouteWhereInput!): [Route!]!
+  getEmployee(where: EmployeeWhereUniqueInput!): Employee!
+  getBorrower(id: String!): Borrower!
+  getBorrowers(where: EmployeeWhereInput): [Borrower!]!
 }
 
 input RouteWhereInput {
   name: String
+}
+
+input EmployeeWhereUniqueInput {
+  id: ID!
+}
+
+input EmployeeWhereInput {
+  locationId: ID
 }
 
 type Mutation {

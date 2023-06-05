@@ -7,6 +7,7 @@ import { EmployeeModule } from './modules/employee/employee.module';
 import { LocationModule } from './modules/location/location.module';
 import { PersonalDataModule } from './modules/personal-data/personal-data.module';
 import { RouteModule } from './modules/route/route.module';
+import { BorrowerModule } from './modules/borrower/borrower.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { RouteModule } from './modules/route/route.module';
     EmployeeModule,
     LocationModule,
     PersonalDataModule,
+    BorrowerModule,
   ],
   providers: [PrismaService, AppResolver],
 })
