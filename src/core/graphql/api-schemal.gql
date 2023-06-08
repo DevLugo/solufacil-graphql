@@ -35,6 +35,13 @@ enum EmployeesTypes {
   LOAN_LEAD
 }
 
+type Phone {
+  id: ID!
+  number: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 type PersonalData {
   id: ID!
   fullName: String!
@@ -56,13 +63,6 @@ type Location {
   id: ID!
   name: String!
   leads: [Employee!]!
-}
-
-type Phone {
-  id: ID!
-  number: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
 }
 
 type Address {

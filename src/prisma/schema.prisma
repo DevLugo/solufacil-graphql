@@ -5,12 +5,12 @@ generator client {
   provider = "prisma-client-js"
 }
 
-generator nestgraphql {
-  provider               = "node ../../node_modules/prisma-nestjs-graphql"
-  output                 = "../../src/@generated"
-  fields_Validator_from  = "class-validator"
-  fields_Validator_input = true
-}
+//generator nestgraphql {
+//  provider               = "node ../../node_modules/prisma-nestjs-graphql"
+//  output                 = "../../src/@generated"
+//  fields_Validator_from  = "class-validator"
+//  fields_Validator_input = true
+//}
 
 datasource db {
   provider = "postgresql"
@@ -336,10 +336,10 @@ model Loan {
   loanType                Loantype       @relation(fields: [loantypeId], references: [id])
   signDate                DateTime       @default(now())
   finishedDate            DateTime?
+  firstPaymentDate        DateTime
   avals                   PersonalData[]
   documents               Document[]
 
-  /// @HideField({ output: false, input: true })
   createdAt         DateTime            @default(now())
   grantor           Employee            @relation(fields: [grantorId], references: [id])
   /// @HideField({ output: false, input: true })

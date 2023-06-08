@@ -21,3 +21,20 @@ export class Address {
     references!: string | null;
 
 }
+
+export class CreateAddressInput {
+    @Field(() => String, {nullable:false})
+    street!: string;
+
+    @Field(() => String, {nullable:true})
+    exteriorNumber!: string | null;
+
+    @Field(() => String, {nullable:false})
+    interiorNumber!: string;
+
+    @Field(() => String, {nullable:false})
+    postalCode!: string;
+
+    @Field(() => String, {nullable:true})
+    references!: string | null;
+}

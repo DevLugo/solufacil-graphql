@@ -221,7 +221,6 @@ CREATE TABLE "Loantype" (
     "amountToIncrease" DOUBLE PRECISION NOT NULL DEFAULT 500,
     "increaseEveryNLoans" INTEGER NOT NULL DEFAULT 2,
     "availableFor" "EmployeesTypes"[],
-    "leadsOnly" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -294,6 +293,7 @@ CREATE TABLE "Loan" (
     "totalProfitAmount" MONEY NOT NULL DEFAULT 0,
     "signDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "finishedDate" TIMESTAMP(3),
+    "firstPaymentDate" TIMESTAMP(3) NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "contractId" TEXT NOT NULL,

@@ -1,7 +1,7 @@
 import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { PersonalData } from '../personal-data/types';
 import { Employee } from '../employee/types';
-import { PrismaService } from 'src/core/prisma/prisma.service';
+import { PrismaService } from '../../core/prisma/prisma.service';
 import { Borrower, EmployeeWhereInput } from './types';
 
 @Resolver(Borrower)

@@ -15,3 +15,9 @@ export class Phone {
     updatedAt!: Date;
 
 }
+
+
+export class CreatePhoneInput {
+    @Field(() => String, {nullable:false})
+    number!: string;
+}
