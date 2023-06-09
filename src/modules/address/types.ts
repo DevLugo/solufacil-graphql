@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { Field, ID, InputType, ObjectType } from "@nestjs/graphql";
 
 @ObjectType()
 export class Address {
@@ -22,6 +22,7 @@ export class Address {
 
 }
 
+@InputType()
 export class CreateAddressInput {
     @Field(() => String, {nullable:false})
     street!: string;

@@ -1,6 +1,5 @@
 import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UserCreateInput } from '../../@generated/user/user-create.input';
 import { PrismaService } from '../../core/prisma/prisma.service';
 import { genSalt, hash, compare } from 'bcryptjs';
 import { User } from '@prisma/client';
@@ -14,7 +13,7 @@ export class AuthService {
 
     ){}
 
-    async signup(data: UserCreateInput): Promise<User> {
+    /* async signup(data: UserCreateInput): Promise<User> {
         const { email, password } = data;
         const aaa = await this._db.user.findFirst({
             where:{email:email}
@@ -46,7 +45,7 @@ export class AuthService {
             }
         });
         return newUser;
-      }
+      } */
 
       async signin(signinDto: SignInInput): Promise<{ token: string, user: User }> {
         const { email, password } = signinDto;

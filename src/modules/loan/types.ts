@@ -1,15 +1,18 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, InputType, registerEnumType } from '@nestjs/graphql';
 import { ObjectType } from '@nestjs/graphql';
 import { ID } from '@nestjs/graphql';
 import { GraphQLDecimal } from 'prisma-graphql-type-decimal';
 import { Decimal } from '@prisma/client/runtime';
 import { Employee, LoanState, PersonalData, User } from '@prisma/client';
-import { Loantype } from 'src/@generated/loantype/loantype.model';
 import { PaymentSchedule } from '../payment-schedule/types';
 import { LoanType } from '../loan-types/types';
 import { GraphQLDate } from 'graphql-scalars';
 import { CreatePersonalDataInput } from '../personal-data/types';
 
+
+registerEnumType(LoanState, {
+    name: 'LoanState',
+});
 
 @ObjectType()
 export class Loan {
@@ -18,7 +21,7 @@ export class Loan {
     id!: string;
 
     @Field(() => LoanState, {nullable:false})
-    status!: keyof typeof LoanState;
+    status!: LoanState;
 
     @Field(() => GraphQLDecimal, {nullable:false})
     weeklyPaymentAmount!: Decimal;
@@ -50,8 +53,8 @@ export class Loan {
     @Field(() => GraphQLDecimal, {nullable:false,defaultValue:0})
     totalProfitAmount!: Decimal;
 
-    @Field(() => Loantype, {nullable:false})
-    loanType?: Loantype;
+    @Field(() => LoanType, {nullable:false})
+    loanType?: LoanType;
 
     @Field(() => Date, {nullable:false})
     signDate!: Date;
@@ -113,7 +116,7 @@ export class LoanCreateInput {
     grantorId?: string;
 }
 
-
+@InputType()
 export class CreateAvalInput {
     @Field(() => String, {nullable:true  })
     avalId?: string;
@@ -122,6 +125,7 @@ export class CreateAvalInput {
     newAval?: CreatePersonalDataInput;
 }
 
+@InputType()
 export class CreateLoansProcess extends LoanCreateInput {
     @Field(() => String, {nullable:false})
     contractId!: string;

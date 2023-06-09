@@ -1,8 +1,11 @@
-import { Field, ID, InputType, Int, ObjectType } from "@nestjs/graphql";
+import { Field, ID, InputType, Int, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { PaymentState } from "@prisma/client";
 import { Decimal } from "@prisma/client/runtime";
 import { GraphQLDecimal } from "prisma-graphql-type-decimal";
 
+registerEnumType(PaymentState, {
+    name: 'PaymentState',
+})
 
 @ObjectType()
 export class PaymentSchedule {

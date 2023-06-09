@@ -1,6 +1,6 @@
 import { Field, ID, InputType, ObjectType } from "@nestjs/graphql";
-import { CreatePhoneInput, Phone } from "../phone/types";
-import { Address, CreateAddressInput } from "../address/types";
+import { CreatePhoneInput } from "../phone/types";
+import { CreateAddressInput } from "../address/types";
 
 @ObjectType()
 export class PersonalData {
@@ -52,10 +52,10 @@ export class CreatePersonalDataInput {
     @Field(() => String, {nullable:false})
     lastName!: string;
 
-    @Field(() => [Phone], {nullable:false})
+    @Field(() => [CreatePhoneInput], {nullable:false})
     phones: CreatePhoneInput[];
 
-    @Field(() => [Phone], {nullable:false})
+    @Field(() => [CreateAddressInput], {nullable:false})
     Adresses: CreateAddressInput[];
 
 }

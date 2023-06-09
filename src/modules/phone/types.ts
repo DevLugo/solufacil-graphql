@@ -17,6 +17,7 @@ export class Phone {
 }
 
 
+@InputType()
 export class CreatePhoneInput {
     @Field(() => String, {nullable:false})
     number!: string;

@@ -9,6 +9,11 @@ describe('LoanService', () => {
     let loanService: LoanService;
     const db = new PrismaService();
     const _paymentScheduleService = new PaymentScheduleService(db);
+    beforeAll(async () => {
+        //Create loan types
+        //Create loanLead
+        //Create Grantor
+    })
 
     beforeEach(() => {
 
@@ -40,14 +45,20 @@ describe('LoanService', () => {
             expect(createdLoans.length).toBe(loansData.length);
             let idx = 0;
             for await (const loan of createdLoans) {
+                const loanType = await db.loantype.findFirst({ where: { id: { equals: loansData[idx].loanTypeId } } });
                 expect(loan).toHaveProperty('id');
                 expect(loan).toHaveProperty('createdAt');
                 expect(loan).toHaveProperty('updatedAt');
                 expect(loan).toHaveProperty('paymentSchedule');
+                //create tests for loan
+
 
                 // retrieve the payment schedule for the loan and test it
                 expect(loan.paymentSchedule).toBeInstanceOf(Array);
-                const loanType = await db.loantype.findFirst({ where: { id: { equals: loansData[idx].loanTypeId } } });
+                expect(new Decimal(loan.amountGived)).toEqual(new Decimal(loansData[idx].amountGived));
+                expect(new Decimal(loan.amountToPay)).toEqual(new Decimal(+loansData[idx].amountGived * (1 + loanType.rate)));
+
+
                 expect(loan.paymentSchedule.length).toBe(loanType.weekDuration);
                 const amountGiven = +loansData[idx].amountGived;
                 const firstPaymentDate = +loansData[idx].firstPaymentDate;

@@ -12,9 +12,9 @@ export class LoanService {
     private readonly _paymentScheduleService: PaymentScheduleService
   ) { }
 
-  async createLoansProcess(loansData: CreateLoansProcess[]): Promise<any[]> {
+  async createLoansProcess(loansData: CreateLoansProcess[]): Promise<LoanWithAdditionalData[]> {
     const dbActions = [];
-    const results = []
+    const results:LoanWithAdditionalData[] = []
     for (const data of loansData) {
       const { contractId, loanTypeId, signDate, grantorId, renovatedFromId } = data;
       const amountGived: Number = Number(data.amountGived);

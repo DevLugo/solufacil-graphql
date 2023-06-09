@@ -4,8 +4,11 @@ import { LoanService } from './loan.service';
 import { Loan, LoanCreateInput } from './types';
 import { CurrentUser } from '../auth/auth.decorator';
 import { ContractService } from '../contract/contract.service';
+import { PaymentSchedule } from '../payment-schedule/types';
+import { PersonalData } from '../personal-data/types';
+import { Employee } from '../employee/types';
 
-@Resolver()
+@Resolver(Loan)
 export class LoanResolver {
     constructor(
         private readonly _db: PrismaService,
@@ -15,9 +18,9 @@ export class LoanResolver {
 
     @Mutation(() => [Loan])
     async createLoanBulk(
-        @Args({ name: 'input', type: () => Loan })
-        @CurrentUser() user: any,
+        @Args({ name: 'input', type: () => [LoanCreateInput] })
         data: [LoanCreateInput],
+        @CurrentUser() user: any,
     ): Promise<Loan[]> {
         const loans = [];
         for (const loanData of data) {
@@ -57,8 +60,8 @@ export class LoanResolver {
         return this._loanService.createLoansProcess(loans);
     }
 
-    @ResolveField()
-    async paymentsScheduled(@Parent() loan: Loan) {
+    @ResolveField(() => [PaymentSchedule])
+    async paymentsSchedules(@Parent() loan: Loan) {
         const { id } = loan;
         return this._db.paymentSchedule.findMany({
             where: {
@@ -67,8 +70,8 @@ export class LoanResolver {
         });
     }
     
-    @ResolveField()
-    async payments(@Parent() loan: Loan) {
+    @ResolveField(() => [PaymentSchedule])
+    async paymentSchedules(@Parent() loan: Loan) {
         const { id } = loan;
         return this._db.loanPayment.findMany({
             where: {
@@ -77,7 +80,7 @@ export class LoanResolver {
         });
     }
 
-    @ResolveField()
+    @ResolveField(() => PersonalData)
     async avals(@Parent() loan: Loan) {
         const { id } = loan;
         return this._db.personalData.findMany({
@@ -87,7 +90,7 @@ export class LoanResolver {
         });
     }
 
-    @ResolveField()
+    @ResolveField(() => Employee)
     async grantor(@Parent() loan: Loan) {
         const { grantorId } = loan;
         return this._db.employee.findUnique({
@@ -97,7 +100,7 @@ export class LoanResolver {
         });
     }
 
-    @ResolveField()
+    /* @ResolveField(() =>)
     async contract(@Parent() loan: Loan) {
         const { contractId } = loan;
         return this._db.contract.findUnique({
@@ -105,5 +108,5 @@ export class LoanResolver {
                 id: contractId,
             },
         });
-    }
+    } */
 }

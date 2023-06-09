@@ -8,6 +8,7 @@ import { LocationModule } from './modules/location/location.module';
 import { PersonalDataModule } from './modules/personal-data/personal-data.module';
 import { RouteModule } from './modules/route/route.module';
 import { BorrowerModule } from './modules/borrower/borrower.module';
+import { LoanModule } from './modules/loan/loan.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { BorrowerModule } from './modules/borrower/borrower.module';
     LocationModule,
     PersonalDataModule,
     BorrowerModule,
+    LoanModule
   ],
   providers: [PrismaService, AppResolver],
 })

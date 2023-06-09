@@ -4,7 +4,7 @@ import { PersonalData } from './types';
 import { Phone } from '../phone/types';
 import { Address } from '../address/types';
 
-@Resolver(PersonalData)
+@Resolver(() => PersonalData)
 export class PersonalDataResolver {
     constructor(
         private readonly _db: PrismaService,
@@ -13,10 +13,10 @@ export class PersonalDataResolver {
     @ResolveField(() => [Phone])
     async phones(@Parent() root: PersonalData): Promise<Phone[]> {
         const id = root.id
-        const employee = await this._db.phone.findMany({
+        const phones = await this._db.phone.findMany({
             where: { personalDataId: id },
         });
-        return employee;
+        return phones;
     }
 
     @ResolveField(() => [Address])

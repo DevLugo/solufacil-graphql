@@ -42,6 +42,15 @@ type Phone {
   updatedAt: DateTime!
 }
 
+type Address {
+  id: ID!
+  street: String!
+  exteriorNumber: String
+  interiorNumber: String!
+  postalCode: String!
+  references: String
+}
+
 type PersonalData {
   id: ID!
   fullName: String!
@@ -65,15 +74,6 @@ type Location {
   leads: [Employee!]!
 }
 
-type Address {
-  id: ID!
-  street: String!
-  exteriorNumber: String
-  interiorNumber: String!
-  postalCode: String!
-  references: String
-}
-
 type Borrower {
   id: ID!
   email: String
@@ -84,6 +84,85 @@ type Borrower {
   grantorId: String
   grantor: Employee!
   personalData: PersonalData!
+}
+
+type PaymentSchedule {
+  id: ID!
+  numeration: Int!
+  amountToPay: Decimal!
+  paidAmount: Decimal!
+  returnToCapital: Decimal!
+  profit: Decimal!
+  status: PaymentState!
+  delayed: Boolean!
+  dueDate: DateTime!
+  details: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  loanId: String!
+}
+
+"""An arbitrary-precision Decimal type"""
+scalar Decimal
+
+enum PaymentState {
+  PENDING
+  PAID_OUT
+  PARTIALLY_PAID
+}
+
+type LoanType {
+  id: ID!
+  name: String!
+  weekDuration: Int!
+  rate: Float!
+  weeksToRenew: Int!
+  overdueRate: Float!
+  initialAmount: Float!
+  maximunAmount: Float!
+  amountToIncrease: Float!
+  increaseEveryNLoans: Int!
+  availableFor: EmployeesTypes!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Loan {
+  id: ID!
+  status: LoanState!
+  weeklyPaymentAmount: Decimal!
+  previousAmountGived: Decimal
+  amountGived: Decimal!
+  amountToPay: Decimal!
+  paidAmount: Decimal!
+  pendingAmount: Decimal!
+  renovationProfitAmount: Decimal!
+  renovationPendingAmount: Decimal!
+  baseProfitAmount: Decimal!
+  totalProfitAmount: Decimal!
+  loanType: LoanType!
+  signDate: DateTime!
+  finishedDate: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  contractId: String!
+  loantypeId: String!
+  grantorId: String!
+  paymentSchedule: [PaymentSchedule!]
+  renovatedFromId: String
+  paymentsSchedules: [PaymentSchedule!]!
+  paymentSchedules: [PaymentSchedule!]!
+  avals: PersonalData!
+  grantor: Employee!
+}
+
+enum LoanState {
+  REQUESTED
+  IN_REVIEW
+  APPROVED
+  REJECTED
+  PAID_OUT
+  POSTPONED
 }
 
 type Query {
@@ -108,9 +187,54 @@ input EmployeeWhereInput {
 
 type Mutation {
   signIn(input: SignInInput!): SignInOutput!
+  createLoanBulk(input: [LoanCreateInput!]!): [Loan!]!
 }
 
 input SignInInput {
   email: String!
   password: String!
+}
+
+input LoanCreateInput {
+  firstPaymentDate: Date!
+
+  """Previos loanId. This apply when is a renovation"""
+  renovatedFromId: String
+  borrowerId: String!
+  loanLeadId: String!
+  amountGived: Decimal
+  loanTypeId: String!
+  signDate: Date
+  avals: [CreateAvalInput!]
+  grantorId: String
+}
+
+"""
+A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+"""
+scalar Date
+
+input CreateAvalInput {
+  avalId: String
+  newAval: CreatePersonalDataInput
+}
+
+input CreatePersonalDataInput {
+  fullName: String!
+  firstName: String!
+  lastName: String!
+  phones: [CreatePhoneInput!]!
+  Adresses: [CreateAddressInput!]!
+}
+
+input CreatePhoneInput {
+  number: String!
+}
+
+input CreateAddressInput {
+  street: String!
+  exteriorNumber: String
+  interiorNumber: String!
+  postalCode: String!
+  references: String
 }
