@@ -62,7 +62,6 @@ export class Loan {
     @Field(() => Date, {nullable:true})
     finishedDate!: Date | null;
 
-
     @Field(() => Date, {nullable:false})
     createdAt!: Date;
 
@@ -78,9 +77,6 @@ export class Loan {
     @Field(() => String, {nullable:false})
     grantorId!: string;
 
-    @Field(() => [PaymentSchedule], {nullable:true})
-    paymentSchedule?: Array<PaymentSchedule>;
-    
     @Field(() => String, {nullable:true})
     renovatedFromId!: string | null;
 
@@ -109,9 +105,6 @@ export class LoanCreateInput {
     @Field(() => GraphQLDate, {nullable:true})
     signDate?: Date | string;
 
-    @Field(() => [CreateAvalInput], {nullable:true})
-    avals?: CreateAvalInput[];
-    
     @Field(() => String, {nullable:true  })
     grantorId?: string;
 }

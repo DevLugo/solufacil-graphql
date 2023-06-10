@@ -7,6 +7,8 @@ import { ContractService } from '../contract/contract.service';
 import { PaymentSchedule } from '../payment-schedule/types';
 import { PersonalData } from '../personal-data/types';
 import { Employee } from '../employee/types';
+import { Contract } from '../contract/types';
+import { LoanPayment } from '../loan-payment/types';
 
 @Resolver(Loan)
 export class LoanResolver {
@@ -70,17 +72,7 @@ export class LoanResolver {
         });
     }
     
-    @ResolveField(() => [PaymentSchedule])
-    async paymentSchedules(@Parent() loan: Loan) {
-        const { id } = loan;
-        return this._db.loanPayment.findMany({
-            where: {
-                loanId: id,
-            },
-        });
-    }
-
-    @ResolveField(() => PersonalData)
+    @ResolveField(() => [PersonalData])
     async avals(@Parent() loan: Loan) {
         const { id } = loan;
         return this._db.personalData.findMany({
@@ -100,7 +92,7 @@ export class LoanResolver {
         });
     }
 
-    /* @ResolveField(() =>)
+    @ResolveField(() => Contract)
     async contract(@Parent() loan: Loan) {
         const { contractId } = loan;
         return this._db.contract.findUnique({
@@ -108,5 +100,15 @@ export class LoanResolver {
                 id: contractId,
             },
         });
-    } */
+    }
+    
+    @ResolveField(() => [LoanPayment])
+    async payments(@Parent() loan: Loan) {
+        const { id } = loan;
+        return this._db.loanPayment.findMany({
+            where: {
+                loanId: id,
+            },
+        });
+    }
 }

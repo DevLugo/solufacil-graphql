@@ -2,7 +2,7 @@ import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { PersonalData } from '../personal-data/types';
 import { Employee } from '../employee/types';
 import { PrismaService } from '../../core/prisma/prisma.service';
-import { Borrower, EmployeeWhereInput } from './types';
+import { Borrower, BorrowerWhereInput, BorrowerWhereUniqueInput } from './types';
 
 @Resolver(Borrower)
 export class BorrowerResolver {
@@ -12,13 +12,13 @@ export class BorrowerResolver {
     ){}
 
     @Query(() => Borrower)
-    async getBorrower(@Args('id') id: string): Promise<Borrower> {
-        return this._db.borrower.findUnique({where: {id}});
+    async getBorrower(@Args('where') where: BorrowerWhereUniqueInput): Promise<Borrower> {
+        return this._db.borrower.findUnique({where});
     }
 
     @Query(() => [Borrower])
     async getBorrowers(
-        @Args('where', {nullable:true}) where: EmployeeWhereInput
+        @Args('where', {nullable:true}) where: BorrowerWhereInput
     ): Promise<Borrower[]> {
         return this._db.borrower.findMany(
             {

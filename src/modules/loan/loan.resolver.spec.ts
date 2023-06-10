@@ -113,7 +113,7 @@ describe('GraphQL API', () => {
             expect(loan.renovationProfitAmount).toEqual('0');
             expect(loan.baseProfitAmount).toEqual('1200');
             expect(loan.paymentSchedule).toHaveLength(numPayments);
-
+            
             const paymentSchedule = loan.paymentSchedule;
             for (let i = 0; i < numPayments; i++) {
                 const percentegeToPaid = _paymentScheduleService.calculatePayedPercentege(weeklyPaymentAmount, weeklyPaymentAmount);

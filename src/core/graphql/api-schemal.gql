@@ -22,19 +22,6 @@ type SignInOutput {
   user: User!
 }
 
-type Employee {
-  id: ID!
-  userId: ID
-  type: EmployeesTypes
-  routes: [Route!]!
-  personalData: PersonalData!
-}
-
-enum EmployeesTypes {
-  LIAISON_EXECUTIVE
-  LOAN_LEAD
-}
-
 type Phone {
   id: ID!
   number: String!
@@ -62,16 +49,17 @@ type PersonalData {
   addresses: [Address!]!
 }
 
-type Route {
+type Employee {
   id: ID!
-  name: String!
-  locations: [Location!]!
+  userId: ID
+  type: EmployeesTypes
+  routes: [Route!]!
+  personalData: PersonalData!
 }
 
-type Location {
-  id: ID!
-  name: String!
-  leads: [Employee!]!
+enum EmployeesTypes {
+  LIAISON_EXECUTIVE
+  LOAN_LEAD
 }
 
 type Borrower {
@@ -86,29 +74,10 @@ type Borrower {
   personalData: PersonalData!
 }
 
-type PaymentSchedule {
+type Route {
   id: ID!
-  numeration: Int!
-  amountToPay: Decimal!
-  paidAmount: Decimal!
-  returnToCapital: Decimal!
-  profit: Decimal!
-  status: PaymentState!
-  delayed: Boolean!
-  dueDate: DateTime!
-  details: String
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  loanId: String!
-}
-
-"""An arbitrary-precision Decimal type"""
-scalar Decimal
-
-enum PaymentState {
-  PENDING
-  PAID_OUT
-  PARTIALLY_PAID
+  name: String!
+  locations: [Location!]!
 }
 
 type LoanType {
@@ -148,12 +117,12 @@ type Loan {
   contractId: String!
   loantypeId: String!
   grantorId: String!
-  paymentSchedule: [PaymentSchedule!]
   renovatedFromId: String
   paymentsSchedules: [PaymentSchedule!]!
-  paymentSchedules: [PaymentSchedule!]!
-  avals: PersonalData!
+  avals: [PersonalData!]!
   grantor: Employee!
+  contract: Contract!
+  payments: [LoanPayment!]!
 }
 
 enum LoanState {
@@ -165,12 +134,68 @@ enum LoanState {
   POSTPONED
 }
 
+"""An arbitrary-precision Decimal type"""
+scalar Decimal
+
+type PaymentSchedule {
+  id: ID!
+  numeration: Int!
+  amountToPay: Decimal!
+  paidAmount: Decimal!
+  returnToCapital: Decimal!
+  profit: Decimal!
+  status: PaymentState!
+  delayed: Boolean!
+  dueDate: DateTime!
+  details: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  loanId: String!
+}
+
+enum PaymentState {
+  PENDING
+  PAID_OUT
+  PARTIALLY_PAID
+}
+
+type Contract {
+  id: ID!
+  borrowerId: ID!
+  contractTypeId: ID!
+  loanLeadId: ID!
+  grantorId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  signDate: DateTime!
+}
+
+type LoanPayment {
+  id: ID!
+  amount: Decimal!
+  percentage: Decimal!
+  loanId: String!
+  collectorId: String!
+  leadPaymentReceivedId: String!
+  profitAmount: Decimal!
+  returnToCapital: Decimal!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Location {
+  id: ID!
+  name: String!
+  leads: [Employee!]!
+}
+
 type Query {
   hello: String!
   getRoutes(where: RouteWhereInput!): [Route!]!
   getEmployee(where: EmployeeWhereUniqueInput!): Employee!
-  getBorrower(id: String!): Borrower!
-  getBorrowers(where: EmployeeWhereInput): [Borrower!]!
+  getBorrower(where: BorrowerWhereUniqueInput!): Borrower!
+  getBorrowers(where: BorrowerWhereInput): [Borrower!]!
+  getLoanTypes(where: LoanTypeWhereInput): [LoanType!]!
 }
 
 input RouteWhereInput {
@@ -181,18 +206,23 @@ input EmployeeWhereUniqueInput {
   id: ID!
 }
 
-input EmployeeWhereInput {
+input BorrowerWhereUniqueInput {
+  id: ID
+}
+
+input BorrowerWhereInput {
   locationId: ID
+  leadId: ID
+}
+
+input LoanTypeWhereInput {
+  employeeType: EmployeesTypes
 }
 
 type Mutation {
-  signIn(input: SignInInput!): SignInOutput!
   createLoanBulk(input: [LoanCreateInput!]!): [Loan!]!
-}
-
-input SignInInput {
-  email: String!
-  password: String!
+  signUp(input: UserCreateInput!): User!
+  signIn(input: SignInInput!): SignInOutput!
 }
 
 input LoanCreateInput {
@@ -205,7 +235,6 @@ input LoanCreateInput {
   amountGived: Decimal
   loanTypeId: String!
   signDate: Date
-  avals: [CreateAvalInput!]
   grantorId: String
 }
 
@@ -214,27 +243,14 @@ A date string, such as 2007-12-03, compliant with the `full-date` format outline
 """
 scalar Date
 
-input CreateAvalInput {
-  avalId: String
-  newAval: CreatePersonalDataInput
-}
-
-input CreatePersonalDataInput {
-  fullName: String!
+input UserCreateInput {
+  email: String!
+  password: String!
   firstName: String!
   lastName: String!
-  phones: [CreatePhoneInput!]!
-  Adresses: [CreateAddressInput!]!
 }
 
-input CreatePhoneInput {
-  number: String!
-}
-
-input CreateAddressInput {
-  street: String!
-  exteriorNumber: String
-  interiorNumber: String!
-  postalCode: String!
-  references: String
+input SignInInput {
+  email: String!
+  password: String!
 }

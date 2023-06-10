@@ -16,7 +16,7 @@ export class Location {
 @InputType()
 export class LocationWhereInput {
     @Field(() => ID, {nullable:false})
-    id!: string;
+    routeId!: string;
 
     @Field(() => String, {nullable:true})
     name?: string;

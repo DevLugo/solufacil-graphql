@@ -22,6 +22,23 @@ export class SignInInput {
     password!: string;
 }
 
+@InputType()
+export class UserCreateInput {
+    @Field(() => String, {nullable:false})
+    email!: string;
+
+    @Field(() => String, {nullable:false})
+    password!: string;
+
+    @Field(() => String, {nullable:false})
+    firstName!: string;
+
+    @Field(() => String, {nullable:false})
+    lastName!: string;
+}
+
+
+
 @ObjectType()
 export class SignInOutput {
     @Field(() => String, {nullable:false})

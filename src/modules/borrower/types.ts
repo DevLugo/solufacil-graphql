@@ -27,7 +27,16 @@ export class Borrower {
 }
 
 @InputType()
-export class EmployeeWhereInput {
+export class BorrowerWhereInput {
     @Field(() => ID, {nullable:true})
     locationId?: string;
+
+    @Field(() => ID, {nullable:true})
+    leadId?: string;
+}
+
+@InputType()
+export class BorrowerWhereUniqueInput {
+    @Field(() => ID, {nullable:true})
+    id?: string;
 }

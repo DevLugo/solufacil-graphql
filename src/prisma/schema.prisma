@@ -38,30 +38,22 @@ model SystemSection {
 
 model User {
   id             String    @id @default(uuid())
-  /// @FieldType({ name: 'Scalars.GraphQLEmailAddress', from: 'graphql-scalars', input: true })
   email          String    @unique
   password       String
-  /// @HideField({ output: false, input: true })
   lastLogin      DateTime?
-  /// @HideField({ output: false, input: true })
   profilePicture String?
-  /// @HideField({ output: false, input: true })
   createdAt      DateTime  @default(now())
-  /// @HideField({ output: false, input: true })
   updatedAt      DateTime  @updatedAt
   employee       Employee?
 }
 
 model Employee {
-  /// @HideField({ match: 'EmployeeCreate*Input' })
   id                            String                          @id @default(uuid())
   type                          EmployeesTypes
   documents                     Document[]
   user                          User                            @relation(fields: [userId], references: [id])
   personalData                  PersonalData                    @relation(fields: [personalDataId], references: [id])
-  /// @HideField({ output: false, input: true })
   createdAt                     DateTime                        @default(now())
-  /// @HideField({ output: false, input: true })
   updatedAt                     DateTime                        @updatedAt
   loan                          Loan[]
   userId                        String                          @unique()
@@ -113,9 +105,7 @@ model PersonalData {
   documents Document[]
   phones    Phone[]
   addresses Address[]
-  /// @HideField({ output: false, input: true })
   createdAt DateTime   @default(now())
-  /// @HideField({ output: false, input: true })
   updatedAt DateTime   @updatedAt
   employee  Employee[]
   borrower  Borrower[]
@@ -138,7 +128,6 @@ model Municipality {
 }
 
 model Address {
-  /// @HideField({ match: 'BorrowerCreate*Input' })
   id             String        @id @default(uuid())
   street         String
   exteriorNumber String?
@@ -154,7 +143,6 @@ model Address {
 }
 
 model Location {
-  /// @HideField({ match: 'BorrowerCreate*Input' })
   id             String       @id @default(uuid())
   name           String       @unique
   address        Address[]
@@ -166,16 +154,12 @@ model Location {
 
 //Prestatario
 model Borrower {
-  /// @HideField({ match: 'BorrowerCreate*Input' })
   id                String       @id @default(uuid())
-  /// @FieldType({ name: 'Scalars.GraphQLEmailAddress', from: 'graphql-scalars', input: true })
   email             String?      @unique
   documents         Document[]
   personalData      PersonalData @relation(fields: [personalDataId], references: [id])
   //reference Borrower?  @relation("BorrowerToBorrower", fields: [borrowerId], references: [id])
-  /// @HideField({ output: false, input: true })
   createdAt         DateTime     @default(now())
-  /// @HideField({ output: false, input: true })
   updatedAt         DateTime     @updatedAt
   contract          Contract[]
   loanFinishedCount Int          @default(0)
@@ -188,42 +172,32 @@ model Borrower {
 }
 
 model Local {
-  /// @HideField({ match: 'LocalCreate*Input' })
   id        String    @id @default(uuid())
   name      String
   addresses Address[]
 
-  /// @HideField({ output: false, input:true })
   createdAt  DateTime @default(now())
-  /// @HideField({ output: false, input: true })
   updatedAt  DateTime @updatedAt
   borrower   Borrower @relation(fields: [borrowerId], references: [id])
   borrowerId String
 }
 
 model Phone {
-  /// @HideField({ match: 'PhoneCreate*Input' })
   id             String        @id @default(uuid())
   number         String        @unique
-  /// @HideField({ output: false, input: true })
   createdAt      DateTime      @default(now())
-  /// @HideField({ output: false, input: true })
   updatedAt      DateTime      @updatedAt
   personalDataId String?
   personalData   PersonalData? @relation(fields: [personalDataId], references: [id])
 }
 
 model ContractType {
-  /// @HideField({ match: 'ContractTypeCreate*Input' })
   id            String     @id @default(uuid())
-  /// @Validator.MinLength(3)
   name          String
   monthDuration Int
   amount        Decimal    @db.Money
   maxRate       Decimal
-  /// @HideField({ output: false, input: true })
   createdAt     DateTime   @default(now())
-  /// @HideField({ output: false, input: true })
   updatedAt     DateTime?  @updatedAt
   contract      Contract[]
 }
@@ -287,19 +261,14 @@ model LeadPaymentReceived {
 }
 
 model Contract {
-  /// @HideField({ match: 'ContractCreate*Input' })
   id             String       @id @default(uuid())
   borrower       Borrower     @relation(fields: [borrowerId], references: [id])
   borrowerId     String
   documents      Document[]
-  /// @HideField({ output: false, input: true })
   loans          Loan[]
-  /// @HideField({ output: false, input: true })
   createdAt      DateTime     @default(now())
-  /// @HideField({ output: false, input: true })
   dueDate        DateTime
   signDate       DateTime
-  /// @HideField({ output: false, input: true })
   updatedAt      DateTime     @updatedAt
   contractType   ContractType @relation(fields: [contractTypeId], references: [id])
   contractTypeId String
@@ -310,28 +279,18 @@ model Contract {
 }
 
 model Loan {
-  /// @HideField({ match: 'LoanCreateInput' })
   id                      String         @id @default(uuid())
-  /// @HideField({ output: false, input: true })
   status                  LoanState
-  /// @HideField({ output: false, input: true })
   payments                LoanPayment[]
-  /// @HideField({ match: 'LoanCreateInput' })
   weeklyPaymentAmount     Decimal        @db.Money
   previousAmountGived     Decimal?       @db.Money
   amountGived             Decimal        @default(0) @db.Money
   amountToPay             Decimal        @default(0) @db.Money
-  /// @HideField({ output: false, input: true })
   paidAmount              Decimal        @default(0) @db.Money
-  /// @HideField({ output: false, input: true })
   pendingAmount           Decimal        @default(0) @db.Money
-  /// @HideField({ output: false, input: true })
   renovationProfitAmount  Decimal        @default(0) @db.Money
-  /// @HideField({ output: false, input: true })
   renovationPendingAmount Decimal        @default(0) @db.Money
-  /// @HideField({ output: false, input: true })
   baseProfitAmount        Decimal        @default(0) @db.Money
-  /// @HideField({ output: false, input: true })
   totalProfitAmount       Decimal        @default(0) @db.Money
   loanType                Loantype       @relation(fields: [loantypeId], references: [id])
   signDate                DateTime       @default(now())
@@ -342,7 +301,6 @@ model Loan {
 
   createdAt         DateTime            @default(now())
   grantor           Employee            @relation(fields: [grantorId], references: [id])
-  /// @HideField({ output: false, input: true })
   updatedAt         DateTime            @updatedAt
   contract          Contract            @relation(fields: [contractId], references: [id])
   contractId        String
@@ -358,12 +316,9 @@ model LoanPayment {
   amount                Decimal              @db.Money
   profitAmount          Decimal              @db.Money
   returnToCapital       Decimal              @db.Money
-  date                  DateTime
   percentage            Decimal              @db.Decimal(100, 9)
   comments              Comment[]
-  /// @HideField({ output: false, input: true })
   createdAt             DateTime             @default(now())
-  /// @HideField({ output: false, input: true })
   updatedAt             DateTime             @updatedAt
   paymentSchedules      PaymentSchedule[]
   loan                  Loan                 @relation(fields: [loanId], references: [id])
@@ -377,9 +332,7 @@ model LoanPayment {
 model Comment {
   id            String      @id @default(uuid())
   text          String
-  /// @HideField({ output: false, input: true })
   createdAt     DateTime    @default(now())
-  /// @HideField({ output: false, input: true })
   createdBy     Employee    @relation(fields: [employeeId], references: [id])
   createdById   String
   payment       LoanPayment @relation(fields: [loanPaymentId], references: [id])
@@ -388,7 +341,6 @@ model Comment {
 }
 
 model ComissionPaymentConfiguration {
-  /// @HideField({ match: 'PaymentScheduleCreate*Input' })
   id                 String             @id @default(uuid())
   employeeType       EmployeesTypes
   loantypeId         String
@@ -401,7 +353,6 @@ model ComissionPaymentConfiguration {
 }
 
 model CommissionPayment {
-  /// @HideField({ match: 'PaymentScheduleCreate*Input' })
   id                String                  @id @default(uuid())
   amount            Decimal                 @db.Money
   paymentSchedule   PaymentSchedule         @relation(fields: [paymentScheduleId], references: [id])
@@ -414,7 +365,6 @@ model CommissionPayment {
 }
 
 model PaymentSchedule {
-  /// @HideField({ match: 'PaymentScheduleCreate*Input' })
   id                String              @id @default(uuid())
   numeration        Int
   amountToPay       Decimal             @db.Money
@@ -425,28 +375,22 @@ model PaymentSchedule {
   delayed           Boolean             @default(false)
   dueDate           DateTime
   details           String?
-  /// @HideField({ output: false, input: true })
   createdAt         DateTime            @default(now())
-  /// @HideField({ output: false, input: true })
   updatedAt         DateTime            @updatedAt
   loan              Loan                @relation(fields: [loanId], references: [id])
   loanId            String
   loanPayments      LoanPayment[]
-  /// @HideField({ output: false, input: true })
   commissionPayment CommissionPayment[]
 }
 
 model Expenses {
-  /// @HideField({ match: 'ExpensesScheduleCreate*Input' })
   id          String       @id @default(uuid())
   amountToPay Decimal      @db.Money
   status      PaymentState
   dueDate     DateTime
   payedAt     DateTime
   employee    Employee     @relation(fields: [employeeId], references: [id])
-  /// @HideField({ output: false, input: true })
   createdAt   DateTime     @default(now())
-  /// @HideField({ output: false, input: true })
   updatedAt   DateTime     @updatedAt
   userId      String?
   employeeId  String
