@@ -10,6 +10,9 @@ import { LoanModule } from './modules/loan/loan.module';
 import { LocationModule } from './modules/location/location.module';
 import { PersonalDataModule } from './modules/personal-data/personal-data.module';
 import { RouteModule } from './modules/route/route.module';
+import { PaymentScheduleModule } from './modules/payment-schedule/payment-schedule.module';
+import { AddressModule } from './modules/address/address.module';
+import { LoanPaymentModule } from './modules/loan-payment/loan-payment.module';
 
 @Module({
   imports: [
@@ -17,12 +20,15 @@ import { RouteModule } from './modules/route/route.module';
     LoanModule,
     AuthModule,
     RouteModule,
+    AddressModule,
     LocationModule,
     EmployeeModule,
     LocationModule,
     BorrowerModule,
     LoanTypesModule,
+    LoanPaymentModule,
     PersonalDataModule,
+    PaymentScheduleModule,
   ],
   providers: [PrismaService, AppResolver],
 })

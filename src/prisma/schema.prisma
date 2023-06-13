@@ -292,7 +292,7 @@ model Loan {
   renovationPendingAmount Decimal        @default(0) @db.Money
   baseProfitAmount        Decimal        @default(0) @db.Money
   totalProfitAmount       Decimal        @default(0) @db.Money
-  loanType                Loantype       @relation(fields: [loantypeId], references: [id])
+  loanType                Loantype       @relation(fields: [loanTypeId], references: [id])
   signDate                DateTime       @default(now())
   finishedDate            DateTime?
   firstPaymentDate        DateTime
@@ -304,7 +304,7 @@ model Loan {
   updatedAt         DateTime            @updatedAt
   contract          Contract            @relation(fields: [contractId], references: [id])
   contractId        String
-  loantypeId        String
+  loanTypeId        String
   grantorId         String
   paymentSchedule   PaymentSchedule[]
   commissionPayment CommissionPayment[]
@@ -343,11 +343,11 @@ model Comment {
 model ComissionPaymentConfiguration {
   id                 String             @id @default(uuid())
   employeeType       EmployeesTypes
-  loantypeId         String
+  loanTypeId         String
   commissionGoalType CommissionGoalType
   commissionType     CommissionType
   amount             Decimal
-  loanType           Loantype?          @relation(fields: [loantypeId], references: [id])
+  loanType           Loantype?          @relation(fields: [loanTypeId], references: [id])
   leadId             Employee?          @relation(fields: [employeeId], references: [id])
   employeeId         String? //When employee is is setter, this is to overwrite the default loan configuration
 }

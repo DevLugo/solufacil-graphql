@@ -4,6 +4,7 @@
 
 type User {
   id: ID!
+  employeeId: ID
   email: String!
   password: String!
   lastLogin: DateTime
@@ -36,6 +37,8 @@ type Address {
   interiorNumber: String!
   postalCode: String!
   references: String
+  locationId: ID!
+  location: Location!
 }
 
 type PersonalData {
@@ -55,6 +58,7 @@ type Employee {
   type: EmployeesTypes
   routes: [Route!]!
   personalData: PersonalData!
+  user: User!
 }
 
 enum EmployeesTypes {
@@ -109,13 +113,12 @@ type Loan {
   renovationPendingAmount: Decimal!
   baseProfitAmount: Decimal!
   totalProfitAmount: Decimal!
-  loanType: LoanType!
+  loanTypeId: ID!
   signDate: DateTime!
   finishedDate: DateTime
   createdAt: DateTime!
   updatedAt: DateTime!
   contractId: String!
-  loantypeId: String!
   grantorId: String!
   renovatedFromId: String
   paymentsSchedules: [PaymentSchedule!]!
@@ -151,6 +154,7 @@ type PaymentSchedule {
   createdAt: DateTime!
   updatedAt: DateTime!
   loanId: String!
+  pendingAmount: Decimal!
 }
 
 enum PaymentState {
@@ -181,12 +185,37 @@ type LoanPayment {
   returnToCapital: Decimal!
   createdAt: DateTime!
   updatedAt: DateTime!
+  comments: [Comment!]!
 }
 
 type Location {
   id: ID!
   name: String!
+  municipalityId: ID!
+  stateId: ID!
   leads: [Employee!]!
+  municipality: [Municipality!]!
+  state: [State!]!
+}
+
+type State {
+  id: ID!
+  name: String!
+}
+
+type Municipality {
+  id: ID!
+  name: String!
+  stateId: ID!
+}
+
+type Comment {
+  id: ID!
+  employeeId: ID!
+  loanPaymentId: ID!
+  text: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type Query {
@@ -196,6 +225,7 @@ type Query {
   getBorrower(where: BorrowerWhereUniqueInput!): Borrower!
   getBorrowers(where: BorrowerWhereInput): [Borrower!]!
   getLoanTypes(where: LoanTypeWhereInput): [LoanType!]!
+  getPaymentSchedules(where: PaymentScheduleWhereInput): [PaymentSchedule!]!
 }
 
 input RouteWhereInput {
@@ -217,6 +247,12 @@ input BorrowerWhereInput {
 
 input LoanTypeWhereInput {
   employeeType: EmployeesTypes
+}
+
+input PaymentScheduleWhereInput {
+  leadId: String
+  dueDate: DateTime
+  paymentState: [PaymentState!]
 }
 
 type Mutation {

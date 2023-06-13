@@ -53,8 +53,8 @@ export class Loan {
     @Field(() => GraphQLDecimal, {nullable:false,defaultValue:0})
     totalProfitAmount!: Decimal;
 
-    @Field(() => LoanType, {nullable:false})
-    loanType?: LoanType;
+    @Field(() => ID, {nullable:false})
+    loanTypeId!: string;
 
     @Field(() => Date, {nullable:false})
     signDate!: Date;
@@ -70,9 +70,6 @@ export class Loan {
 
     @Field(() => String, {nullable:false})
     contractId!: string;
-
-    @Field(() => String, {nullable:false})
-    loantypeId!: string;
 
     @Field(() => String, {nullable:false})
     grantorId!: string;

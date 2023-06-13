@@ -61,4 +61,5 @@ export class PaymentScheduleWhereInput {
 
     @Field(() => [PaymentState], {nullable:true})
     paymentState?: (keyof typeof PaymentState)[];
+
 }

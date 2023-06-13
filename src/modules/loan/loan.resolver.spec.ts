@@ -63,7 +63,7 @@ describe('GraphQL API', () => {
                 amountToPay
                 renovationProfitAmount
                 baseProfitAmount
-                paymentSchedule {
+                paymentsSchedules {
                     numeration
                     amountToPay
                     paidAmount
@@ -100,8 +100,8 @@ describe('GraphQL API', () => {
             .send({ query, variables });
 
         if (!response.body || !response.body.data) {
-            throw new Error('Response body is missing data property');
-          }
+            throw new Error('Response body is missing data property' + JSON.stringify(response.body));
+        }
         const createLoanResponseList = response.body.data.createLoanBulk;
         for (const loan of createLoanResponseList) {
 
@@ -112,7 +112,7 @@ describe('GraphQL API', () => {
             expect(loan.amountToPay).toEqual('4200');
             expect(loan.renovationProfitAmount).toEqual('0');
             expect(loan.baseProfitAmount).toEqual('1200');
-            expect(loan.paymentSchedule).toHaveLength(numPayments);
+            expect(loan.paymentsSchedules).toHaveLength(numPayments);
             
             const paymentSchedule = loan.paymentSchedule;
             for (let i = 0; i < numPayments; i++) {

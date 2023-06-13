@@ -3,6 +3,7 @@ import { PrismaService } from '../../core/prisma/prisma.service';
 import { Employee, EmployeeWhereUniqueInput } from './types';
 import { PersonalData } from '../personal-data/types';
 import { Route } from '../route/types';
+import { User } from '../user/types';
 
 @Resolver(Employee)
 export class EmployeeResolver {
@@ -38,5 +39,12 @@ export class EmployeeResolver {
             where: { employee:{every:{id}} },
         });
         return employee;
+    }
+
+    @ResolveField(() => User)
+    async user(@Parent() root: Employee): Promise<User> {
+        return await this._db.user.findFirst({
+            where: { id: root.userId },
+        });
     }
 }

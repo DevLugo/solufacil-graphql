@@ -28,9 +28,6 @@ CREATE TYPE "CommissionGoalType" AS ENUM ('NEW_LOAN', 'PAYMENT_RECEIVED');
 -- CreateEnum
 CREATE TYPE "CommissionType" AS ENUM ('FIXED_AMOUNT', 'PERCENTAGE');
 
--- DropEnum
-DROP TYPE "InteractionType";
-
 -- CreateTable
 CREATE TABLE "Log" (
     "id" TEXT NOT NULL,
@@ -297,7 +294,7 @@ CREATE TABLE "Loan" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "contractId" TEXT NOT NULL,
-    "loantypeId" TEXT NOT NULL,
+    "loanTypeId" TEXT NOT NULL,
     "grantorId" TEXT NOT NULL,
     "renovatedFromId" TEXT,
 
@@ -310,7 +307,6 @@ CREATE TABLE "LoanPayment" (
     "amount" MONEY NOT NULL,
     "profitAmount" MONEY NOT NULL,
     "returnToCapital" MONEY NOT NULL,
-    "date" TIMESTAMP(3) NOT NULL,
     "percentage" DECIMAL(100,9) NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -337,7 +333,7 @@ CREATE TABLE "Comment" (
 CREATE TABLE "ComissionPaymentConfiguration" (
     "id" TEXT NOT NULL,
     "employeeType" "EmployeesTypes" NOT NULL,
-    "loantypeId" TEXT NOT NULL,
+    "loanTypeId" TEXT NOT NULL,
     "commissionGoalType" "CommissionGoalType" NOT NULL,
     "commissionType" "CommissionType" NOT NULL,
     "amount" DECIMAL(65,30) NOT NULL,
@@ -525,7 +521,7 @@ ALTER TABLE "Contract" ADD CONSTRAINT "Contract_contractTypeId_fkey" FOREIGN KEY
 ALTER TABLE "Loan" ADD CONSTRAINT "Loan_grantorId_fkey" FOREIGN KEY ("grantorId") REFERENCES "Employee"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Loan" ADD CONSTRAINT "Loan_loantypeId_fkey" FOREIGN KEY ("loantypeId") REFERENCES "Loantype"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Loan" ADD CONSTRAINT "Loan_loanTypeId_fkey" FOREIGN KEY ("loanTypeId") REFERENCES "Loantype"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Loan" ADD CONSTRAINT "Loan_contractId_fkey" FOREIGN KEY ("contractId") REFERENCES "Contract"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -549,7 +545,7 @@ ALTER TABLE "Comment" ADD CONSTRAINT "Comment_loanPaymentId_fkey" FOREIGN KEY ("
 ALTER TABLE "ComissionPaymentConfiguration" ADD CONSTRAINT "ComissionPaymentConfiguration_employeeId_fkey" FOREIGN KEY ("employeeId") REFERENCES "Employee"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ComissionPaymentConfiguration" ADD CONSTRAINT "ComissionPaymentConfiguration_loantypeId_fkey" FOREIGN KEY ("loantypeId") REFERENCES "Loantype"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "ComissionPaymentConfiguration" ADD CONSTRAINT "ComissionPaymentConfiguration_loanTypeId_fkey" FOREIGN KEY ("loanTypeId") REFERENCES "Loantype"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "CommissionPayment" ADD CONSTRAINT "CommissionPayment_employeeId_fkey" FOREIGN KEY ("employeeId") REFERENCES "Employee"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

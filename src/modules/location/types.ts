@@ -9,6 +9,12 @@ export class Location {
     @Field(() => String, {nullable:false})
     name!: string;
 
+    @Field(() => ID, {nullable:false})
+    municipalityId!: string;
+
+    @Field(() => ID, {nullable:false})
+    stateId!: string;
+
     /* @Field(() => [Employee], {nullable:false})
     leads?: Employee[]; */
 }

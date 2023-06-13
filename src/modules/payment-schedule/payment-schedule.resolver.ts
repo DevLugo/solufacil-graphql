@@ -1,7 +1,7 @@
-import { Args, Query, Resolver } from '@nestjs/graphql';
+import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { PaymentSchedule, PaymentScheduleWhereInput } from './types';
-import { PrismaService } from '../../core/prisma/prisma.service';
 import { PaymentScheduleService } from './payment-schedule.service';
+import { GraphQLDecimal } from 'prisma-graphql-type-decimal';
 
 @Resolver(PaymentSchedule)
 export class PaymentScheduleResolver {
@@ -14,5 +14,10 @@ export class PaymentScheduleResolver {
         @Args('where', {nullable:true}) where: PaymentScheduleWhereInput,
     ) {
         return this._paymentScheduleService.getPaymentSchedules(where);
-    }   
+    }
+
+    @ResolveField(() => GraphQLDecimal)
+    async pendingAmount(@Parent() root: PaymentSchedule) {
+        return +root.amountToPay - (+root.paidAmount);
+    }
 }

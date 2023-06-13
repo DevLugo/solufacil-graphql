@@ -23,7 +23,18 @@ export class RouteResolver {
     async locations(@Parent() route: Route): Promise<Location[]> {
         const locations = await this._db.location.findMany({
             where: { routeId: route.id },
+            include:{
+                municipality:{
+                    include:{
+                        state:true
+                    }
+                }
+            }
         });
-        return locations
+
+        return locations.map(location => ({
+            ...location,
+            stateId: location.municipality.state.id,
+        }));
     }
 }

@@ -20,6 +20,8 @@ export class Address {
     @Field(() => String, {nullable:true})
     references!: string | null;
 
+    @Field(() => ID, {nullable:false})
+    locationId!: string;
 }
 
 @InputType()

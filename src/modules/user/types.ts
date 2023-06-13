@@ -6,6 +6,9 @@ export class User {
     @Field(() => ID, {nullable:false})
     id!: string;
 
+    @Field(() => ID, {nullable:true})
+    employeeId?: string;
+
     @Field(() => String, {nullable:false})
     email!: string;
 
@@ -24,4 +27,4 @@ export class User {
     @Field(() => Date, {nullable:false})
     updatedAt!: Date;
 
- }
+}

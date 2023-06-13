@@ -89,7 +89,6 @@ export class PaymentScheduleService {
     paymentBreakDown(amount:Number, rate:number): PaymentBreakDown {
         //(1000*.2)/12 * 10;
         //(650*.3)/13 * 10;
-        console.log(rate);
         const profit = (Number(amount) / rate) / Number((10 + (rate * 10) * 10));
         const returnOfCapital = Number(amount)-profit;
         const breakDown:PaymentBreakDown = {
