@@ -14,11 +14,7 @@ export class LoanTypesResolver {
         @Args('where', {nullable:true}) where: LoanTypeWhereInput,
     ) {
         return this._db.loantype.findMany({
-            where:{
-                availableFor: {
-                    has:where.employeeType
-                }
-            }
+            where:{}
         });
     }
 }

@@ -14,7 +14,8 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Log {
@@ -66,7 +67,6 @@ model Employee {
   amountGivedIncreased          Boolean                         @default(false)
   comments                      Comment[]
   routes                        Route[]
-  borrower                      Borrower[]
   leadPaymentsReceivedLead      LeadPaymentReceived[]           @relation("LeadPaymentsReceived_Lead")
   leadPaymentReceivedAgent      LeadPaymentReceived[]           @relation("LeadPaymentsReceived_Agent")
   comissionPaymentConfiguration ComissionPaymentConfiguration[]
@@ -88,15 +88,6 @@ model Document {
   loanId         String?
 }
 
-model Customer {
-  id        String   @id @default(uuid())
-  name      String
-  logo      String
-  url       String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
 model PersonalData {
   id        String     @id @default(uuid())
   fullName  String
@@ -105,12 +96,14 @@ model PersonalData {
   documents Document[]
   phones    Phone[]
   addresses Address[]
+  birthDate DateTime
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   employee  Employee[]
   borrower  Borrower[]
-  Loan      Loan?      @relation(fields: [loanId], references: [id])
-  loanId    String?
+  curp      String     @unique
+  loan      Loan?      @relation(fields: [loanId], references: [id]) //only when is an aval
+  loanId    String? //only when is an aval
 }
 
 model State {
@@ -136,7 +129,7 @@ model Address {
   references     String?
   location       Location      @relation(fields: [locationId], references: [id])
   locationId     String
-  local          Local?        @relation(fields: [localId], references: [id])
+  //local          Local?        @relation(fields: [localId], references: [id])
   localId        String?
   personalData   PersonalData? @relation(fields: [personalDataId], references: [id])
   personalDataId String?
@@ -158,29 +151,24 @@ model Borrower {
   email             String?      @unique
   documents         Document[]
   personalData      PersonalData @relation(fields: [personalDataId], references: [id])
-  //reference Borrower?  @relation("BorrowerToBorrower", fields: [borrowerId], references: [id])
   createdAt         DateTime     @default(now())
   updatedAt         DateTime     @updatedAt
   contract          Contract[]
   loanFinishedCount Int          @default(0)
-  //borrowerId String?
-  //Borrower   Borrower[] @relation("BorrowerToBorrower")
-  local             Local[]
-  grantor           Employee?    @relation(fields: [grantorId], references: [id])
+  //local             Local[]
   personalDataId    String
-  grantorId         String?
 }
 
-model Local {
-  id        String    @id @default(uuid())
-  name      String
-  addresses Address[]
+//model Local {
+  //id        String    @id @default(uuid())
+  //name      String
+  //addresses Address[]
 
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  borrower   Borrower @relation(fields: [borrowerId], references: [id])
-  borrowerId String
-}
+  //createdAt  DateTime @default(now())
+  //updatedAt  DateTime @updatedAt
+  //borrower   Borrower @relation(fields: [borrowerId], references: [id])
+  //borrowerId String
+//}
 
 model Phone {
   id             String        @id @default(uuid())
@@ -352,6 +340,13 @@ model ComissionPaymentConfiguration {
   employeeId         String? //When employee is is setter, this is to overwrite the default loan configuration
 }
 
+
+//TODO: COMISIONES. 
+//Comision x  empleado. 
+// Lider recibe dos tipos de comosiones, por pago recibido y por credito otorgado
+// Ejecutivo recibe comision por total de pagos recibidos
+// ayudante de ejecutivo recibe comision por total de pagos recibidos
+// Ejecutivo recibe comision por desempeño
 model CommissionPayment {
   id                String                  @id @default(uuid())
   amount            Decimal                 @db.Money

@@ -1,5 +1,7 @@
 import { Field, ID, InputType, Int, ObjectType } from "@nestjs/graphql";
-import { PersonalData } from "../personal-data/types";
+import { CreatePersonalDataInput, PersonalData } from "../personal-data/types";
+//import { IsEmail, IsString, ValidateIf, Validator} from 'class-validator';
+import * as Validator from 'class-validator';
 
 @ObjectType()
 export class Borrower {
@@ -21,9 +23,6 @@ export class Borrower {
 
     @Field(() => String, {nullable:false})
     personalDataId!: string;
-
-    @Field(() => String, {nullable:true})
-    grantorId!: string | null;
 }
 
 @InputType()
@@ -39,4 +38,17 @@ export class BorrowerWhereInput {
 export class BorrowerWhereUniqueInput {
     @Field(() => ID, {nullable:true})
     id?: string;
+}
+
+
+@InputType()
+export class BorrowerCreateInput {
+  @Field(() => String, { nullable: true })
+  email?: string;
+
+  /* @Field(() => [DocumentCreateInput], { nullable: true })
+  documents?: DocumentCreateInput[]; */
+
+  @Field(() => CreatePersonalDataInput)
+  personalData: CreatePersonalDataInput;
 }

@@ -8,6 +8,9 @@ export class IJwtPayload {
 
     @Field(() => String, {nullable:false})
     email: string;
+
+    @Field(() => String, {nullable:false})
+    employeeId: string;
     
     @Field(() => String, {nullable:false})
     iat?: Date;

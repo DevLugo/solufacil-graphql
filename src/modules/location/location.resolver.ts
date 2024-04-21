@@ -28,20 +28,25 @@ export class LocationResolver {
         });
     }
 
-    @ResolveField(() => [Municipality])
+    @ResolveField(() => Municipality)
     async municipality(@Parent() root: Location) {
-        return await this._db.municipality.findMany({
+        return await this._db.municipality.findUnique({
             where:{
                 id: root.municipalityId
             }
         });
     }
 
-    @ResolveField(() => [State])
+    @ResolveField(() => State)
     async state(@Parent() root: Location) {
-        return await this._db.state.findMany({
+        console.log("JUAJUA", root);
+        return await this._db.state.findFirst({
             where:{
-                id: root.stateId
+                municipalities:{
+                    some:{
+                        id: root.municipalityId
+                    }
+                }
             }
         });
     }

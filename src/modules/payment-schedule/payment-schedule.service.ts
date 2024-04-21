@@ -3,6 +3,7 @@ import { PaymentScheduleWhereInput } from './types';
 import { PrismaService } from '../../core/prisma/prisma.service';
 import { PaymentState } from '@prisma/client';
 import { PaymentBreakDown } from '../types';
+import { calculatePayedPercentege, getPercentageOf } from '../loan/paymentUtils';
 
 @Injectable()
 export class PaymentScheduleService {
@@ -61,9 +62,9 @@ export class PaymentScheduleService {
         let nextDateToPay:Date = firstDayPay;
         const transactions = [];
         while (i < weeksDuration){
-            nextDateToPay = new Date(nextDateToPay.getTime( ) + weekSeconds);
-            const percentegeToPaid = this.calculatePayedPercentege(+loan.weeklyPaymentAmount, +loan.amountToPay);
-            const profit = this.getPercentageOf(percentegeToPaid, Number(loan.totalProfitAmount));
+            nextDateToPay = new Date(nextDateToPay.getTime( ) + (weekSeconds * i));
+            const percentegeToPaid = calculatePayedPercentege(+loan.weeklyPaymentAmount, +loan.amountToPay);
+            const profit = getPercentageOf(percentegeToPaid, Number(loan.totalProfitAmount));
            
             transactions.push(
                 this._db.paymentSchedule.create({
@@ -97,18 +98,5 @@ export class PaymentScheduleService {
             returnOfCapital: Number(returnOfCapital.toFixed(2))
         }
         return breakDown
-    }
-
-    calculatePayedPercentege(amountToPay: number, totalAmount:number){
-        try {
-            return Number(((amountToPay * 100)/+totalAmount).toFixed(9));
-        } catch (error) {
-            return 0
-        }
-    }
-
-    getPercentageOf(percent: number, total: number): Number{
-        console.log(percent, total)
-        return Number(((percent/ 100) * total).toFixed(2));
     }
 }

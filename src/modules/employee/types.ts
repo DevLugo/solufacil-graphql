@@ -16,6 +16,7 @@ export class Employee {
     @Field(() => EmployeesTypes, {nullable:true})
     type: keyof typeof EmployeesTypes;
     
+    
 }
 
 

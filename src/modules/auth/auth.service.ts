@@ -2,7 +2,7 @@ import { ConflictException, Injectable, NotFoundException, UnauthorizedException
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../../core/prisma/prisma.service';
 import { genSalt, hash, compare } from 'bcryptjs';
-import { User } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 import { IJwtPayload, SignInInput, UserCreateInput } from './types';
 
 @Injectable()
@@ -38,6 +38,8 @@ export class AuthService {
                         lastName: lastName,
                         firstName:  firstName,
                         fullName: `${firstName} ${lastName}`,
+                        birthDate: new Date(),
+                        curp:"CURP",
                       }
                     }
                   }
@@ -49,8 +51,9 @@ export class AuthService {
       async signin(signinDto: SignInInput): Promise<{ token: string, user: User }> {
         const { email, password } = signinDto;
     
-        const user: User = await this._db.user.findUnique({
+        const user = await this._db.user.findUnique({
           where: { email },
+          include: { employee: true },
         });
     
         if (!user) {
@@ -66,7 +69,7 @@ export class AuthService {
         const payload: IJwtPayload = {
           id: user.id,
           email: user.email,
-          
+          employeeId: user.employee.id,
         };
     
         const token = await this._jwtService.sign(payload);

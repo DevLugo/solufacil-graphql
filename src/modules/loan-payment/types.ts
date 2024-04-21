@@ -1,5 +1,6 @@
-import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { Field, ID, InputType, ObjectType } from "@nestjs/graphql";
 import { Decimal } from "@prisma/client/runtime";
+import e from "express";
 import { GraphQLDecimal } from "prisma-graphql-type-decimal";
 
 @ObjectType()
@@ -37,4 +38,21 @@ export class LoanPayment {
 
     @Field(() => Date, {nullable:false})
     updatedAt!: Date;
+}
+
+
+@InputType()
+export class PayLoanPaymentInput {
+    @Field(() => GraphQLDecimal, {nullable:false})
+    amount!: Decimal;
+
+    @Field(() => Date, {nullable:false})
+    paidDate!: Date | string
+
+    @Field()
+    loanId: string;
+}
+
+export class AddPaymentToLoanInput extends PayLoanPaymentInput {
+    collectorId!: string;
 }

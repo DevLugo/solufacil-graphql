@@ -43,28 +43,21 @@ type Address {
 
 type PersonalData {
   id: ID!
+  curp: String!
   fullName: String!
   firstName: String!
   lastName: String!
+  birthDate: Date!
   createdAt: DateTime!
   updatedAt: DateTime!
   phones: [Phone!]!
   addresses: [Address!]!
 }
 
-type Employee {
-  id: ID!
-  userId: ID
-  type: EmployeesTypes
-  routes: [Route!]!
-  personalData: PersonalData!
-  user: User!
-}
-
-enum EmployeesTypes {
-  LIAISON_EXECUTIVE
-  LOAN_LEAD
-}
+"""
+A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+"""
+scalar Date
 
 type Borrower {
   id: ID!
@@ -73,31 +66,8 @@ type Borrower {
   updatedAt: DateTime!
   loanFinishedCount: Int!
   personalDataId: String!
-  grantorId: String
-  grantor: Employee!
+  activeLoan: Loan!
   personalData: PersonalData!
-}
-
-type Route {
-  id: ID!
-  name: String!
-  locations: [Location!]!
-}
-
-type LoanType {
-  id: ID!
-  name: String!
-  weekDuration: Int!
-  rate: Float!
-  weeksToRenew: Int!
-  overdueRate: Float!
-  initialAmount: Float!
-  maximunAmount: Float!
-  amountToIncrease: Float!
-  increaseEveryNLoans: Int!
-  availableFor: EmployeesTypes!
-  createdAt: DateTime!
-  updatedAt: DateTime!
 }
 
 type Loan {
@@ -140,6 +110,42 @@ enum LoanState {
 """An arbitrary-precision Decimal type"""
 scalar Decimal
 
+type Employee {
+  id: ID!
+  userId: ID
+  type: EmployeesTypes
+  routes: [Route!]!
+  personalData: PersonalData!
+  user: User!
+}
+
+enum EmployeesTypes {
+  LIAISON_EXECUTIVE
+  LOAN_LEAD
+}
+
+type Route {
+  id: ID!
+  name: String!
+  locations: [Location!]!
+}
+
+type LoanType {
+  id: ID!
+  name: String!
+  weekDuration: Int!
+  rate: Float!
+  weeksToRenew: Int!
+  overdueRate: Float!
+  initialAmount: Float!
+  maximunAmount: Float!
+  amountToIncrease: Float!
+  increaseEveryNLoans: Int!
+  availableFor: EmployeesTypes!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 type PaymentSchedule {
   id: ID!
   numeration: Int!
@@ -155,6 +161,7 @@ type PaymentSchedule {
   updatedAt: DateTime!
   loanId: String!
   pendingAmount: Decimal!
+  borrower: Borrower!
 }
 
 enum PaymentState {
@@ -194,8 +201,8 @@ type Location {
   municipalityId: ID!
   stateId: ID!
   leads: [Employee!]!
-  municipality: [Municipality!]!
-  state: [State!]!
+  municipality: Municipality!
+  state: State!
 }
 
 type State {
@@ -220,12 +227,17 @@ type Comment {
 
 type Query {
   hello: String!
+  getLoanByBorrower(where: LoanByBorrowerWhereUniqueInput!): Loan!
   getRoutes(where: RouteWhereInput!): [Route!]!
   getEmployee(where: EmployeeWhereUniqueInput!): Employee!
   getBorrower(where: BorrowerWhereUniqueInput!): Borrower!
   getBorrowers(where: BorrowerWhereInput): [Borrower!]!
   getLoanTypes(where: LoanTypeWhereInput): [LoanType!]!
   getPaymentSchedules(where: PaymentScheduleWhereInput): [PaymentSchedule!]!
+}
+
+input LoanByBorrowerWhereUniqueInput {
+  borrowerId: String!
 }
 
 input RouteWhereInput {
@@ -256,28 +268,53 @@ input PaymentScheduleWhereInput {
 }
 
 type Mutation {
+  payPayment(input: PayLoanPaymentInput!): Loan!
   createLoanBulk(input: [LoanCreateInput!]!): [Loan!]!
   signUp(input: UserCreateInput!): User!
   signIn(input: SignInInput!): SignInOutput!
 }
 
-input LoanCreateInput {
-  firstPaymentDate: Date!
-
-  """Previos loanId. This apply when is a renovation"""
-  renovatedFromId: String
-  borrowerId: String!
-  loanLeadId: String!
-  amountGived: Decimal
-  loanTypeId: String!
-  signDate: Date
-  grantorId: String
+input PayLoanPaymentInput {
+  amount: Decimal!
+  paidDate: DateTime!
+  loanId: String!
 }
 
-"""
-A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
-"""
-scalar Date
+input LoanCreateInput {
+  firstPaymentDate: Date!
+  isRenovation: Boolean!
+  borrowerId: String
+  borrower: BorrowerCreateInput
+  loanLeadId: String!
+  amountGived: Decimal!
+  loanTypeId: String!
+  signDate: Date
+}
+
+input BorrowerCreateInput {
+  email: String
+  personalData: CreatePersonalDataInput!
+}
+
+input CreatePersonalDataInput {
+  curp: String!
+  firstName: String!
+  lastName: String!
+  phones: [CreatePhoneInput!]!
+  adresses: [CreateAddressInput!]!
+}
+
+input CreatePhoneInput {
+  number: String!
+}
+
+input CreateAddressInput {
+  street: String!
+  exteriorNumber: String
+  interiorNumber: String!
+  postalCode: String!
+  references: String
+}
 
 input UserCreateInput {
   email: String!

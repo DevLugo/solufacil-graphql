@@ -28,6 +28,9 @@ CREATE TYPE "CommissionGoalType" AS ENUM ('NEW_LOAN', 'PAYMENT_RECEIVED');
 -- CreateEnum
 CREATE TYPE "CommissionType" AS ENUM ('FIXED_AMOUNT', 'PERCENTAGE');
 
+-- DropEnum
+DROP TYPE "InteractionType";
+
 -- CreateTable
 CREATE TABLE "Log" (
     "id" TEXT NOT NULL,
@@ -91,25 +94,15 @@ CREATE TABLE "Document" (
 );
 
 -- CreateTable
-CREATE TABLE "Customer" (
-    "id" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
-    "logo" TEXT NOT NULL,
-    "url" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "Customer_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "PersonalData" (
     "id" TEXT NOT NULL,
     "fullName" TEXT NOT NULL,
     "firstName" TEXT NOT NULL,
     "lastName" TEXT NOT NULL,
+    "birthDate" TIMESTAMP(3) NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "curp" TEXT NOT NULL,
     "loanId" TEXT,
 
     CONSTRAINT "PersonalData_pkey" PRIMARY KEY ("id")
@@ -165,20 +158,8 @@ CREATE TABLE "Borrower" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "loanFinishedCount" INTEGER NOT NULL DEFAULT 0,
     "personalDataId" TEXT NOT NULL,
-    "grantorId" TEXT,
 
     CONSTRAINT "Borrower_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "Local" (
-    "id" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-    "borrowerId" TEXT NOT NULL,
-
-    CONSTRAINT "Local_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -413,6 +394,9 @@ CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 CREATE UNIQUE INDEX "Employee_userId_key" ON "Employee"("userId");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "PersonalData_curp_key" ON "PersonalData"("curp");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Location_name_key" ON "Location"("name");
 
 -- CreateIndex
@@ -476,22 +460,13 @@ ALTER TABLE "Address" ADD CONSTRAINT "Address_personalDataId_fkey" FOREIGN KEY (
 ALTER TABLE "Address" ADD CONSTRAINT "Address_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "Location"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Address" ADD CONSTRAINT "Address_localId_fkey" FOREIGN KEY ("localId") REFERENCES "Local"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "Location" ADD CONSTRAINT "Location_municipalityId_fkey" FOREIGN KEY ("municipalityId") REFERENCES "Municipality"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Location" ADD CONSTRAINT "Location_routeId_fkey" FOREIGN KEY ("routeId") REFERENCES "Route"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Borrower" ADD CONSTRAINT "Borrower_grantorId_fkey" FOREIGN KEY ("grantorId") REFERENCES "Employee"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "Borrower" ADD CONSTRAINT "Borrower_personalDataId_fkey" FOREIGN KEY ("personalDataId") REFERENCES "PersonalData"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Local" ADD CONSTRAINT "Local_borrowerId_fkey" FOREIGN KEY ("borrowerId") REFERENCES "Borrower"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Phone" ADD CONSTRAINT "Phone_personalDataId_fkey" FOREIGN KEY ("personalDataId") REFERENCES "PersonalData"("id") ON DELETE SET NULL ON UPDATE CASCADE;

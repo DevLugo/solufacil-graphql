@@ -1,6 +1,8 @@
 import { Field, ID, InputType, ObjectType } from "@nestjs/graphql";
 import { CreatePhoneInput } from "../phone/types";
 import { CreateAddressInput } from "../address/types";
+import { Type } from 'class-transformer';
+import { GraphQLDate } from "graphql-scalars";
 
 @ObjectType()
 export class PersonalData {
@@ -9,13 +11,22 @@ export class PersonalData {
     id!: string;
 
     @Field(() => String, {nullable:false})
+    curp!: string;
+
+    @Field(() => String, {nullable:false})
     fullName!: string;
+
 
     @Field(() => String, {nullable:false})
     firstName!: string;
 
+
     @Field(() => String, {nullable:false})
     lastName!: string;
+
+    @Field(() => GraphQLDate, {nullable:false})
+    birthDate: Date | string;
+
 
     /*@Field(() => [Document], {nullable:true})
     documents?: Array<Document>;
@@ -44,11 +55,11 @@ export class PersonalData {
 @InputType()
 export class CreatePersonalDataInput {
     @Field(() => String, {nullable:false})
-    fullName!: string;
-
+    curp!: string;
+    
     @Field(() => String, {nullable:false})
     firstName!: string;
-
+    
     @Field(() => String, {nullable:false})
     lastName!: string;
 
@@ -56,6 +67,5 @@ export class CreatePersonalDataInput {
     phones: CreatePhoneInput[];
 
     @Field(() => [CreateAddressInput], {nullable:false})
-    Adresses: CreateAddressInput[];
-
+    adresses: CreateAddressInput[];
 }

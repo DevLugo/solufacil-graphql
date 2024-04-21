@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module,  } from '@nestjs/common';
 import { AppResolver } from './app.resolver';
 import { CoreModule } from './core/core.module';
 import { PrismaService } from './core/prisma/prisma.service';
@@ -13,6 +13,8 @@ import { RouteModule } from './modules/route/route.module';
 import { PaymentScheduleModule } from './modules/payment-schedule/payment-schedule.module';
 import { AddressModule } from './modules/address/address.module';
 import { LoanPaymentModule } from './modules/loan-payment/loan-payment.module';
+import { APP_PIPE,  } from '@nestjs/core';
+import { LoanResolver } from './modules/loan/loan.resolver';
 
 @Module({
   imports: [
@@ -30,6 +32,10 @@ import { LoanPaymentModule } from './modules/loan-payment/loan-payment.module';
     PersonalDataModule,
     PaymentScheduleModule,
   ],
-  providers: [PrismaService, AppResolver],
+  providers: [
+    PrismaService,
+    AppResolver,
+   
+  ],
 })
 export class AppModule { }

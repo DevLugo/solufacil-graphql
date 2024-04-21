@@ -251,7 +251,9 @@ async function main() {
                     create:{
                         firstName: "Josue",
                         lastName: "Santos",
-                        fullName: "Josue Santos"
+                        fullName: "Josue Santos",
+                        birthDate: new Date(),
+                        curp: "SACJ000000HDFNTA1",
                     }
                 }
             },
@@ -272,6 +274,7 @@ async function main() {
                         firstName: "Minerva ",
                         lastName: "CORTES GARCIA",
                         fullName: "Minerva CORTES GARCIA",
+                        curp: "SACJ000000HDFNTA3",
                         phones:{
                             create:{
                                 number: "9999999999",
@@ -289,7 +292,8 @@ async function main() {
                                 }
 
                             }
-                        }
+                        },
+                        birthDate: new Date(),
                     }
                 },
             },
@@ -303,7 +307,9 @@ async function main() {
                 create:{
                     firstName: "borrower Name",
                     lastName: "borrower lastName",
-                    fullName :"fullName" 
+                    fullName :"fullName",
+                    birthDate: new Date(), 
+                    curp: "SACJ000000HDFNTA2",
                 }
             },
         }
@@ -386,6 +392,37 @@ async function main() {
             }
         }
     });
+    const currentDate = new Date();
+    const futureDate = new Date(currentDate.getTime() + (14 * 7 * 24 * 60 * 60 * 1000));
+    /* const loan = await prisma.loan.create({
+        data:{
+            id: "1",
+            amountGived: 3000,
+            amountToPay: 4200,
+            pendingAmount: 4200,
+            baseProfitAmount: 1200,
+            totalProfitAmount: 1200,
+            firstPaymentDate: futureDate,
+            contract:{
+                connect:{
+                    id: contract.id
+                }
+            },
+            status: "APPROVED",
+            weeklyPaymentAmount: 300,
+            grantor:{
+                connect:{
+                    id: userId1
+                }
+            },
+            loanType: {
+                connect:{
+                    id: "14"
+                }  
+            }
+        }
+    }); */
+
     await prisma.route.create({
         data:{
             id: "1",

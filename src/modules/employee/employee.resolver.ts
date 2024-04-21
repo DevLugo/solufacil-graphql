@@ -26,6 +26,7 @@ export class EmployeeResolver {
                 every:{id}
             } },
         });
+        console.log("routes", routes)
         return routes;
     }
     
@@ -34,7 +35,6 @@ export class EmployeeResolver {
     @ResolveField(() => PersonalData)
     async personalData(@Parent() root: Employee): Promise<PersonalData> {
         const id = root.id
-        console.log(id)
         const employee = await this._db.personalData.findFirst({
             where: { employee:{every:{id}} },
         });

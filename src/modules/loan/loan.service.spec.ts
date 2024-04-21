@@ -3,6 +3,7 @@ import { PaymentScheduleService } from '../payment-schedule/payment-schedule.ser
 import { LoanService } from './loan.service';
 import { Decimal } from '@prisma/client/runtime';
 import { CreateLoansProcess } from './types';
+import { calculatePayedPercentege, getPercentageOf } from './paymentUtils';
 
 
 describe('LoanService', () => {
@@ -38,6 +39,7 @@ describe('LoanService', () => {
                     grantorId: '1',
                     contractId: '1',
                     loanLeadId: '1',
+                    isRenovation: true,
                 },
             ];
             const createdLoans = await loanService.createLoansProcess(loansData);
@@ -66,12 +68,12 @@ describe('LoanService', () => {
                 const totalAmountToPay = (amountGiven * loanType.rate) + amountGiven;
                 const weeklyPaymentAmount = new Decimal(totalAmountToPay / loanType.weekDuration)
                 await loan.paymentSchedule.forEach(async (payment, i) => {
-                    const percentegeToPaid = _paymentScheduleService.calculatePayedPercentege(+weeklyPaymentAmount, +totalAmountToPay);
+                    const percentegeToPaid = calculatePayedPercentege(+weeklyPaymentAmount, +totalAmountToPay);
                     let dueDate = new Date(firstPaymentDateObject.getTime());
                     //console.log("firstDate", firstPaymentDateObject)
                     dueDate.setDate(firstPaymentDateObject.getDate() + ((i + 1) * 7));
 
-                    const profit = _paymentScheduleService.getPercentageOf(percentegeToPaid, Number(loan.totalProfitAmount));
+                    const profit = getPercentageOf(percentegeToPaid, Number(loan.totalProfitAmount));
                     const returnToCapital = +weeklyPaymentAmount - Number(profit);
                     expect(payment.numeration).toEqual(i + 1);
                     expect(new Decimal(payment.amountToPay)).toEqual(weeklyPaymentAmount);

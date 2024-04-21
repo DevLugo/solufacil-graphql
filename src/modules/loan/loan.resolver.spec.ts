@@ -6,6 +6,7 @@ import { PaymentScheduleService } from '../payment-schedule/payment-schedule.ser
 import { PrismaService } from '../../core/prisma/prisma.service';
 import { LoanCreateInput } from './types';
 import { Decimal } from '@prisma/client/runtime';
+import { calculatePayedPercentege, getPercentageOf } from './paymentUtils';
 
 export function formatDate(date: Date): string {
     return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
@@ -91,6 +92,7 @@ describe('GraphQL API', () => {
                         firstPaymentDate: '2022-06-12',
                         borrowerId: '1',
                         loanLeadId: '1',
+                        isRenovation: true,
                     }],
         };
 
@@ -116,8 +118,8 @@ describe('GraphQL API', () => {
             
             const paymentSchedule = loan.paymentSchedule;
             for (let i = 0; i < numPayments; i++) {
-                const percentegeToPaid = _paymentScheduleService.calculatePayedPercentege(weeklyPaymentAmount, weeklyPaymentAmount);
-                const profit = _paymentScheduleService.getPercentageOf(percentegeToPaid, Number(loan.totalProfitAmount));
+                const percentegeToPaid = calculatePayedPercentege(weeklyPaymentAmount, weeklyPaymentAmount);
+                const profit = getPercentageOf(percentegeToPaid, Number(loan.totalProfitAmount));
                 const dueDate = new Date(firstPaymentDateObject.getTime() + ((i + 1) * 7 * 24 * 60 * 60 * 1000));
                 console.log(percentegeToPaid, profit, weeklyPaymentAmount, loan.totalProfitAmount)
                 /* const profit = Number((weeklyPaymentAmount - Number(returnToCapital)).toFixed(2)); */
