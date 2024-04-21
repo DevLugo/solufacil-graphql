@@ -1,11 +1,8 @@
 import { Module } from '@nestjs/common';
-import { BorrowerService } from './borrower.service';
 import { BorrowerResolver } from './borrower.resolver';
-import { PrismaModule } from '../../core/prisma/prisma.module';
-import { AuthModule } from '../auth/auth.module';
+import { PrismaService } from '../../core/prisma/prisma.service';
 
 @Module({
-  providers: [BorrowerService, BorrowerResolver],
-  imports: [PrismaModule, AuthModule]
+  providers: [BorrowerResolver, PrismaService]
 })
 export class BorrowerModule {}

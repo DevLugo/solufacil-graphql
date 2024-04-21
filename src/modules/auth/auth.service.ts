@@ -1,11 +1,9 @@
 import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UserCreateInput } from '../../@generated/user/user-create.input';
-import { User } from '../../@generated/user/user.model';
 import { PrismaService } from '../../core/prisma/prisma.service';
 import { genSalt, hash, compare } from 'bcryptjs';
-import { SignInInput } from './signIn.input';
-import { IJwtPayload } from './jwt-payload.interface';
+import { Prisma, User } from '@prisma/client';
+import { IJwtPayload, SignInInput, UserCreateInput } from './types';
 
 @Injectable()
 export class AuthService {
@@ -16,19 +14,19 @@ export class AuthService {
     ){}
 
     async signup(data: UserCreateInput): Promise<User> {
-        const { email, password } = data;
-        const aaa = await this._db.user.findFirst({
+        const { email, password, firstName, lastName } = data;
+        const alreadyExist = await this._db.user.findFirst({
             where:{email:email}
         });
     
-        if (aaa) {
+        if (alreadyExist) {
           throw new ConflictException('Email already exists');
         }
 
         const salt = await genSalt(10);
         const passwordHashed = await hash(password, salt);
 
-        const newUser = await this._db.user.create({
+        return await this._db.user.create({
             data:{ 
                 email:data.email,
                 password: passwordHashed,
@@ -37,23 +35,25 @@ export class AuthService {
                     type: 'LIAISON_EXECUTIVE',
                     personalData:{
                       create:{
-                        lastName: data.employee.create[0].personalData.create.lastName,
-                        firstName:  data.employee.create[0].personalData.create.firstName,
-                        fullName:   data.employee.create[0].personalData.create.firstName + data.employee.create[0].personalData.create.lastName,
+                        lastName: lastName,
+                        firstName:  firstName,
+                        fullName: `${firstName} ${lastName}`,
+                        birthDate: new Date(),
+                        curp:"CURP",
                       }
                     }
                   }
                 }
             }
         });
-        return newUser;
       }
 
       async signin(signinDto: SignInInput): Promise<{ token: string, user: User }> {
         const { email, password } = signinDto;
     
-        const user: User = await this._db.user.findUnique({
+        const user = await this._db.user.findUnique({
           where: { email },
+          include: { employee: true },
         });
     
         if (!user) {
@@ -69,7 +69,7 @@ export class AuthService {
         const payload: IJwtPayload = {
           id: user.id,
           email: user.email,
-          
+          employeeId: user.employee.id,
         };
     
         const token = await this._jwtService.sign(payload);

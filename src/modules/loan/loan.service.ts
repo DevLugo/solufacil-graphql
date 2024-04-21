@@ -1,122 +1,175 @@
 import { Injectable } from '@nestjs/common';
-import { LoanWhereInput } from '../../@generated/loan/loan-where.input';
-import { LoanCreateInput } from '../../@generated/loan/loan-create.input';
 import { PrismaService } from '../../core/prisma/prisma.service';
-import { LoanPaymentService } from './loan-payment/loan-payment.service';
-import { CustomCreateLoanInput } from './CustomCreateLoanInput';
-import { PaymentScheduleService } from './payment-schedule/payment-schedule.service';
-import { LoanState } from '../../@generated/prisma/loan-state.enum';
-import { Loan } from '@prisma/client';
-import { UtilsService } from './utils.service';
+import { CreateLoansProcess, LoanWithAdditionalData } from './types';
+import { Loan, LoanState } from '@prisma/client';
+import { PaymentScheduleService } from '../payment-schedule/payment-schedule.service';
+import { Decimal } from '@prisma/client/runtime/library';
 
 @Injectable()
 export class LoanService {
-    constructor(
-        private readonly db:PrismaService,
-        private readonly loanPaymentService: LoanPaymentService,
-        private readonly paymentScheduleService: PaymentScheduleService,
-        private readonly utilsService: UtilsService
-        
-        
+  constructor(
+    private readonly _db: PrismaService,
+    private readonly _paymentScheduleService: PaymentScheduleService
+  ) { }
 
-    ){}
+  async createLoansProcess(loansData: CreateLoansProcess[]): Promise<LoanWithAdditionalData[]> {
+    const dbActions = [];
+    const results:LoanWithAdditionalData[] = []
+    for (const data of loansData) {
+      const { contractId, loanTypeId, signDate, grantorId, borrowerId, isRenovation } = data;
+      console.log("==================================== createLoansProcess 1", contractId)
+      const amountGived: Number = Number(data.amountGived);
+      const contract = await this._db.contract.findFirstOrThrow({ where: { id: contractId }, include:{contractType:true} });
+      let previousLoan;
+      if(isRenovation){
+        previousLoan = await this.findPreviousLoan(contractId);
+      }
+      const loanType = await await this._db.loantype.findFirstOrThrow({ where: { id: loanTypeId } });
+      const amountToPay = this.calculateAmountToPay(Number(amountGived), previousLoan, loanType.rate, contract.contractType.amount);
+      data.firstPaymentDate = data.firstPaymentDate instanceof Date ? data.firstPaymentDate : new Date(data.firstPaymentDate);
+      // Extract the first payment date from the input data
+      const { firstPaymentDate, ..._ } = data;
+      /* let nextDate;
+      if (!(cleanedData.finishedDate instanceof Date)) 
+        nextDate = new Date(cleanedData.finishedDate); */
+      const weeklyPayment = this.calculateWeeklyPayment(amountToPay, loanType.weekDuration);
+      const baseProfitAmount = this.calculateBaseProfitAmount(Number(amountGived), previousLoan, loanType.rate);
+      console.log("====================================", signDate)
+      console.log("====================================", signDate)
+      console.log("====================================", signDate)
+      console.log("====================================", signDate)
 
-    async getMany(where: LoanWhereInput){
-        return await this.db.loan.findMany({where});
+      const loan = this.createLoan(
+        signDate as Date,
+        loanTypeId,
+        grantorId, 
+        contractId,
+        Number(amountGived),
+        amountToPay,
+        weeklyPayment,
+        baseProfitAmount,
+        previousLoan,
+      );
+      dbActions.push(loan);
     }
-    async get(id: string){
-        return await this.db.loan.findUnique({
-            where:{id},
-            include: {
-                payments: {
-                    include: {
-                        employee:true
-                    }
-                },
-                employee: {
-                    include: {
-                        user: true
-                    }    
-                },
-            }
-        });
+    console.log("despues del for, antes del transaction", dbActions, results, loansData)
+    let transactionresult
+    try {
+      transactionresult = await this._db.$transaction(dbActions);
+    } catch (error) {
+      console.error(error);
     }
+    let idx = 0;
 
-    async createLoanProccess(data:CustomCreateLoanInput){
-        const contract = await this.db.contract.findFirst({
-            where: {
-                id:data.contract.connect.id
-            },
-            include: {
-                contractType:true
-            },
-            rejectOnNotFound:true
-        });
+    for (const loan of transactionresult) {
+      try {
+        await this._paymentScheduleService.createPaymentSchedule(loansData[idx].firstPaymentDate! as Date, loan.loanType.weekDuration, loan.id);
+        const loanWithAdditionalData = await this.findLoanWithAdditionalData(loan.id);
+        results.push(loanWithAdditionalData);
+      } catch (error) {
+        const errorMessage = `Failed to create payment schedule for loan ${loan.id}: ${error.message}`;
+        console.error(errorMessage);
+        throw new Error(errorMessage);
+      }
+      idx++
+    }
+    return results;
 
-        let previousLoan: Loan;
-        if (!!data.renovatedFromId) {
-            previousLoan = await this.db.loan.findUnique({where: {id: data.renovatedFromId}});
+  }
+
+  private async findLoanWithAdditionalData(loanId: string): Promise<LoanWithAdditionalData> {
+    return await this._db.loan.findUnique({
+      where: { id: loanId },
+      include: {
+        paymentSchedule: true,
+        grantor: {
+          include: { user: true }
         }
-        if(!!data.renovatedFromId && !previousLoan)
-            throw new Error('invalid renovatedFromId');
+      }
+    });
+  }
 
+  private async findPreviousLoan(contractId: string): Promise<Loan | undefined> {
+  
+    const previousLoan = await this._db.loan.findFirst({
+      where: {
+        contractId,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+    console.log("previousLoan,==============================", contractId, previousLoan)
+    if (!previousLoan) {
+      //thhrow and error about the contract id dont have a previous loan
+      throw new Error('El contrato no tiene un credito previo');
 
-        const loanType = await this.db.loantype.findFirst({
-            where: {id:data.loanType.connect.id},
-            rejectOnNotFound:true
-        }, );
-
-        let renovationPendingAmount:any = 0;
-        let renovationAmountToPayPercentege = 0;
-        let renovationProfitAmountToPay = 0;
-        data.amountToPay = data.amountGived as any;
-        
-        // custom calculation when is a renovation
-        if(previousLoan){
-            renovationPendingAmount = previousLoan.pendingAmount;
-            renovationAmountToPayPercentege = (+previousLoan.pendingAmount * 100)/+previousLoan.amountToPay;
-            renovationProfitAmountToPay = renovationAmountToPayPercentege*(+previousLoan.baseProfitAmount)/100;
-            data.amountToPay = (Number(data.amountGived) + Number(previousLoan.pendingAmount)) as any;
-        }
-        data.amountToPay = (+data.amountToPay * (1+loanType.rate)) as any;
-        
-        if (contract.contractType.amount < data.amountToPay){
-            throw new Error('La cantidad solicitada es mayor a la otorgada en el contrato: TODO: validar que solo tenga un credito activo a la vez');
-        }
-        const {firstPaymentDate, ...cleanedData} = data;
-
-        const weecklyPayment = +data.amountToPay / loanType.weekDuration;
-        //(4200*.40)/(10+(.40+10))*10
-        const baseProfitAmount = (Number(data.amountGived) + Number(renovationPendingAmount)) * loanType.rate;
-        const loan = await this.db.loan.create({
-            data:{
-                ...cleanedData, 
-                amountGived: data.amountGived,
-                status: LoanState.APPROVED, 
-                weeklyPaymentAmount: weecklyPayment,
-                amountToPay: data.amountToPay,
-                pendingAmount: data.amountToPay,
-                baseProfitAmount: baseProfitAmount,
-                renovationPendingAmount,
-                renovationProfitAmount: renovationProfitAmountToPay,
-                totalProfitAmount: renovationProfitAmountToPay + baseProfitAmount,
-                renovatedFromId: data.renovatedFromId ? data.renovatedFromId: null,
-            }
-        });
-        
-        await this.paymentScheduleService.createPaymentSchedule(new Date(data.firstPaymentDate), loanType.weekDuration, loan.id);
-        return await this.db.loan.findUnique({
-            where: {id:loan.id},
-            include:{
-                paymentSchedule:true,
-                employee:{
-                    include:{user:true}
-                }
-            }
-        });
     }
+    return previousLoan;
+  }
 
-    async create(data:LoanCreateInput){
-        return await this.db.loan.create({data:{...data}});
+  private calculateAmountToPay(amountGived: number, previousLoan: Loan | undefined, loanRate: number, contractMaxAmount: Decimal): number {
+    let renovationPendingAmount = 0;
+    let amountToPay = Number(amountGived) as number;
+    if (previousLoan) {
+      renovationPendingAmount = Number(previousLoan.pendingAmount);
+      amountToPay = (Number(amountGived) + Number(previousLoan.pendingAmount)) as number;
     }
+    amountToPay = (+amountToPay * (1 + loanRate)) as number;
+    console.log("previousLoan,==============================", previousLoan, amountToPay)
+    if (Number(contractMaxAmount) < amountToPay) {
+      //throw an error and show the contractMaxAmount and the amount to pay
+      
+      throw new Error('La cantidad solicitada es mayor a la otorgada en el contrato: TODO: validar que solo tenga un credito activo a la vez');
+    }
+    return amountToPay;
+  }
+
+  private calculateWeeklyPayment(amountToPay: number, weekDuration: number): number {
+    return amountToPay / weekDuration;
+  }
+
+  private calculateBaseProfitAmount(amountGived: number, previousLoan: Loan | undefined, rate: number): number {
+    let renovationPendingAmount = 0;
+    if (previousLoan) {
+      renovationPendingAmount = Number(previousLoan.pendingAmount);
+    }
+    return (Number(amountGived) + Number(renovationPendingAmount)) * rate;
+  }
+
+  private createLoan(
+    signDate: Date,
+    loanTypeId: string,
+    grantorId: string,
+    contractId: string,
+    amountGived: number,
+    amountToPay: number,
+    weeklyPaymentAmount: number,
+    baseProfitAmount: number,
+    previousLoan: Loan | undefined,
+  ): Promise<Loan> {
+    console.log("createLoan--------------------------------",grantorId, loanTypeId);
+    return this._db.loan.create({
+      data: { 
+        signDate,
+        loanType: { connect: { id: loanTypeId } },
+        grantor: { connect: { id: grantorId } },
+        contract: { connect: { id: contractId } },
+        amountGived: amountGived,
+        status: LoanState.APPROVED,
+        firstPaymentDate: new Date(),
+        weeklyPaymentAmount,
+        amountToPay,
+        pendingAmount: amountToPay,
+        baseProfitAmount,
+        renovationPendingAmount: previousLoan ? Number(previousLoan.pendingAmount) : 0,
+        renovationProfitAmount: previousLoan ? (+previousLoan.pendingAmount * 100 / +previousLoan.amountToPay) * baseProfitAmount / 100 : 0,
+        totalProfitAmount: previousLoan ? (+previousLoan.pendingAmount * 100 / +previousLoan.amountToPay) * baseProfitAmount / 100 + baseProfitAmount : baseProfitAmount,
+        renovatedFromId: previousLoan ? previousLoan.id : undefined,
+      },
+      include: {
+        loanType: true,
+      }
+    });
+  }
 }
