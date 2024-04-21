@@ -11,13 +11,12 @@ export class ContractService {
 
     async create(data: ContractCreateInput) {
         const { contractTypeId, borrowerId, grantorId, signDate, loanLeadId } = data;
-        const existBorrower = await this._db.borrower.findUnique({ where: { id: borrowerId } })
+        const existBorrower = await this._db.borrower.findFirstOrThrow({ where: { id: borrowerId } })
         if (!existBorrower) throw new Error("Invalid BorrowerId")
         const { monthDuration } = await this._db.contractType.findFirst({
             where: {
                 id: data.contractTypeId
             },
-            rejectOnNotFound: true
         })
         const signDateObj = new Date(signDate);
 

@@ -15,9 +15,13 @@ import { AddressModule } from './modules/address/address.module';
 import { LoanPaymentModule } from './modules/loan-payment/loan-payment.module';
 import { APP_PIPE,  } from '@nestjs/core';
 import { LoanResolver } from './modules/loan/loan.resolver';
+import { DevtoolsModule } from '@nestjs/devtools-integration';
 
 @Module({
   imports: [
+    DevtoolsModule.register({
+      http: process.env.NODE_ENV !== 'production',
+    }),
     CoreModule,
     LoanModule,
     AuthModule,

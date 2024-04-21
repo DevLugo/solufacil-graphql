@@ -23,12 +23,12 @@ export class PrismaService
   async onModuleInit() {
     await this.$connect();
   }
-  async enableShutdownHooks(app: INestApplication) {
+  /* async enableShutdownHooks(app: INestApplication) {
     this.$on('beforeExit', async (event) => {
       console.log(event.name);
       await app.close();
     });
-  }
+  } */
 
   async onModuleDestroy() {
     await this.$disconnect();

@@ -1,6 +1,5 @@
 import { Field, ID, InputType, ObjectType } from "@nestjs/graphql";
-import { Decimal } from "@prisma/client/runtime";
-import e from "express";
+import { Decimal } from "@prisma/client/runtime/library";
 import { GraphQLDecimal } from "prisma-graphql-type-decimal";
 
 @ObjectType()

@@ -16,7 +16,11 @@ export class BorrowerResolver {
 
     @Query(() => Borrower)
     async getBorrower(@Args('where') where: BorrowerWhereUniqueInput): Promise<Borrower> {
-        return this._db.borrower.findUnique({where});
+        return this._db.borrower.findUnique({
+            where:{
+                id:where.id
+            }
+        });
     }
 
     @Query(() => [Borrower])

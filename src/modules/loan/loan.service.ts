@@ -3,7 +3,7 @@ import { PrismaService } from '../../core/prisma/prisma.service';
 import { CreateLoansProcess, LoanWithAdditionalData } from './types';
 import { Loan, LoanState } from '@prisma/client';
 import { PaymentScheduleService } from '../payment-schedule/payment-schedule.service';
-import { Decimal } from '@prisma/client/runtime';
+import { Decimal } from '@prisma/client/runtime/library';
 
 @Injectable()
 export class LoanService {
