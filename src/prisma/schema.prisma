@@ -101,7 +101,7 @@ model PersonalData {
   updatedAt DateTime   @updatedAt
   employee  Employee[]
   borrower  Borrower[]
-  curp      String     @unique
+  curp      String?     @unique
   loan      Loan?      @relation(fields: [loanId], references: [id]) //only when is an aval
   loanId    String? //only when is an aval
 }
