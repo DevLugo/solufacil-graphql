@@ -39,7 +39,6 @@ export class AuthService {
                         firstName:  firstName,
                         fullName: `${firstName} ${lastName}`,
                         birthDate: new Date(),
-                        curp:"CURP",
                       }
                     }
                   }
