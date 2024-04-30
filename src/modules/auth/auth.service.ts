@@ -43,7 +43,8 @@ export class AuthService {
                     }
                   }
                 }
-            }
+            },
+            include: { employee: true },
         });
       }
 

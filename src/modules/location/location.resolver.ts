@@ -37,17 +37,19 @@ export class LocationResolver {
         });
     }
 
-    @ResolveField(() => State)
+    @ResolveField(() => State, { nullable: true })
     async state(@Parent() root: Location) {
-        console.log("JUAJUA", root);
-        return await this._db.state.findFirst({
-            where:{
-                municipalities:{
-                    some:{
-                        id: root.municipalityId
-                    }
-                }
-            }
+        return await this._db.state.findFirst();
+    }
+
+    @Query(() => [Location])
+    async locations(
+        @Args({ name: 'where', type: () => LocationWhereInput})
+        where:LocationWhereInput
+    ) {
+        return await this._db.location.findMany({
+            where,
         });
     }
+    
 }

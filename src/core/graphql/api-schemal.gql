@@ -2,9 +2,24 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Employee {
+  id: ID!
+  userId: ID
+  type: EmployeesTypes
+  routes: [Route!]!
+  personalData: PersonalData!
+  user: User!
+}
+
+enum EmployeesTypes {
+  LIAISON_EXECUTIVE
+  LOAN_LEAD
+}
+
 type User {
   id: ID!
   employeeId: ID
+  employee: Employee!
   email: String!
   password: String!
   lastLogin: DateTime
@@ -110,20 +125,6 @@ enum LoanState {
 """An arbitrary-precision Decimal type"""
 scalar Decimal
 
-type Employee {
-  id: ID!
-  userId: ID
-  type: EmployeesTypes
-  routes: [Route!]!
-  personalData: PersonalData!
-  user: User!
-}
-
-enum EmployeesTypes {
-  LIAISON_EXECUTIVE
-  LOAN_LEAD
-}
-
 type Route {
   id: ID!
   name: String!
@@ -202,7 +203,7 @@ type Location {
   stateId: ID!
   leads: [Employee!]!
   municipality: Municipality!
-  state: State!
+  state: State
 }
 
 type State {
@@ -229,6 +230,7 @@ type Query {
   hello: String!
   getLoanByBorrower(where: LoanByBorrowerWhereUniqueInput!): Loan!
   getRoutes(where: RouteWhereInput!): [Route!]!
+  locations(where: LocationWhereInput!): [Location!]!
   getEmployee(where: EmployeeWhereUniqueInput!): Employee!
   getBorrower(where: BorrowerWhereUniqueInput!): Borrower!
   getBorrowers(where: BorrowerWhereInput): [Borrower!]!
@@ -241,6 +243,11 @@ input LoanByBorrowerWhereUniqueInput {
 }
 
 input RouteWhereInput {
+  name: String
+}
+
+input LocationWhereInput {
+  routeId: ID!
   name: String
 }
 

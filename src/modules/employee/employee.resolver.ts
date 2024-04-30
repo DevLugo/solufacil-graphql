@@ -45,6 +45,7 @@ export class EmployeeResolver {
     async user(@Parent() root: Employee): Promise<User> {
         return await this._db.user.findFirst({
             where: { id: root.userId },
+            include: { employee: true },
         });
     }
 }
