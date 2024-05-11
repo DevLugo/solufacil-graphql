@@ -135,8 +135,8 @@ export class LoanCreateInput {
     @Field(() => BorrowerCreateInput, {nullable: true})
     borrower?: BorrowerCreateInput
     
-    /* @Field(() => [CreatePersonalDataInput], {nullable: true})
-    avals: AvalsCreateInput[] */
+    @Field(() => [CreatePersonalDataInput], {nullable: true})
+    avals: AvalsCreateInput[]
  
     @Field(() => String, {nullable:false})
     loanLeadId:string
@@ -148,7 +148,7 @@ export class LoanCreateInput {
     loanTypeId: string;
 
     @Field(() => GraphQLDate, {nullable:true})
-    signDate?: Date | string;
+    signDate: Date | string;
 }
 
 @InputType()

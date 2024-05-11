@@ -33,8 +33,8 @@ export class LoanType {
     @Field(() => Int, {nullable:false,defaultValue:2})
     increaseEveryNLoans!: number;
 
-    @Field(() => EmployeesTypes, {nullable:false,defaultValue:false})
-    availableFor!: EmployeesTypes;
+    @Field(() => [EmployeesTypes], { nullable: true })
+    availableFor!: EmployeesTypes[];
 
     @Field(() => Date, {nullable:false})
     createdAt!: Date;

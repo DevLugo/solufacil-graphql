@@ -102,6 +102,113 @@ export class LoanResolver {
         );
     }
 
+    @Mutation(() => Loan)
+    async createLoan(
+        @CurrentUser() user: IJwtPayload,
+        @Args({ name: 'input', type: () => LoanCreateInput })
+        input: LoanCreateInput,
+    ): Promise<Loan> 
+    {
+        const loanData = input;
+        //trhow an unauthenticated error  if user is empty
+        if (!user) {
+            throw new HttpException('Unauthenticated', HttpStatus.UNAUTHORIZED);
+        }
+        console.log("--------", user)
+        // validate if the loanData has a firstPaymentDate, if not, throw an error
+        if (!input.firstPaymentDate) {
+            throw new BadRequestException("firstPaymentDate is required");
+        }
+        // if the isRenovation is true, validate if the loanData has a borrowerId, if not, throw an error. and if it has, validate if the borrower exists, if not, throw an error
+        if (input.isRenovation) {
+            if (!input.borrowerId) {
+                throw new BadRequestException("borrowerId is required");
+            }
+
+            if (input.borrower) {
+                throw new BadRequestException("borrower is not required when isRenovation is true");
+            }
+            const borrower = await this._db.borrower.findUnique({ where: { id: input.borrowerId } });
+            if (!borrower) {
+                throw new BadRequestException("borrowerId is not valid");
+            }
+        }
+        // if the isRenovation is false, validate if the loanData has a borrower, if not, throw an error. and if it has, validate if the borrower is valid, if not, throw an error
+        if (!loanData.isRenovation) {
+            console.log("//////////////")
+            console.log("//////////////")
+            console.log("//////////////")
+            console.log("//////////////")
+            console.log("//////////////")
+            console.log("//////////////")
+
+            if (!loanData.borrower) {
+                throw new BadRequestException("borrower is required");
+            }
+            if(!loanData.borrower.personalData){
+                throw new BadRequestException("personalData is required");
+            }
+            console.log("*********************************")
+            console.log("*********************************")
+            console.log("*********************************")
+            console.log("*********************************")
+            console.log("*********************************")
+            console.log("*********************************")
+            console.log("*********************************")
+            console.log("*********************************")
+
+
+            if(!loanData.borrower.personalData.phones.length){
+                throw new BadRequestException("phones is required and must have at least one phone");
+            }
+            if(!loanData.borrower.personalData.adresses.length){
+                throw new BadRequestException("adresses is required and must have at least one adress");
+            }
+        }
+
+        if(!loanData.signDate){
+            throw new BadRequestException("signDate is required");
+        }
+        console.log("aka 1")
+        //get contract type from db
+        const { borrowerId, loanLeadId } = loanData;
+        
+        const loanType = await this._db.loantype.findFirstOrThrow({where: {id: loanData.loanTypeId}});
+        console.log("aka 2")
+
+        //calculate the end date of the contract. Using as base the sign date and the weeks duration of the type contract
+        const endDate = new Date(loanData.signDate);
+        endDate.setDate(endDate.getDate() + (loanType.weekDuration * 7));
+        console.log("aka 3")
+        
+        //get the employee from the user
+        let contract = await this._contractService.getActiveContract(borrowerId, loanData.signDate as Date);
+        console.log("aka 4", contract.id)
+        
+        if (!contract) {
+         console.log("aka 4.1", contract)
+
+            //if the employee doesn't have an active contract, create a new one
+            contract = await this._contractService.create({
+                signDate: new Date(loanData.signDate),
+                contractTypeId: "14",
+                borrowerId,
+                loanLeadId,
+                grantorId: user.id,
+            });
+            
+            
+        };
+        const loan:CreateLoansProcess = {
+            ...loanData,
+            contractId: contract.id,
+            grantorId: user.id,
+        };
+        const res = await this._loanService.createLoansProcess([loan]);
+        return res[0];
+    }
+
+
     @Mutation(() => [Loan])
 /*     @UsePipes(new YupValidationPipe(LoanCreateInputValidations))
  */    async createLoanBulk(

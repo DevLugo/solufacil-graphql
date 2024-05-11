@@ -142,7 +142,7 @@ type LoanType {
   maximunAmount: Float!
   amountToIncrease: Float!
   increaseEveryNLoans: Int!
-  availableFor: EmployeesTypes!
+  availableFor: [EmployeesTypes!]
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -276,6 +276,7 @@ input PaymentScheduleWhereInput {
 
 type Mutation {
   payPayment(input: PayLoanPaymentInput!): Loan!
+  createLoan(input: LoanCreateInput!): Loan!
   createLoanBulk(input: [LoanCreateInput!]!): [Loan!]!
   signUp(input: UserCreateInput!): User!
   signIn(input: SignInInput!): SignInOutput!
@@ -292,6 +293,7 @@ input LoanCreateInput {
   isRenovation: Boolean!
   borrowerId: String
   borrower: BorrowerCreateInput
+  avals: [CreatePersonalDataInput!]
   loanLeadId: String!
   amountGived: Decimal!
   loanTypeId: String!
