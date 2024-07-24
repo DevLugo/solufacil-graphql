@@ -29,11 +29,14 @@ export class CreateAddressInput {
     @Field(() => String, {nullable:false})
     street!: string;
 
-    @Field(() => String, {nullable:true})
+    @Field(() => String, {nullable:false})
     exteriorNumber!: string | null;
 
     @Field(() => String, {nullable:false})
-    interiorNumber!: string;
+    locationId!: string;
+
+    @Field(() => String, {nullable:true})
+    interiorNumber: string;
 
     @Field(() => String, {nullable:false})
     postalCode!: string;

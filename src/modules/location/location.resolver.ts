@@ -48,7 +48,29 @@ export class LocationResolver {
         where:LocationWhereInput
     ) {
         return await this._db.location.findMany({
-            where,
+            where: {
+                AND: [
+                    /* {
+                        name: {
+                            startsWith: where.name
+                        },
+                    }, */
+                    {
+                        addresses: {
+                            some:{
+                                personalData: {
+                                    employee: {
+                                        some: {
+                                            type: "LOAN_LEAD"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                ]
+                
+            },
         });
     }
     

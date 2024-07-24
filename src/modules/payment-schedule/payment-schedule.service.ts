@@ -13,6 +13,10 @@ export class PaymentScheduleService {
     WEEK_SECONDS =  7 * 24 * 60 * 60 * 1000;
     
     async getPaymentSchedules(where: PaymentScheduleWhereInput) {
+        const dueDate = where.dueDate ? new Date(where.dueDate) : undefined;
+        const startOfDay = dueDate ? new Date(Date.UTC(dueDate.getUTCFullYear(), dueDate.getUTCMonth(), dueDate.getUTCDate())) : undefined;
+
+    
         return this._db.paymentSchedule.findMany(
             {
                 where: {
@@ -32,7 +36,8 @@ export class PaymentScheduleService {
                         }
                     },
                     dueDate: where.dueDate ? {
-                        lte: where.dueDate
+                        
+                        lt: startOfDay
                     } : undefined,
                     OR: [
                         {

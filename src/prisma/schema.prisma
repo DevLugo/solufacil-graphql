@@ -13,9 +13,11 @@ generator client {
 //}
 
 datasource db {
-  provider = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider =  "postgresql"
+  url =      "postgresql://solufacil_user:Z3VrZMERJCFMeRV0E0xtGA1HC26Y8qr6@dpg-cqfktbqju9rs73burgeg-a.oregon-postgres.render.com/solufacil"
+  //postgresql://janedoe:mypassword@localhost:5432/mydb?schema=sample
+  //directUrl = "postgres://postgres.xlvzxipcgnugffpdouol:AryICVaxC5ngYrsu@aws-0-us-west-1.pooler.supabase.com:5432/postgres"
+  
 }
 
 model Log {
@@ -123,8 +125,8 @@ model Municipality {
 model Address {
   id             String        @id @default(uuid())
   street         String
-  exteriorNumber String?
-  interiorNumber String
+  exteriorNumber String
+  interiorNumber String?
   postalCode     String
   references     String?
   location       Location      @relation(fields: [locationId], references: [id])
@@ -138,7 +140,7 @@ model Address {
 model Location {
   id             String       @id @default(uuid())
   name           String       @unique
-  address        Address[]
+  addresses      Address[]
   municipality   Municipality @relation(fields: [municipalityId], references: [id])
   municipalityId String
   route          Route?       @relation(fields: [routeId], references: [id])

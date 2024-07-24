@@ -8,12 +8,12 @@ async function main() {
     const userId2 = "2";
 
     const salt = await genSalt(10);
-    const password = await hash("test1234", salt);
+    const password = await hash("test12345", salt);
     await prisma.state.createMany({
         data:[
             {
                 name: "Campeche",
-                id: "001",
+                id: "001"
             },
             {
                 name: "QuintanaRoo",
@@ -285,6 +285,7 @@ async function main() {
                                 street: "koben",
                                 interiorNumber: "41",
                                 postalCode: "24060",
+                                exteriorNumber: "41",
                                 location:{
                                     connect:{
                                         name: "ALVARO OBREGON"

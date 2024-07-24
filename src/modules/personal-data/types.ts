@@ -63,6 +63,9 @@ export class CreatePersonalDataInput {
     @Field(() => String, {nullable:false})
     lastName!: string;
 
+    @Field(() => GraphQLDate, {nullable:false})
+    birthDate: Date | string;
+
     @Field(() => [CreatePhoneInput], {nullable:false})
     phones: CreatePhoneInput[];
 

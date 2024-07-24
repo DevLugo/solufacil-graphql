@@ -141,8 +141,9 @@ export class LoanCreateInput {
     @Field(() => String, {nullable:false})
     loanLeadId:string
     
-    @Field(() => GraphQLDecimal, {nullable:false})
-    amountGived: Decimal;
+    @Validator.IsNumber()
+    @Field(() => Number, { nullable: false })
+    amountGived: number;
 
     @Field(() => String, {nullable:false})
     loanTypeId: string;

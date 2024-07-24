@@ -277,7 +277,7 @@ input PaymentScheduleWhereInput {
 type Mutation {
   payPayment(input: PayLoanPaymentInput!): Loan!
   createLoan(input: LoanCreateInput!): Loan!
-  createLoanBulk(input: [LoanCreateInput!]!): [Loan!]!
+  payMultiplePayments(input: [PayLoanPaymentInput!]!): [Loan!]!
   signUp(input: UserCreateInput!): User!
   signIn(input: SignInInput!): SignInOutput!
 }
@@ -295,7 +295,7 @@ input LoanCreateInput {
   borrower: BorrowerCreateInput
   avals: [CreatePersonalDataInput!]
   loanLeadId: String!
-  amountGived: Decimal!
+  amountGived: Float!
   loanTypeId: String!
   signDate: Date
 }
@@ -309,6 +309,7 @@ input CreatePersonalDataInput {
   curp: String!
   firstName: String!
   lastName: String!
+  birthDate: Date!
   phones: [CreatePhoneInput!]!
   adresses: [CreateAddressInput!]!
 }
@@ -319,8 +320,9 @@ input CreatePhoneInput {
 
 input CreateAddressInput {
   street: String!
-  exteriorNumber: String
-  interiorNumber: String!
+  exteriorNumber: String!
+  locationId: String!
+  interiorNumber: String
   postalCode: String!
   references: String
 }

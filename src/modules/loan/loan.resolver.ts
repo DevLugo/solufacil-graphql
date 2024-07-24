@@ -25,6 +25,7 @@ import { borrowerValidations } from '../borrower/validations';
 import {personalDataValidations} from '../personal-data/validations';
 import { LoanPaymentService } from '../loan-payment/loan-payment.service';
 import { Borrower } from '../borrower/types';
+import { create } from 'domain';
 
 export const LoanCreateInputValidations = yup.array().of( 
     yup.object().shape({
@@ -81,6 +82,8 @@ export class LoanResolver {
         return await this._db.loan.findUnique({where: {id: data.loanId}});
     }
 
+    
+
     @Query(() => Loan)
     async getLoanByBorrower(
         @CurrentUser() user: IJwtPayload,
@@ -109,6 +112,7 @@ export class LoanResolver {
         input: LoanCreateInput,
     ): Promise<Loan> 
     {
+        console.log("ANASTASIA")
         const loanData = input;
         //trhow an unauthenticated error  if user is empty
         if (!user) {
@@ -155,7 +159,7 @@ export class LoanResolver {
             console.log("*********************************")
             console.log("*********************************")
             console.log("*********************************")
-            console.log("*********************************")
+            console.log("*********************************1")
 
 
             if(!loanData.borrower.personalData.phones.length){
@@ -164,7 +168,63 @@ export class LoanResolver {
             if(!loanData.borrower.personalData.adresses.length){
                 throw new BadRequestException("adresses is required and must have at least one adress");
             }
+
+            //create a new borrower
+            const currentDate = new Date();
+            console.log("*************/////////1111///////////********************")
+
+            try {
+                
+                console.log("*************////////////////////********************")
+            
+                const borrower = await this._db.borrower.create({
+                    data: {
+                        email: loanData.borrower.email,
+                        contract: {
+                            create: {
+                                signDate: new Date(loanData.signDate),
+                                contractTypeId: "14",//Traducional
+                                loanLeadId: loanData.loanLeadId,
+                                grantorId: user.id,
+                                dueDate: new Date(currentDate.setMonth(currentDate.getMonth() + 14)),
+                            },
+                        },
+                        personalData: {
+                            create: {
+                                curp: loanData.borrower.personalData.curp,
+                                firstName: loanData.borrower.personalData.firstName,
+                                lastName: loanData.borrower.personalData.lastName,
+                                fullName: loanData.borrower.personalData.firstName + " " + loanData.borrower.personalData.lastName,
+                                birthDate: loanData.borrower.personalData.birthDate,
+                                /* phones: {
+                                    create: loanData.borrower.personalData.phones,
+                                }, */
+                                addresses: {
+                                    create: loanData.borrower.personalData.adresses.map((address) => {
+                                        return {
+                                            exteriorNumber: address.exteriorNumber,
+                                            postalCode: address.postalCode,
+                                            references: address.references,
+                                            street: address.street,
+                                            /* interiorNumber:"", */
+                                            location: {
+                                                connect: {
+                                                    id: address.locationId,
+                                                },
+                                            }
+                                        };
+                                    }),
+                                }
+                            },
+                        },
+                    },
+                });
+                loanData.borrowerId = borrower.id;
+            } catch (error) {
+            console.log("====================================", error)       
+            }
         }
+
 
         if(!loanData.signDate){
             throw new BadRequestException("signDate is required");
@@ -210,6 +270,21 @@ export class LoanResolver {
 
 
     @Mutation(() => [Loan])
+    async payMultiplePayments(
+        @CurrentUser() user: IJwtPayload,
+        @Args({ name: 'input', type: () => [PayLoanPaymentInput] })
+        data: PayLoanPaymentInput[]
+    ) {
+        const promises = data.map(async (payment) => {
+            await this._loanPaymentService.addPaymentToLoan({
+                ...payment,
+                collectorId: user.employeeId
+            });
+            return this._db.loan.findUnique({ where: { id: payment.loanId } });
+        });
+
+        return Promise.all(promises);
+    }
 /*     @UsePipes(new YupValidationPipe(LoanCreateInputValidations))
  */    async createLoanBulk(
         @CurrentUser() user: IJwtPayload,
@@ -242,6 +317,7 @@ export class LoanResolver {
                     throw new BadRequestException("borrowerId is not valid");
                 }
             }
+            console.log("BEFRE")
             // if the isRenovation is false, validate if the loanData has a borrower, if not, throw an error. and if it has, validate if the borrower is valid, if not, throw an error
             if (!loanData.isRenovation) {
                 console.log("//////////////")
@@ -249,7 +325,7 @@ export class LoanResolver {
                 console.log("//////////////")
                 console.log("//////////////")
                 console.log("//////////////")
-                console.log("//////////////")
+                console.log("//////////////1")
 
                 if (!loanData.borrower) {
                     throw new BadRequestException("borrower is required");
@@ -264,7 +340,7 @@ export class LoanResolver {
                 console.log("*********************************")
                 console.log("*********************************")
                 console.log("*********************************")
-                console.log("*********************************")
+                console.log("*********************************1")
 
 
                 if(!loanData.borrower.personalData.phones.length){
@@ -272,6 +348,55 @@ export class LoanResolver {
                 }
                 if(!loanData.borrower.personalData.adresses.length){
                     throw new BadRequestException("adresses is required and must have at least one adress");
+                }
+                //create a new borrower
+                const currentDate = new Date();
+                console.log("*************/////////1111///////////********************")
+
+                try {
+                    
+                    console.log("*************////////////////////********************")
+                
+                    const borrower = await this._db.borrower.create({
+                        data: {
+                            email: loanData.borrower.email,
+                            contract: {
+                                create: {
+                                    signDate: new Date(loanData.signDate),
+                                    contractTypeId: "14",//Traducional
+                                    loanLeadId: loanData.loanLeadId,
+                                    grantorId: user.id,
+                                    dueDate: new Date(currentDate.setMonth(currentDate.getMonth() + 14)),
+                                },
+                            },
+                            personalData: {
+                                create: {
+                                    curp: loanData.borrower.personalData.curp,
+                                    firstName: loanData.borrower.personalData.firstName,
+                                    lastName: loanData.borrower.personalData.lastName,
+                                    fullName: loanData.borrower.personalData.firstName + " " + loanData.borrower.personalData.lastName,
+                                    birthDate: loanData.borrower.personalData.birthDate,
+                                    phones: {
+                                        create: loanData.borrower.personalData.phones,
+                                    },
+                                    addresses: {
+                                        create: loanData.borrower.personalData.adresses.map((address) => {
+                                            return {
+                                            ...address,
+                                            location: {
+                                                connect: {
+                                                    id: address.locationId,
+                                                },
+                                            }
+                                            };
+                                        }),
+                                        }
+                                },
+                            },
+                        },
+                    });
+                } catch (error) {
+                console.log("====================================", error)       
                 }
             }
 
