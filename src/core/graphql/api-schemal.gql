@@ -14,6 +14,7 @@ type Employee {
 enum EmployeesTypes {
   LIAISON_EXECUTIVE
   LOAN_LEAD
+  INVESTMENT_DIRECTOR
 }
 
 type User {
@@ -162,6 +163,7 @@ type PaymentSchedule {
   updatedAt: DateTime!
   loanId: String!
   pendingAmount: Decimal!
+  weecklyPendingAmount: Decimal!
   borrower: Borrower!
 }
 
@@ -270,7 +272,8 @@ input LoanTypeWhereInput {
 
 input PaymentScheduleWhereInput {
   leadId: String
-  dueDate: DateTime
+  dueDate: DateTime!
+  startDate: DateTime!
   paymentState: [PaymentState!]
 }
 
@@ -280,6 +283,8 @@ type Mutation {
   payMultiplePayments(input: [PayLoanPaymentInput!]!): [Loan!]!
   signUp(input: UserCreateInput!): User!
   signIn(input: SignInInput!): SignInOutput!
+  transferMoney(transferMoneyInput: TransferMoneyInput!): Boolean!
+  approveRejectTransactionRequest(approveRejectTransactionInput: ApproveRejectTransactionInput!): Boolean!
 }
 
 input PayLoanPaymentInput {
@@ -289,7 +294,7 @@ input PayLoanPaymentInput {
 }
 
 input LoanCreateInput {
-  firstPaymentDate: Date!
+  firstPaymentDate: DateTime!
   isRenovation: Boolean!
   borrowerId: String
   borrower: BorrowerCreateInput
@@ -297,7 +302,7 @@ input LoanCreateInput {
   loanLeadId: String!
   amountGived: Float!
   loanTypeId: String!
-  signDate: Date
+  signDate: DateTime
 }
 
 input BorrowerCreateInput {
@@ -337,4 +342,18 @@ input UserCreateInput {
 input SignInInput {
   email: String!
   password: String!
+}
+
+input TransferMoneyInput {
+  fromId: String!
+  toId: String!
+  amount: Float!
+  approverId: String!
+  isInvestment: Boolean!
+}
+
+input ApproveRejectTransactionInput {
+  transactionRqId: String!
+  approverId: String!
+  isApproved: Boolean!
 }

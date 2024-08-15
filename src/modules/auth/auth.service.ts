@@ -30,6 +30,17 @@ export class AuthService {
             data:{ 
                 email:data.email,
                 password: passwordHashed,
+                account: {
+                    create: {
+                        type: "EMPLOYEE_CASH_FUND",
+                        balance: {
+                            create: {
+                                amount: 0,
+                            }
+                        },
+                        name: `${firstName} ${lastName}`
+                    }
+                },
                 employee:{
                   create:{
                     type: 'LIAISON_EXECUTIVE',
@@ -40,7 +51,7 @@ export class AuthService {
                         fullName: `${firstName} ${lastName}`,
                         birthDate: new Date(),
                       }
-                    }
+                    },
                   }
                 }
             },

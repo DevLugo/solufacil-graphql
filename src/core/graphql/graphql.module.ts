@@ -3,6 +3,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { ApolloDriver } from '@nestjs/apollo';
 import { GraphQLFormattedError } from 'graphql';
+import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
 
 @Module({
   imports: [
@@ -10,9 +11,10 @@ import { GraphQLFormattedError } from 'graphql';
       context: ({ req }) => ({ req }),
       driver: ApolloDriver,
       introspection: true,
-      playground: true,
+      playground: false,
       autoSchemaFile: join(process.cwd(), 'src/core/graphql/api-schemal.gql'),
-      
+      plugins: [ApolloServerPluginLandingPageLocalDefault()],
+
     }),
   ],
 })

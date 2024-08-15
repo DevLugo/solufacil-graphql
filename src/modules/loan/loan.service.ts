@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../core/prisma/prisma.service';
 import { CreateLoansProcess, LoanWithAdditionalData } from './types';
-import { Loan, LoanState } from '@prisma/client';
+import { Loan, LoanState, TransactionExpenseSource, TransactionType } from '@prisma/client';
 import { PaymentScheduleService } from '../payment-schedule/payment-schedule.service';
 import { Decimal } from '@prisma/client/runtime/library';
 
@@ -74,7 +74,6 @@ export class LoanService {
       idx++
     }
     return results;
-
   }
 
   private async findLoanWithAdditionalData(loanId: string): Promise<LoanWithAdditionalData> {
@@ -137,7 +136,7 @@ export class LoanService {
     return (Number(amountGived) + Number(renovationPendingAmount)) * rate;
   }
 
-  private createLoan(
+  private async createLoan(
     signDate: Date,
     loanTypeId: string,
     grantorId: string,
@@ -149,8 +148,16 @@ export class LoanService {
     previousLoan: Loan | undefined,
   ): Promise<Loan> {
     console.log("createLoan--------------------------------",grantorId, loanTypeId);
+    const sourceAccount = await this._db.account.findFirst({
+      where: {
+        type: "EMPLOYEE_CASH_FUND",
+        managers: { some: { id: grantorId } },
+      },
+    });
+    if(!sourceAccount) throw new Error('No se encontro la cuenta de caja del empleado');
+
     return this._db.loan.create({
-      data: { 
+      data: {
         signDate,
         loanType: { connect: { id: loanTypeId } },
         grantor: { connect: { id: grantorId } },
@@ -166,6 +173,16 @@ export class LoanService {
         renovationProfitAmount: previousLoan ? (+previousLoan.pendingAmount * 100 / +previousLoan.amountToPay) * baseProfitAmount / 100 : 0,
         totalProfitAmount: previousLoan ? (+previousLoan.pendingAmount * 100 / +previousLoan.amountToPay) * baseProfitAmount / 100 + baseProfitAmount : baseProfitAmount,
         renovatedFromId: previousLoan ? previousLoan.id : undefined,
+        transaction: {
+          create: {
+            amount: amountGived,
+            type: TransactionType.EXPENSE,
+            state: LoanState.APPROVED,
+            expenseSource: TransactionExpenseSource.LOAN_GRANTED_COMISSION, // TODO: update to LOAN_GRANTED
+            sourceAccount: { connect: { id: sourceAccount.id } },
+          }
+        }
+
       },
       include: {
         loanType: true,

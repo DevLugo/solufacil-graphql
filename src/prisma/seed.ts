@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 async function main() {
     const userId1 = "1";
     const userId2 = "2";
-
+    console.log('Seeding database...');
     const salt = await genSalt(10);
     const password = await hash("test12345", salt);
     await prisma.state.createMany({

@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { PaymentState } from '@prisma/client';
+import { PaymentState, TransactionIncomeSource, TransactionType } from '@prisma/client';
 import { PrismaService } from '../../core/prisma/prisma.service';
 import { calculatePayedPercentege, getPercentageOf } from '../loan/paymentUtils';
 import { AddPaymentToLoanInput, PayLoanPaymentInput } from './types';
+import { Decimal } from '@prisma/client/runtime/library';
 
 @Injectable()
 export class LoanPaymentService {
@@ -19,6 +20,10 @@ export class LoanPaymentService {
             },
             include: {loanType:true}
         });
+        if (!loan) throw new Error("El credito no existe");
+        const collectorAccount = await this._db.account.findFirst({where:{managers:{some:{id:data.collectorId}}}});
+        if (!collectorAccount) throw new Error("El cobrador no tiene una cuenta asignada");
+
         if (Number(amountForPayment) > Number(loan.pendingAmount)) throw new Error("La cantidad es mayor a la deuda pendiente")
         let getNextPayments = await this._db.paymentSchedule.findMany(
             {
@@ -34,12 +39,17 @@ export class LoanPaymentService {
         const bulkDbActions = [];
         const paymentSchedulesIds = [];
         while(amountForPayment){
+            console.log("amountForPayment---", amountForPayment);
             const currentPayment = getNextPayments[0];
             const pendingAmount = (Number(currentPayment.amountToPay)-Number(currentPayment.paidAmount));
             const coverFullAmount = Number(amountForPayment) >= pendingAmount;
             const status: PaymentState = coverFullAmount ? PaymentState.PAID_OUT:PaymentState.PARTIALLY_PAID;
-            const paidAmount = coverFullAmount ? pendingAmount : Number(amountForPayment); 
-            amountForPayment = Number(amountForPayment) - Number(paidAmount);
+            let amountForCurrentPayment = coverFullAmount? pendingAmount: amountForPayment;
+            console.log("amountForCurrentPayment", amountForCurrentPayment)
+            const paidAmount = new Decimal(new Decimal(currentPayment.paidAmount).plus(new Decimal(amountForCurrentPayment.toString())));
+            console.log("paidAmount", paidAmount)
+            amountForPayment = (+amountForPayment - (+amountForCurrentPayment));
+            console.log("amountForPayment", amountForPayment)
             
             bulkDbActions.push(
                 this._db.paymentSchedule.update({
@@ -75,6 +85,14 @@ export class LoanPaymentService {
                     /* leadPaymentReceived: data.leadPaymentReceivedId ? 
                         { connect:{id:data.leadPaymentReceivedId} }: undefined, */
                     collector: {connect:{id:data.collectorId}},
+                    transaction: {
+                        create:{
+                            amount: Number(data.amount),
+                            type: TransactionType.INCOME,
+                            incomeSource: TransactionIncomeSource.LOAN_PAYMENT,
+                            destinationAccount: {connect:{id:collectorAccount.id}},
+                        }
+                    }
                 }
             })
         );

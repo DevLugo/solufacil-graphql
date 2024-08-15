@@ -13,11 +13,10 @@ generator client {
 //}
 
 datasource db {
-  provider =  "postgresql"
-  url =      "postgresql://solufacil_user:Z3VrZMERJCFMeRV0E0xtGA1HC26Y8qr6@dpg-cqfktbqju9rs73burgeg-a.oregon-postgres.render.com/solufacil"
+  provider = "postgresql"
+  url      = "postgresql://solufacil_user:Z3VrZMERJCFMeRV0E0xtGA1HC26Y8qr6@dpg-cqfktbqju9rs73burgeg-a.oregon-postgres.render.com/solufacil"
   //postgresql://janedoe:mypassword@localhost:5432/mydb?schema=sample
   //directUrl = "postgres://postgres.xlvzxipcgnugffpdouol:AryICVaxC5ngYrsu@aws-0-us-west-1.pooler.supabase.com:5432/postgres"
-  
 }
 
 model Log {
@@ -48,6 +47,8 @@ model User {
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
   employee       Employee?
+  account        Account?  @relation(fields: [accountId], references: [id])
+  accountId      String?
 }
 
 model Employee {
@@ -72,6 +73,9 @@ model Employee {
   leadPaymentsReceivedLead      LeadPaymentReceived[]           @relation("LeadPaymentsReceived_Lead")
   leadPaymentReceivedAgent      LeadPaymentReceived[]           @relation("LeadPaymentsReceived_Agent")
   comissionPaymentConfiguration ComissionPaymentConfiguration[]
+  balance                       Balance?
+  transactions                  Transaction[]                   @relation("SourceEmployee")
+  receivedTransactions          Transaction[]                   @relation("DestinationEmployee")
 }
 
 model Document {
@@ -103,7 +107,7 @@ model PersonalData {
   updatedAt DateTime   @updatedAt
   employee  Employee[]
   borrower  Borrower[]
-  curp      String?     @unique
+  curp      String?    @unique
   loan      Loan?      @relation(fields: [loanId], references: [id]) //only when is an aval
   loanId    String? //only when is an aval
 }
@@ -162,14 +166,14 @@ model Borrower {
 }
 
 //model Local {
-  //id        String    @id @default(uuid())
-  //name      String
-  //addresses Address[]
+//id        String    @id @default(uuid())
+//name      String
+//addresses Address[]
 
-  //createdAt  DateTime @default(now())
-  //updatedAt  DateTime @updatedAt
-  //borrower   Borrower @relation(fields: [borrowerId], references: [id])
-  //borrowerId String
+//createdAt  DateTime @default(now())
+//updatedAt  DateTime @updatedAt
+//borrower   Borrower @relation(fields: [borrowerId], references: [id])
+//borrowerId String
 //}
 
 model Phone {
@@ -299,6 +303,8 @@ model Loan {
   paymentSchedule   PaymentSchedule[]
   commissionPayment CommissionPayment[]
   renovatedFromId   String?
+  transaction       Transaction         @relation(fields: [transactionId], references: [id])
+  transactionId     String              @unique
 }
 
 model LoanPayment {
@@ -317,6 +323,8 @@ model LoanPayment {
   collectorId           String
   leadPaymentReceived   LeadPaymentReceived? @relation(fields: [leadPaymentReceivedId], references: [id])
   leadPaymentReceivedId String?
+  transaction           Transaction          @relation(fields: [transactionId], references: [id])
+  transactionId         String               @unique
 }
 
 model Comment {
@@ -342,7 +350,6 @@ model ComissionPaymentConfiguration {
   employeeId         String? //When employee is is setter, this is to overwrite the default loan configuration
 }
 
-
 //TODO: COMISIONES. 
 //Comision x  empleado. 
 // Lider recibe dos tipos de comosiones, por pago recibido y por credito otorgado
@@ -359,6 +366,56 @@ model CommissionPayment {
   paymentScheduleId String
   employeeId        String //could be comissio for a loanLead or for a laison executive
   status            CommissionPaymentStatus
+}
+
+model Balance {
+  id         String    @id @default(uuid())
+  amount     Decimal   @db.Money
+  employee   Employee? @relation(fields: [employeeId], references: [id])
+  employeeId String?   @unique
+  account    Account?  @relation(fields: [accountId], references: [id])
+  accountId  String?   @unique
+}
+
+model Account {
+  id                   String        @id @default(uuid())
+  name                 String
+  type                 AccountType
+  balance              Balance?
+  balanceId            String?       @unique
+  transactions         Transaction[] @relation("SourceAccount")
+  receivedTransactions Transaction[] @relation("DestinationAccount")
+  updatedAt            DateTime      @updatedAt
+  createdAt            DateTime      @default(now())
+  managers             User[]
+}
+
+model Transaction {
+  id                    String              @id @default(uuid())
+  amount                Decimal             @db.Money
+  date                  DateTime            @default(now())
+  type                  TransactionType
+  incomeSource          TransactionIncomeSource?
+  expenseSource         TransactionExpenseSource?
+  state                 TransactionRequestState @default(PENDING)
+  sourceEmployee        Employee?           @relation("SourceEmployee", fields: [sourceEmployeeId], references: [id])
+  sourceEmployeeId      String?
+  destinationEmployee   Employee?           @relation("DestinationEmployee", fields: [destinationEmployeeId], references: [id])
+  destinationEmployeeId String?
+  sourceAccount         Account?            @relation("SourceAccount", fields: [sourceAccountId], references: [id])
+  sourceAccountId       String?
+  destinationAccount    Account?            @relation("DestinationAccount", fields: [destinationAccountId], references: [id])
+  destinationAccountId  String?
+  loan                  Loan?
+  loanId                String?
+  loanPayment           LoanPayment?
+  loanPaymentId         String?
+  createdAt             DateTime            @default(now())
+  updatedAt             DateTime            @updatedAt
+
+  @@index([sourceEmployeeId])
+  @@index([destinationEmployeeId])
+  @@index([sourceAccountId])
 }
 
 model PaymentSchedule {
@@ -388,7 +445,7 @@ model Expenses {
   payedAt     DateTime
   employee    Employee     @relation(fields: [employeeId], references: [id])
   createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  updatedAt   DateTime
   userId      String?
   employeeId  String
 }
@@ -431,6 +488,7 @@ enum PaymentState {
 enum EmployeesTypes {
   LIAISON_EXECUTIVE
   LOAN_LEAD
+  INVESTMENT_DIRECTOR
 }
 
 enum DocumentType {
@@ -464,4 +522,41 @@ enum CommissionGoalType {
 enum CommissionType {
   FIXED_AMOUNT
   PERCENTAGE
+}
+
+enum AccountType {
+  BANK
+  OFFICE_CASH_FUND
+  EMPLOYEE_CASH_FUND
+}
+
+enum TransactionType {
+  INCOME
+  EXPENSE
+  TRANSFER
+  INVESTMENT
+}
+
+enum TransactionIncomeSource {
+  LOAN_PAYMENT
+  MONEY_INVESMENT
+}
+
+enum TransactionExpenseSource {
+  VIATIC
+  GASOLINE
+  ACCOMMODATION
+  NOMINA_SALARY
+  EXTERNAL_SALARY
+  VEHICULE_MAINTENANCE
+  LOAN_GRANTED
+  LOAN_PAYMENT_COMISSION
+  LOAN_GRANTED_COMISSION
+  LEAD_COMISSION
+}
+
+enum TransactionRequestState {
+  PENDING
+  APPROVED
+  REJECTED
 }

@@ -56,8 +56,11 @@ export class PaymentScheduleWhereInput {
     @Field(() => String, {nullable:true})
     leadId?: string;
 
-    @Field(() => Date, {nullable:true})
-    dueDate?: Date;
+    @Field(() => Date, {nullable:false})
+    dueDate: Date;
+
+    @Field(() => Date, {nullable:false})
+    startDate: Date;
 
     @Field(() => [PaymentState], {nullable:true})
     paymentState?: (keyof typeof PaymentState)[];

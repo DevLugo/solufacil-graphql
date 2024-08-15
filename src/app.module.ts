@@ -16,6 +16,7 @@ import { LoanPaymentModule } from './modules/loan-payment/loan-payment.module';
 import { APP_PIPE,  } from '@nestjs/core';
 import { LoanResolver } from './modules/loan/loan.resolver';
 import { DevtoolsModule } from '@nestjs/devtools-integration';
+import { TransactionModule } from './modules/transaction/transaction.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { DevtoolsModule } from '@nestjs/devtools-integration';
     LoanPaymentModule,
     PersonalDataModule,
     PaymentScheduleModule,
+    TransactionModule,
   ],
   providers: [
     PrismaService,

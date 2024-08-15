@@ -6,7 +6,6 @@ import { Decimal } from "@prisma/client/runtime/library";
 import { Employee, LoanState, PersonalData, User } from '@prisma/client';
 import { PaymentSchedule } from '../payment-schedule/types';
 import { LoanType } from '../loan-types/types';
-import { GraphQLDate } from 'graphql-scalars';
 import { CreatePersonalDataInput } from '../personal-data/types';
 import { IsDate, IsPhoneNumber, IsNotEmpty, ValidateNested, MinLength, ValidateIf, IsBoolean, IsString } from 'class-validator';
 import { Transform } from 'class-transformer';
@@ -122,7 +121,7 @@ export class AvalsCreateInput {
 
 @InputType()
 export class LoanCreateInput {
-    @Field(() => GraphQLDate, { nullable: false })
+    @Field(() => Date, { nullable: false })
     firstPaymentDate: Date | string;
    
     @IsBoolean()
@@ -148,7 +147,7 @@ export class LoanCreateInput {
     @Field(() => String, {nullable:false})
     loanTypeId: string;
 
-    @Field(() => GraphQLDate, {nullable:true})
+    @Field(() => Date, {nullable:true})
     signDate: Date | string;
 }
 

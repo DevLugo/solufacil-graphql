@@ -4,6 +4,7 @@ import { PrismaService } from '../../core/prisma/prisma.service';
 import { PaymentState } from '@prisma/client';
 import { PaymentBreakDown } from '../types';
 import { calculatePayedPercentege, getPercentageOf } from '../loan/paymentUtils';
+import * as moment from 'moment-timezone';
 
 @Injectable()
 export class PaymentScheduleService {
@@ -14,8 +15,13 @@ export class PaymentScheduleService {
     
     async getPaymentSchedules(where: PaymentScheduleWhereInput) {
         const dueDate = where.dueDate ? new Date(where.dueDate) : undefined;
-        const startOfDay = dueDate ? new Date(Date.UTC(dueDate.getUTCFullYear(), dueDate.getUTCMonth(), dueDate.getUTCDate())) : undefined;
+        const startDate = where.startDate ? new Date(where.startDate) : undefined;
 
+        //const startOfDay = dueDate ? new Date(Date.UTC(dueDate.getUTCFullYear(), dueDate.getUTCMonth(), dueDate.getUTCDate())) : undefined;
+        console.log("==============DUE DATE===============");
+        console.log(dueDate, where.dueDate)
+        console.log("==============Start DATE===============");
+        console.log(startDate)
     
         return this._db.paymentSchedule.findMany(
             {
@@ -35,22 +41,13 @@ export class PaymentScheduleService {
                             } : undefined
                         }
                     },
-                    dueDate: where.dueDate ? {
-                        
-                        lt: startOfDay
-                    } : undefined,
-                    OR: [
-                        {
-                            status: where.paymentState ?{
-                                in: where.paymentState
-                            } : undefined
-                        },
-                        {
-                            delayed: {
-                                equals: true
-                            }
-                        }
-                    ]
+                    dueDate: {
+                        lt: dueDate,
+                        gte: startDate
+                    },
+                    status: {
+                        in: ["PENDING", "PARTIALLY_PAID"]
+                    }
                 }
             }  
         );
@@ -64,10 +61,19 @@ export class PaymentScheduleService {
                 where: {id: loanId},
                 include:{loanType:true}
             });
-        let nextDateToPay:Date = firstDayPay;
+            const timezone = 'America/Mexico_City'; // Example timezone
+
+        const transformedDate = moment.tz(firstDayPay, timezone);
+        let nextDateToPay:Date = transformedDate.toDate();
+
+        console.log("----------------")
+        console.log("----------------")
+        console.log(firstDayPay, nextDateToPay)
+        console.log(firstDayPay, transformedDate.format());
+
         const transactions = [];
         while (i < weeksDuration){
-            nextDateToPay = new Date(nextDateToPay.getTime( ) + (weekSeconds * i));
+            nextDateToPay = i > 0 ? new Date(nextDateToPay.getTime() + weekSeconds): nextDateToPay;
             const percentegeToPaid = calculatePayedPercentege(+loan.weeklyPaymentAmount, +loan.amountToPay);
             const profit = getPercentageOf(percentegeToPaid, Number(loan.totalProfitAmount));
            
