@@ -33,11 +33,7 @@ export class AuthService {
                 account: {
                     create: {
                         type: "EMPLOYEE_CASH_FUND",
-                        balance: {
-                            create: {
-                                amount: 0,
-                            }
-                        },
+                        amount: 0,
                         name: `${firstName} ${lastName}`
                     }
                 },

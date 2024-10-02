@@ -4,6 +4,9 @@ import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { ValidationError } from 'class-validator';
 import { UserInputError } from 'apollo-server-express';
 import * as fs from 'fs';
+import * as dotenv from 'dotenv';
+
+dotenv.config({ path: './.env' });
 
 async function bootstrap() {
     const v8 = require('v8');

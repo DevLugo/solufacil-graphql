@@ -1,3 +1,4 @@
+import 'dotenv/config'; // This will load the environment variables from the .env file
 import { PrismaClient } from '@prisma/client';
 import { genSalt, hash, compare } from 'bcryptjs';
 
@@ -9,6 +10,7 @@ async function main() {
     console.log('Seeding database...');
     const salt = await genSalt(10);
     const password = await hash("test12345", salt);
+
     await prisma.state.createMany({
         data:[
             {
@@ -236,6 +238,7 @@ async function main() {
                 },
             ]
     })
+    
     await prisma.employee.create({
         data:{
                 id: userId1,
@@ -245,6 +248,13 @@ async function main() {
                         id: userId1,
                         email: "josue",
                         password: password,
+                        account:{
+                            create:{
+                                type: "EMPLOYEE_CASH_FUND",
+                                amount: 50000,
+                                name: "Josue Santos"
+                            },
+                        }
                     }
                 },
                 personalData:{
@@ -299,6 +309,56 @@ async function main() {
                 },
             },
     });
+
+    await prisma.employee.create({
+        data:{
+                id: "3",
+                type: 'CASH_MANAGER',
+                user:{
+                    create: {
+                        id: "3",
+                        email: "tefy",
+                        password: password,
+                        account: {
+                            create:{
+                                type: "OFFICE_CASH_FUND",
+                                amount: 10000,
+                                name: "CAJA CHICA MERIDA"
+                            }
+                        }
+                    }
+                },
+                personalData:{
+                    create:{
+                        firstName: "TEFY",
+                        lastName: "COCOM",
+                        fullName: "TEFY COCOM",
+                        curp: "SACJ000000HDF11",
+                        phones:{
+                            create:{
+                                number: "9993999999",
+                            }
+                        },
+                        addresses:{
+                            create:{
+                                street: "koben",
+                                interiorNumber: "41",
+                                postalCode: "24060",
+                                exteriorNumber: "41",
+                                location:{
+                                    connect:{
+                                        name: "ALVARO OBREGON"
+                                    }
+                                }
+
+                            }
+                        },
+                        birthDate: new Date(),
+                    }
+                },
+            },
+    });
+
     const borrower = await prisma.borrower.create({
         data: {
             

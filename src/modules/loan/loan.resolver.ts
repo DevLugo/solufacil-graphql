@@ -6,7 +6,7 @@ import { createParamDecorator, BadRequestException } from '@nestjs/common';
 
 import { PrismaService } from '../../core/prisma/prisma.service';
 import { LoanService } from './loan.service';
-import { CreateLoansProcess, Loan, LoanByBorrowerWhereUniqueInput, LoanCreateInput } from './types';
+import { CreateLoansProcess, Loan, LoanByBorrowerWhereUniqueInput, LoanCreateInput, LoansByLeadIdWhereInput } from './types';
 import { CurrentUser } from '../auth/auth.decorator';
 import { ContractService } from '../contract/contract.service';
 import { PaymentSchedule } from '../payment-schedule/types';
@@ -82,6 +82,23 @@ export class LoanResolver {
         return await this._db.loan.findUnique({where: {id: data.loanId}});
     }
 
+    @Query(() => [Loan])
+    async getLoans(
+        @CurrentUser() user: IJwtPayload,
+        @Args({ name: 'where', type: () => LoansByLeadIdWhereInput }) where: LoansByLeadIdWhereInput,
+    ): Promise<Loan[]> {
+        return await this._db.loan.findMany({
+            where: {
+                contract: {
+                    loanLeadId: where.leadId,
+                },
+                createdAt: {
+                    gte: where.startDate,
+                    lte: where.endDate,
+                }
+            }
+        });
+    }
     
 
     @Query(() => Loan)
@@ -172,7 +189,11 @@ export class LoanResolver {
             //create a new borrower
             const currentDate = new Date();
             console.log("*************/////////1111///////////********************")
-
+            // check if curp is already in use
+            const curp = await this._db.personalData.findFirst({where: {curp: loanData.borrower.personalData.curp}});
+            if(curp){
+                throw new BadRequestException("curp is already in use");
+            }
             try {
                 
                 console.log("*************////////////////////********************")

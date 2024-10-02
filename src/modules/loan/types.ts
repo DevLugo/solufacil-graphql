@@ -3,12 +3,10 @@ import { ObjectType } from '@nestjs/graphql';
 import { ID } from '@nestjs/graphql';
 import { GraphQLDecimal } from 'prisma-graphql-type-decimal';
 import { Decimal } from "@prisma/client/runtime/library";
-import { Employee, LoanState, PersonalData, User } from '@prisma/client';
+import { Employee, LoanState, User } from '@prisma/client';
 import { PaymentSchedule } from '../payment-schedule/types';
-import { LoanType } from '../loan-types/types';
 import { CreatePersonalDataInput } from '../personal-data/types';
-import { IsDate, IsPhoneNumber, IsNotEmpty, ValidateNested, MinLength, ValidateIf, IsBoolean, IsString } from 'class-validator';
-import { Transform } from 'class-transformer';
+import { IsBoolean } from 'class-validator';
 import { BorrowerCreateInput } from '../borrower/types';
 import * as Validator from 'class-validator';
 
@@ -188,4 +186,16 @@ export type LoanWithAdditionalData = Loan & {
 export class LoanByBorrowerWhereUniqueInput {
     @Field()
     borrowerId: string;
+}
+
+@InputType()
+export class LoansByLeadIdWhereInput {
+    @Field()
+    leadId: string;
+
+    @Field(() => Date, {nullable:false})
+    startDate: Date;
+
+    @Field(() => Date, {nullable:false})
+    endDate: Date;
 }

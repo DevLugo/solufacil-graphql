@@ -5,8 +5,9 @@ import { AppModule } from '../../app.module';
 import { PaymentScheduleService } from '../payment-schedule/payment-schedule.service';
 import { PrismaService } from '../../core/prisma/prisma.service';
 import { LoanCreateInput } from './types';
-import { Decimal } from '@prisma/client/runtime';
+
 import { calculatePayedPercentege, getPercentageOf } from './paymentUtils';
+import { Decimal } from '@prisma/client/runtime/library';
 
 export function formatDate(date: Date): string {
     return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
@@ -86,13 +87,14 @@ describe('GraphQL API', () => {
         const variables: {input: LoanCreateInput[]} = {
             input: 
                     [{
-                        amountGived: new Decimal(amountGived),
+                        amountGived: Number(new Decimal(amountGived)),
                         loanTypeId: '14',
                         signDate: '2022-06-12',
                         firstPaymentDate: '2022-06-12',
                         borrowerId: '1',
                         loanLeadId: '1',
                         isRenovation: true,
+                        avals: [],
                     }],
         };
 

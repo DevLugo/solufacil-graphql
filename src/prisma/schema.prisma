@@ -14,7 +14,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://solufacil_user:Z3VrZMERJCFMeRV0E0xtGA1HC26Y8qr6@dpg-cqfktbqju9rs73burgeg-a.oregon-postgres.render.com/solufacil"
+  url      = env("DATABASE_URL")
   //postgresql://janedoe:mypassword@localhost:5432/mydb?schema=sample
   //directUrl = "postgres://postgres.xlvzxipcgnugffpdouol:AryICVaxC5ngYrsu@aws-0-us-west-1.pooler.supabase.com:5432/postgres"
 }
@@ -73,9 +73,6 @@ model Employee {
   leadPaymentsReceivedLead      LeadPaymentReceived[]           @relation("LeadPaymentsReceived_Lead")
   leadPaymentReceivedAgent      LeadPaymentReceived[]           @relation("LeadPaymentsReceived_Agent")
   comissionPaymentConfiguration ComissionPaymentConfiguration[]
-  balance                       Balance?
-  transactions                  Transaction[]                   @relation("SourceEmployee")
-  receivedTransactions          Transaction[]                   @relation("DestinationEmployee")
 }
 
 model Document {
@@ -368,21 +365,12 @@ model CommissionPayment {
   status            CommissionPaymentStatus
 }
 
-model Balance {
-  id         String    @id @default(uuid())
-  amount     Decimal   @db.Money
-  employee   Employee? @relation(fields: [employeeId], references: [id])
-  employeeId String?   @unique
-  account    Account?  @relation(fields: [accountId], references: [id])
-  accountId  String?   @unique
-}
 
 model Account {
   id                   String        @id @default(uuid())
   name                 String
   type                 AccountType
-  balance              Balance?
-  balanceId            String?       @unique
+  amount   Decimal    @db.Money
   transactions         Transaction[] @relation("SourceAccount")
   receivedTransactions Transaction[] @relation("DestinationAccount")
   updatedAt            DateTime      @updatedAt
@@ -391,30 +379,24 @@ model Account {
 }
 
 model Transaction {
-  id                    String              @id @default(uuid())
-  amount                Decimal             @db.Money
-  date                  DateTime            @default(now())
+  id                    String                    @id @default(uuid())
+  amount                Decimal                   @db.Money
+  date                  DateTime                  @default(now())
   type                  TransactionType
   incomeSource          TransactionIncomeSource?
   expenseSource         TransactionExpenseSource?
-  state                 TransactionRequestState @default(PENDING)
-  sourceEmployee        Employee?           @relation("SourceEmployee", fields: [sourceEmployeeId], references: [id])
-  sourceEmployeeId      String?
-  destinationEmployee   Employee?           @relation("DestinationEmployee", fields: [destinationEmployeeId], references: [id])
-  destinationEmployeeId String?
-  sourceAccount         Account?            @relation("SourceAccount", fields: [sourceAccountId], references: [id])
+  state                 TransactionRequestState   @default(PENDING)
+  sourceAccount         Account?                  @relation("SourceAccount", fields: [sourceAccountId], references: [id])
   sourceAccountId       String?
-  destinationAccount    Account?            @relation("DestinationAccount", fields: [destinationAccountId], references: [id])
+  destinationAccount    Account?                  @relation("DestinationAccount", fields: [destinationAccountId], references: [id])
   destinationAccountId  String?
   loan                  Loan?
   loanId                String?
   loanPayment           LoanPayment?
   loanPaymentId         String?
-  createdAt             DateTime            @default(now())
-  updatedAt             DateTime            @updatedAt
+  createdAt             DateTime                  @default(now())
+  updatedAt             DateTime                  @updatedAt
 
-  @@index([sourceEmployeeId])
-  @@index([destinationEmployeeId])
   @@index([sourceAccountId])
 }
 
@@ -489,6 +471,7 @@ enum EmployeesTypes {
   LIAISON_EXECUTIVE
   LOAN_LEAD
   INVESTMENT_DIRECTOR
+  CASH_MANAGER
 }
 
 enum DocumentType {

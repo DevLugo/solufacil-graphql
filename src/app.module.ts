@@ -14,9 +14,9 @@ import { PaymentScheduleModule } from './modules/payment-schedule/payment-schedu
 import { AddressModule } from './modules/address/address.module';
 import { LoanPaymentModule } from './modules/loan-payment/loan-payment.module';
 import { APP_PIPE,  } from '@nestjs/core';
-import { LoanResolver } from './modules/loan/loan.resolver';
 import { DevtoolsModule } from '@nestjs/devtools-integration';
 import { TransactionModule } from './modules/transaction/transaction.module';
+import { AccountModule } from './modules/account/account.module';
 
 @Module({
   imports: [
@@ -37,6 +37,7 @@ import { TransactionModule } from './modules/transaction/transaction.module';
     PersonalDataModule,
     PaymentScheduleModule,
     TransactionModule,
+    AccountModule,
   ],
   providers: [
     PrismaService,

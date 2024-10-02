@@ -1,9 +1,9 @@
 import { PrismaService } from '../../core/prisma/prisma.service';
 import { PaymentScheduleService } from '../payment-schedule/payment-schedule.service';
 import { LoanService } from './loan.service';
-import { Decimal } from '@prisma/client/runtime';
 import { CreateLoansProcess } from './types';
 import { calculatePayedPercentege, getPercentageOf } from './paymentUtils';
+import { Decimal } from '@prisma/client/runtime/library';
 
 
 describe('LoanService', () => {
@@ -32,7 +32,7 @@ describe('LoanService', () => {
             const loansData: CreateLoansProcess[] = [
                 {
                     borrowerId: '1',
-                    amountGived: new Decimal(3000), // convert number to Decimal
+                    amountGived: Number(new Decimal(3000)), // convert number to Decimal
                     signDate: '2022-06-12',
                     firstPaymentDate: '2022-06-18',
                     loanTypeId: '14',
@@ -40,6 +40,7 @@ describe('LoanService', () => {
                     contractId: '1',
                     loanLeadId: '1',
                     isRenovation: true,
+                    avals: [],
                 },
             ];
             const createdLoans = await loanService.createLoansProcess(loansData);

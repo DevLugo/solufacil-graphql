@@ -7,6 +7,7 @@ type Employee {
   userId: ID
   type: EmployeesTypes
   routes: [Route!]!
+  accounts: [Account!]!
   personalData: PersonalData!
   user: User!
 }
@@ -15,6 +16,7 @@ enum EmployeesTypes {
   LIAISON_EXECUTIVE
   LOAN_LEAD
   INVESTMENT_DIRECTOR
+  CASH_MANAGER
 }
 
 type User {
@@ -132,6 +134,19 @@ type Route {
   locations: [Location!]!
 }
 
+type Account {
+  id: ID!
+  name: String!
+  type: AccountType!
+  amount: Decimal!
+}
+
+enum AccountType {
+  BANK
+  OFFICE_CASH_FUND
+  EMPLOYEE_CASH_FUND
+}
+
 type LoanType {
   id: ID!
   name: String!
@@ -228,16 +243,36 @@ type Comment {
   updatedAt: DateTime!
 }
 
+type TransactionT {
+  id: String!
+  amount: Decimal!
+  type: String!
+  state: String!
+  incomeSource: String
+  sourceEmployee: Employee
+  destinationEmployee: Employee!
+}
+
 type Query {
   hello: String!
+  getLoans(where: LoansByLeadIdWhereInput!): [Loan!]!
   getLoanByBorrower(where: LoanByBorrowerWhereUniqueInput!): Loan!
   getRoutes(where: RouteWhereInput!): [Route!]!
   locations(where: LocationWhereInput!): [Location!]!
   getEmployee(where: EmployeeWhereUniqueInput!): Employee!
+  getEmployeeList(where: EmployeeWhereInput!): [Employee!]!
   getBorrower(where: BorrowerWhereUniqueInput!): Borrower!
   getBorrowers(where: BorrowerWhereInput): [Borrower!]!
   getLoanTypes(where: LoanTypeWhereInput): [LoanType!]!
   getPaymentSchedules(where: PaymentScheduleWhereInput): [PaymentSchedule!]!
+  receivedTransferRequests: [TransactionT!]!
+  getMyAccounts: [Account!]!
+}
+
+input LoansByLeadIdWhereInput {
+  leadId: String!
+  startDate: DateTime!
+  endDate: DateTime!
 }
 
 input LoanByBorrowerWhereUniqueInput {
@@ -255,6 +290,10 @@ input LocationWhereInput {
 
 input EmployeeWhereUniqueInput {
   id: ID!
+}
+
+input EmployeeWhereInput {
+  employeeTypes: [EmployeesTypes!]!
 }
 
 input BorrowerWhereUniqueInput {
@@ -345,15 +384,11 @@ input SignInInput {
 }
 
 input TransferMoneyInput {
-  fromId: String!
-  toId: String!
+  destinationAccountId: String!
   amount: Float!
-  approverId: String!
-  isInvestment: Boolean!
 }
 
 input ApproveRejectTransactionInput {
   transactionRqId: String!
-  approverId: String!
   isApproved: Boolean!
 }
